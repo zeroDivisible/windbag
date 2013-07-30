@@ -1,4 +1,4 @@
 .build.gradle.un~
 .idea/
-matasano.iml
+*.iml
 .gradle/
