@@ -6,47 +6,71 @@ project.ext {
     targetCompatibility = 1.7
 }
 
-repositories {
-    mavenCentral()
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+
+    // YOU SHALL NOT PASS!
+    configurations {
+        all*.exclude module: 'commons-logging'
+    }
 }
 
-dependencies {
 
-    // logging
-    compile libraries.logback
+subprojects { subProject ->
+    apply plugin: 'java'
+    apply plugin: 'idea'
 
+    targetCompatibility = rootProject.sourceCompatibility
+    sourceCompatibility = rootProject.targetCompatibility
 
-    // testing
-    testCompile libraries.festAssertions
-    testCompile libraries.mockito
-    testCompile libraries.testNg
-}
-
-sourceSets {
-    main {
-        resources {
-            srcDirs 'src/main/resources'
+    idea {
+        module {
+            downloadJavadoc = true
+            downloadSources = true
         }
     }
 
-    test {
-        java {
-            srcDirs 'src/test/'
+    // common dependencies for all projects
+    dependencies {
+        // logging
+        compile libraries.logback
+
+        // testing
+        testCompile libraries.festAssertions
+        testCompile libraries.mockito
+        testCompile libraries.testNg
+    }
+
+    sourceSets {
+        main {
+            resources {
+                srcDirs 'src/main/resources'
+                srcDirs 'src/main/properties'
+            }
+        }
+
+        test {
+            java {
+                srcDirs 'src/test/'
+            }
+        }
+    }
+
+    task "create-dirs"  {
+        description =  "creates basic directory structure for given project"
+
+        sourceSets*.java.srcDirs*.each {
+            it.mkdirs()
+        }
+
+        sourceSets*.resources.srcDirs*.each {
+            it.mkdirs()
         }
     }
 }
 
-task "create-dirs"  {
-    description =  "creates basic directory structure for java project"
-
-    sourceSets*.java.srcDirs*.each {
-        it.mkdirs()
-    }
-
-    sourceSets*.resources.srcDirs*.each {
-        it.mkdirs()
-    }
-}
 
 test {
     useTestNG()
