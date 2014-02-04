@@ -12,7 +12,7 @@ import javax.ws.rs.core.MediaType;
 /**
  * @author zerodi
  */
-@Path(UrlConstants.API_URL_PREFIX + "/epp-server-configuration")
+@Path(UrlConstants.API_URL_PREFIX + "/epp-server")
 @Produces(MediaType.APPLICATION_JSON)
 public class EppServerConfigurationResource {
 
