@@ -58,8 +58,8 @@ subprojects { subProject ->
         }
     }
 
-    task "create-dirs"  {
-        description =  "creates basic directory structure for given project"
+    task "create-dirs" {
+        description = "creates basic directory structure for given project"
 
         sourceSets*.java.srcDirs*.each {
             it.mkdirs()
