@@ -1,12 +1,12 @@
-package io.zerodi.epp;
+package io.zerodi.windbag;
 
 
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.yammer.dropwizard.Service;
 import com.yammer.dropwizard.config.Bootstrap;
 import com.yammer.dropwizard.config.Environment;
-import io.zerodi.epp.healtchecks.ServerDefinitionHealthCheck;
-import io.zerodi.epp.resources.ServerDetailsResource;
+import io.zerodi.windbag.healtchecks.ServerDefinitionHealthCheck;
+import io.zerodi.windbag.resources.ServerDetailsResource;
 
 /**
  * Main class, spinning the core application.

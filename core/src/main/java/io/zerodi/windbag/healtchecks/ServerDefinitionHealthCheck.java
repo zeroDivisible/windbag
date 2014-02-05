@@ -1,7 +1,7 @@
-package io.zerodi.epp.healtchecks;
+package io.zerodi.windbag.healtchecks;
 
 import com.yammer.metrics.core.HealthCheck;
-import io.zerodi.epp.ServerDetail;
+import io.zerodi.windbag.ServerDetail;
 
 import java.util.List;
 

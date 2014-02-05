@@ -1,8 +1,8 @@
-package io.zerodi.epp.resources;
+package io.zerodi.windbag.resources;
 
 import com.yammer.metrics.annotation.Timed;
-import io.zerodi.epp.ServerDetail;
-import io.zerodi.epp.UrlConstants;
+import io.zerodi.windbag.ServerDetail;
+import io.zerodi.windbag.UrlConstants;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

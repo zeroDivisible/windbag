@@ -1,4 +1,4 @@
-package io.zerodi.epp;
+package io.zerodi.windbag;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.yammer.dropwizard.config.Configuration;
