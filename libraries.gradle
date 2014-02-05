@@ -1,5 +1,6 @@
 
 ext {
+    dropwizardVersion = '0.6.2'
     festAssertionsVersion = '1.4'
     logbackVersion = '1.0.13'
     mockitoVersion = '1.9.5'
@@ -7,6 +8,7 @@ ext {
 
 
     libraries = [
+            dropwizardCore:             dependencies.create("com.yammer.dropwizard:dropwizard-core:${dropwizardVersion}"),
 
             // logging
             logback:                dependencies.create("ch.qos.logback:logback-classic:${logbackVersion}"),
@@ -15,6 +17,5 @@ ext {
             testNg:                 dependencies.create("org.testng:testng:${testNgVersion}"),
             festAssertions:         dependencies.create("org.easytesting:fest-assert:${festAssertionsVersion}"),
             mockito:                dependencies.create("org.mockito:mockito-all:${mockitoVersion}"),
-
     ]
 }
