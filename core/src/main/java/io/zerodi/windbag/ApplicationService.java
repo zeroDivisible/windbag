@@ -20,7 +20,7 @@ public class ApplicationService extends Service<GeneralServiceConfiguration> {
 
     @Override
     public void initialize(Bootstrap<GeneralServiceConfiguration> bootstrap) {
-        bootstrap.setName("server-wizard");
+        bootstrap.setName("windbag");
 
         bootstrap.getObjectMapperFactory().enable(SerializationFeature.WRAP_ROOT_VALUE);
     }
