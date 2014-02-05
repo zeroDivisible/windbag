@@ -2,9 +2,9 @@
 ext {
     dropwizardVersion = '0.6.2'
     festAssertionsVersion = '1.4'
-    logbackVersion = '1.0.13'
+    logbackVersion = '1.1.0'
     mockitoVersion = '1.9.5'
-    testNgVersion = '6.8.5'
+    testNgVersion = '6.8.7'
 
 
     libraries = [
