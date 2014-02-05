@@ -1,3 +1,4 @@
+# service specific settings for the application.
 # those are the default servers which the applications knows about
 servers:
   - name: devvm

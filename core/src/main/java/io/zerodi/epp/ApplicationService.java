@@ -9,6 +9,7 @@ import io.zerodi.epp.healtchecks.ServerDefinitionHealthCheck;
 import io.zerodi.epp.resources.ServerDetailsResource;
 
 /**
+ * Main class, spinning the core application.
  * @author zerodi
  */
 public class ApplicationService extends Service<GeneralServiceConfiguration> {
