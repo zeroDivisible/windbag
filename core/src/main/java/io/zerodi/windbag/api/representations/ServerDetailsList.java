@@ -1,13 +1,12 @@
-package io.zerodi.windbag.resources;
+package io.zerodi.windbag.api.representations;
 
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.annotation.JsonValue;
-import io.zerodi.windbag.ServerDetail;
 
 import java.util.List;
 
 /**
- * Class which abstracts returning the details of {@link io.zerodi.windbag.ServerDetail}
+ * Class which abstracts returning the details of {@link ServerDetail}
  * @author zerodi
  */
 @JsonRootName("server_details")

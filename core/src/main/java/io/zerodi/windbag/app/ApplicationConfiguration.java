@@ -1,7 +1,8 @@
-package io.zerodi.windbag;
+package io.zerodi.windbag.app;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.yammer.dropwizard.config.Configuration;
+import io.zerodi.windbag.api.representations.ServerDetail;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.List;
 /**
  * @author zerodi
  */
-public class GeneralServiceConfiguration extends Configuration {
+public class ApplicationConfiguration extends Configuration {
 
     @NotEmpty
     @JsonProperty

@@ -1,8 +1,8 @@
-package io.zerodi.windbag;
+package io.zerodi.windbag.api.representations;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author zerodi

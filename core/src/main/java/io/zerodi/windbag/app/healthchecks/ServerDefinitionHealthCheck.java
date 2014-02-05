@@ -1,11 +1,13 @@
-package io.zerodi.windbag.healtchecks;
+package io.zerodi.windbag.app.healthchecks;
 
 import com.yammer.metrics.core.HealthCheck;
-import io.zerodi.windbag.ServerDetail;
+import io.zerodi.windbag.api.representations.ServerDetail;
 
 import java.util.List;
 
 /**
+ * Basic healthcheck, which is rather proving the point then really checking anything.
+ *
  * @author zerodi
  */
 public class ServerDefinitionHealthCheck extends HealthCheck {
