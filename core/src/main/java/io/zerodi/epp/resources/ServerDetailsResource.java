@@ -3,7 +3,6 @@ package io.zerodi.epp.resources;
 import com.yammer.metrics.annotation.Timed;
 import io.zerodi.epp.ServerDetail;
 import io.zerodi.epp.UrlConstants;
-import io.zerodi.epp.core.EppServerDetails;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -18,7 +17,6 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 public class ServerDetailsResource {
 
-
     private final List<ServerDetail> serverDetails;
 
     private ServerDetailsResource(List<ServerDetail> serverDetails) {
@@ -28,7 +26,6 @@ public class ServerDetailsResource {
     public static ServerDetailsResource getInstance(List<ServerDetail> serverDetails) {
         return new ServerDetailsResource(serverDetails);
     }
-
 
     @GET
     @Timed
