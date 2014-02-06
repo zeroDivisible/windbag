@@ -4,12 +4,14 @@ ext {
     festAssertionsVersion = '1.4'
     logbackVersion = '1.1.0'
     mockitoVersion = '1.9.5'
+    nettyVersion = '5.0.0.Alpha1'
     testNgVersion = '6.8.7'
 
 
     libraries = [
             dropwizardCore:         dependencies.create("com.yammer.dropwizard:dropwizard-core:${dropwizardVersion}"),
             dropwizardTesting:      dependencies.create("com.yammer.dropwizard:dropwizard-testing:${dropwizardVersion}"),
+            netty:                  dependencies.create("io.netty:netty-all:${nettyVersion}"),
 
             // logging
             logback:                dependencies.create("ch.qos.logback:logback-classic:${logbackVersion}"),
