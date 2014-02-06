@@ -8,7 +8,8 @@ ext {
 
 
     libraries = [
-            dropwizardCore:             dependencies.create("com.yammer.dropwizard:dropwizard-core:${dropwizardVersion}"),
+            dropwizardCore:         dependencies.create("com.yammer.dropwizard:dropwizard-core:${dropwizardVersion}"),
+            dropwizardTesting:      dependencies.create("com.yammer.dropwizard:dropwizard-testing:${dropwizardVersion}"),
 
             // logging
             logback:                dependencies.create("ch.qos.logback:logback-classic:${logbackVersion}"),
