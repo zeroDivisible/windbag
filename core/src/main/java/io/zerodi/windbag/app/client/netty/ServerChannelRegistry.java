@@ -83,6 +83,13 @@ public class ServerChannelRegistry implements Managed {
                 return; // (3)
             }
 
+            int anInt = in.getInt(0);
+            if (in.readableBytes() < anInt) {
+                return;
+            }
+
+            in.readInt();
+
             out.add(in.readBytes(in.readableBytes())); // (4)
         }
     }
@@ -92,7 +99,7 @@ public class ServerChannelRegistry implements Managed {
 
         @Override
         public void handlerAdded(ChannelHandlerContext ctx) {
-            buf = ctx.alloc().buffer(4); // (1)
+            buf = ctx.alloc().buffer(1024); // (1)
         }
 
         @Override
@@ -107,9 +114,11 @@ public class ServerChannelRegistry implements Managed {
             buf.writeBytes(m); // (2)
             m.release();
 
-            for (int i = 0; i < buf.readableBytes(); i++) {
+            while (buf.isReadable()) {
                 System.out.print((char) buf.readByte());
             }
+
+            ctx.close();
         }
 
         @Override
