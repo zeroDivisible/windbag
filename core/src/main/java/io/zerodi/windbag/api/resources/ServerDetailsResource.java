@@ -1,19 +1,22 @@
-package io.zerodi.epp.resources;
+package io.zerodi.windbag.api.resources;
 
-import com.yammer.metrics.annotation.Timed;
-import io.zerodi.epp.ServerDetail;
-import io.zerodi.epp.UrlConstants;
+import java.util.List;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.util.List;
+
+import com.yammer.metrics.annotation.Timed;
+
+import io.zerodi.windbag.api.representations.ServerDetail;
+import io.zerodi.windbag.api.ApiSettings;
+import io.zerodi.windbag.api.representations.ServerDetailsList;
 
 /**
  * @author zerodi
  */
-@Path(UrlConstants.API_URL_PREFIX + "/configuration/servers")
+@Path(ApiSettings.API_URL_PREFIX + "/configuration/servers")
 @Produces(MediaType.APPLICATION_JSON)
 public class ServerDetailsResource {
 

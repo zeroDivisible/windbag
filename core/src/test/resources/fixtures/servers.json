@@ -1,0 +1,9 @@
+{
+    "server_details": [
+        {
+            "name": "devvm",
+            "serverAddress": "192.168.33.15",
+            "serverPort": "700"
+        }
+    ]
+}
