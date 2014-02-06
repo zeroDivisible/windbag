@@ -6,7 +6,7 @@ import com.yammer.dropwizard.config.Bootstrap;
 import com.yammer.dropwizard.config.Environment;
 import io.zerodi.windbag.app.healthchecks.ServerDefinitionHealthCheck;
 import io.zerodi.windbag.api.resources.ServerDetailsResource;
-import io.zerodi.windbag.app.server.netty.TestTcpServer;
+import io.zerodi.windbag.app.server.netty.TestTcpClient;
 
 /**
  * Main class, spinning the core application.
@@ -27,7 +27,7 @@ public class ApplicationService extends Service<ApplicationConfiguration> {
 
     @Override
     public void run(ApplicationConfiguration configuration, Environment environment) throws Exception {
-        environment.manage(TestTcpServer.getInstance());
+        environment.manage(TestTcpClient.getInstance());
 
         environment.addResource(ServerDetailsResource.getInstance(configuration.getServers()));
         environment.addHealthCheck(ServerDefinitionHealthCheck.getInstance(configuration.getServers()));

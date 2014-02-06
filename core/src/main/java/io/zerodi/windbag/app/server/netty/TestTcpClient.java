@@ -8,24 +8,24 @@ import org.slf4j.LoggerFactory;
  * Simple, test implementation of TcpServer which is getting managed with the lifecycle of the whole stack.
  * @author zerodi
  */
-public class TestTcpServer implements Managed {
-    private static final Logger logger = LoggerFactory.getLogger(TestTcpServer.class);
+public class TestTcpClient implements Managed {
+    private static final Logger logger = LoggerFactory.getLogger(TestTcpClient.class);
 
 
-    private TestTcpServer() {
+    private TestTcpClient() {
     }
 
-    public static TestTcpServer getInstance() {
-        return new TestTcpServer();
+    public static TestTcpClient getInstance() {
+        return new TestTcpClient();
     }
 
     @Override
     public void start() throws Exception {
-        logger.info("starting TestTcpServer");
+        logger.info("starting TestTcpClient");
     }
 
     @Override
     public void stop() throws Exception {
-        logger.info("stopping TestTcpServer");
+        logger.info("stopping TestTcpClient");
     }
 }
