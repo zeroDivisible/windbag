@@ -32,4 +32,16 @@ public class ServerDetail {
     public String getServerPort() {
         return serverPort;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setServerAddress(String serverAddress) {
+        this.serverAddress = serverAddress;
+    }
+
+    public void setServerPort(String serverPort) {
+        this.serverPort = serverPort;
+    }
 }
