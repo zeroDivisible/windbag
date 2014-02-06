@@ -80,17 +80,19 @@ public class ServerChannelRegistry implements Managed {
         @Override
         protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
             if (in.readableBytes() < 4) {
-                return; // (3)
+                return;
             }
 
             int anInt = in.getInt(0);
             if (in.readableBytes() < anInt) {
                 return;
+            } else {
+                // we can read a header
+                in.readInt();
             }
 
-            in.readInt();
-
-            out.add(in.readBytes(in.readableBytes())); // (4)
+            // and add the rest to the buffer
+            out.add(in.readBytes(in.readableBytes()));
         }
     }
 
@@ -114,9 +116,10 @@ public class ServerChannelRegistry implements Managed {
             buf.writeBytes(m); // (2)
             m.release();
 
-            while (buf.isReadable()) {
-                System.out.print((char) buf.readByte());
-            }
+            byte[] readableBytes = new byte[buf.readableBytes()];
+            buf.readBytes(readableBytes);
+
+            logger.info(new String(readableBytes));
 
             ctx.close();
         }
