@@ -1,4 +1,4 @@
-package io.zerodi.windbag.app.healthchecks;
+package io.zerodi.windbag.app.healthcheck;
 
 import com.yammer.metrics.core.HealthCheck;
 import io.zerodi.windbag.api.representations.ServerDetail;

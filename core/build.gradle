@@ -1,4 +1,5 @@
 dependencies {
     compile libraries.dropwizardCore
     compile libraries.dropwizardTesting
+    compile libraries.netty
 }
