@@ -6,31 +6,34 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.ByteToMessageDecoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.yammer.dropwizard.lifecycle.Managed;
+
+import java.util.List;
 
 /**
  * Simple, test implementation of TcpServer which is getting managed with the lifecycle of the whole stack.
  *
  * @author zerodi
  */
-public class TestTcpClient implements Managed {
-    private static final Logger logger = LoggerFactory.getLogger(TestTcpClient.class);
+public class ServerChannelRegistry implements Managed {
+    private static final Logger logger = LoggerFactory.getLogger(ServerChannelRegistry.class);
 
     private EventLoopGroup eventLoopGroup;
 
-    private TestTcpClient() {
+    private ServerChannelRegistry() {
     }
 
-    public static TestTcpClient getInstance() {
-        return new TestTcpClient();
+    public static ServerChannelRegistry getInstance() {
+        return new ServerChannelRegistry();
     }
 
     @Override
     public void start() throws Exception {
-        logger.info("starting TestTcpClient");
+        logger.info("starting ServerChannelRegistry");
         eventLoopGroup = new NioEventLoopGroup();
 
         try {
@@ -43,12 +46,12 @@ public class TestTcpClient implements Managed {
 
                 @Override
                 protected void initChannel(SocketChannel ch) throws Exception {
-                    ch.pipeline().addLast(new EppClientHandler());
+                    ch.pipeline().addLast(new EppClientDecoder(), new EppClientHandler());
                 }
             });
 
             // start the client
-            ChannelFuture future = bootstrap.connect("192.168.33.15", 8701);
+            ChannelFuture future = bootstrap.connect("192.168.33.15", 8700).sync();
 
             future.channel().closeFuture().sync();
         } finally {
@@ -59,25 +62,53 @@ public class TestTcpClient implements Managed {
 
     @Override
     public void stop() throws Exception {
-        logger.info("stopping TestTcpClient");
+        logger.info("stopping ServerChannelRegistry");
 
         if (eventLoopGroup != null) {
             eventLoopGroup.shutdownGracefully();
         }
     }
 
+    public static class EppClientDecoder extends ByteToMessageDecoder {
+
+        @Override
+        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+            logger.error(cause.getMessage(), cause);
+            ctx.close();
+        }
+
+        @Override
+        protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
+            if (in.readableBytes() < 4) {
+                return; // (3)
+            }
+
+            out.add(in.readBytes(in.readableBytes())); // (4)
+        }
+    }
+
     public static class EppClientHandler extends ChannelHandlerAdapter {
+        private ByteBuf buf;
+
+        @Override
+        public void handlerAdded(ChannelHandlerContext ctx) {
+            buf = ctx.alloc().buffer(4); // (1)
+        }
+
+        @Override
+        public void handlerRemoved(ChannelHandlerContext ctx) {
+            buf.release(); // (1)
+            buf = null;
+        }
 
         @Override
         public void channelRead(ChannelHandlerContext ctx, Object msg) {
             ByteBuf m = (ByteBuf) msg;
-            try {
-                for (int i = 0; i < m.capacity(); i++) {
-                    byte b = m.getByte(i);
-                    System.out.print((char) b);
-                }
-            } catch (Exception e) {
-                m.release();
+            buf.writeBytes(m); // (2)
+            m.release();
+
+            for (int i = 0; i < buf.readableBytes(); i++) {
+                System.out.print((char) buf.readByte());
             }
         }
 
