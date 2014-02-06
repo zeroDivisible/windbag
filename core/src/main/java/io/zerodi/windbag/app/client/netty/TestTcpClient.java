@@ -1,8 +1,9 @@
-package io.zerodi.windbag.app.server.netty;
+package io.zerodi.windbag.app.client.netty;
 
-import com.yammer.dropwizard.lifecycle.Managed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.yammer.dropwizard.lifecycle.Managed;
 
 /**
  * Simple, test implementation of TcpServer which is getting managed with the lifecycle of the whole stack.
@@ -10,7 +11,6 @@ import org.slf4j.LoggerFactory;
  */
 public class TestTcpClient implements Managed {
     private static final Logger logger = LoggerFactory.getLogger(TestTcpClient.class);
-
 
     private TestTcpClient() {
     }

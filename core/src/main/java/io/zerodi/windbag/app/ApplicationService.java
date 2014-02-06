@@ -6,7 +6,7 @@ import com.yammer.dropwizard.config.Bootstrap;
 import com.yammer.dropwizard.config.Environment;
 import io.zerodi.windbag.app.healthchecks.ServerDefinitionHealthCheck;
 import io.zerodi.windbag.api.resources.ServerDetailsResource;
-import io.zerodi.windbag.app.server.netty.TestTcpClient;
+import io.zerodi.windbag.app.client.netty.TestTcpClient;
 
 /**
  * Main class, spinning the core application.
