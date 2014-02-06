@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.yammer.dropwizard.Service;
 import com.yammer.dropwizard.config.Bootstrap;
 import com.yammer.dropwizard.config.Environment;
-import io.zerodi.windbag.app.healthchecks.ServerDefinitionHealthCheck;
+import io.zerodi.windbag.app.healthcheck.ServerDefinitionHealthCheck;
 import io.zerodi.windbag.api.resources.ServerDetailsResource;
 import io.zerodi.windbag.app.client.netty.TestTcpClient;
 
