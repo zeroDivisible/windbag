@@ -1,8 +1,8 @@
-package io.zerodi.epp;
+package io.zerodi.windbag.api.representations;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author zerodi
@@ -31,5 +31,17 @@ public class ServerDetail {
 
     public String getServerPort() {
         return serverPort;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setServerAddress(String serverAddress) {
+        this.serverAddress = serverAddress;
+    }
+
+    public void setServerPort(String serverPort) {
+        this.serverPort = serverPort;
     }
 }

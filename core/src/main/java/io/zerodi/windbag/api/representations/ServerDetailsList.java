@@ -1,14 +1,12 @@
-package io.zerodi.epp.resources;
+package io.zerodi.windbag.api.representations;
 
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.yammer.dropwizard.json.JsonSnakeCase;
-import io.zerodi.epp.ServerDetail;
 
 import java.util.List;
 
 /**
- * Class which abstracts returning the details of {@link io.zerodi.epp.ServerDetail}
+ * Class which abstracts returning the details of {@link ServerDetail}
  * @author zerodi
  */
 @JsonRootName("server_details")
