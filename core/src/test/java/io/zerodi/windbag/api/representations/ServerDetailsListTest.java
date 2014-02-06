@@ -22,6 +22,7 @@ public class ServerDetailsListTest {
 
     private List<ServerDetail> serverDetails;
     private ServerDetail devvm;
+    private ServerDetail machine2;
 
     @BeforeMethod
     public void setUp() throws Exception {
@@ -32,7 +33,13 @@ public class ServerDetailsListTest {
         devvm.setServerAddress("192.168.33.15");
         devvm.setServerPort("700");
 
+        machine2 = new ServerDetail();
+        machine2.setName("machine2");
+        machine2.setServerAddress("192.168.33.20");
+        machine2.setServerPort("701");
+
         serverDetails.add(devvm);
+        serverDetails.add(machine2);
     }
 
     @Test
