@@ -7,6 +7,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.ByteToMessageDecoder;
+import io.netty.util.CharsetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +20,7 @@ import java.util.List;
  *
  * @author zerodi
  */
-public class ServerChannelRegistry implements Managed {
+public class ServerChannelRegistry implements Managed, ChannelRegistry {
     private static final Logger logger = LoggerFactory.getLogger(ServerChannelRegistry.class);
 
     private EventLoopGroup eventLoopGroup;
@@ -52,7 +53,6 @@ public class ServerChannelRegistry implements Managed {
 
             // start the client
             ChannelFuture future = bootstrap.connect("192.168.33.15", 8700).sync();
-
             future.channel().closeFuture().sync();
         } finally {
             eventLoopGroup.shutdownGracefully();
@@ -69,6 +69,16 @@ public class ServerChannelRegistry implements Managed {
         }
     }
 
+    @Override
+    public void registerChannel(String serverId, Bootstrap bootstrap) {
+        // TODO Implement
+    }
+
+    @Override
+    public Bootstrap getChannelBootstrap(String serverId) {
+        return null;  //TODO Implement
+    }
+
     public static class EppClientDecoder extends ByteToMessageDecoder {
 
         @Override
@@ -83,16 +93,16 @@ public class ServerChannelRegistry implements Managed {
                 return;
             }
 
-            int anInt = in.getInt(0);
-            if (in.readableBytes() < anInt) {
+            int messageLength = in.getInt(0);
+            if (in.readableBytes() < messageLength) {
                 return;
             } else {
                 // we can read a header
                 in.readInt();
             }
 
-            // and add the rest to the buffer
-            out.add(in.readBytes(in.readableBytes()));
+            // and add the full message to the buffer
+            out.add(in.readBytes(messageLength - 4));
         }
     }
 
@@ -101,26 +111,25 @@ public class ServerChannelRegistry implements Managed {
 
         @Override
         public void handlerAdded(ChannelHandlerContext ctx) {
-            buf = ctx.alloc().buffer(1024); // (1)
+            buf = ctx.alloc().buffer(1024);
         }
 
         @Override
         public void handlerRemoved(ChannelHandlerContext ctx) {
-            buf.release(); // (1)
+            buf.release();
             buf = null;
         }
 
         @Override
         public void channelRead(ChannelHandlerContext ctx, Object msg) {
             ByteBuf m = (ByteBuf) msg;
-            buf.writeBytes(m); // (2)
+            buf.writeBytes(m);
             m.release();
 
             byte[] readableBytes = new byte[buf.readableBytes()];
             buf.readBytes(readableBytes);
 
-            logger.info(new String(readableBytes));
-
+            logger.info(new String(readableBytes, CharsetUtil.UTF_8));
             ctx.close();
         }
 
