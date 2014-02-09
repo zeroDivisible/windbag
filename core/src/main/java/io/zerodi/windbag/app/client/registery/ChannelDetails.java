@@ -1,6 +1,5 @@
 package io.zerodi.windbag.app.client.registery;
 
-import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.EventLoopGroup;
 
 /**
