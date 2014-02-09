@@ -1,5 +1,6 @@
 package io.zerodi.windbag.app.client.netty;
 
+import com.google.common.base.Preconditions;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.*;
@@ -8,11 +9,14 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.util.CharsetUtil;
+import io.zerodi.windbag.app.client.epp.EppClientDecoder;
+import io.zerodi.windbag.app.client.epp.EppClientHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.yammer.dropwizard.lifecycle.Managed;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -24,6 +28,7 @@ public class ServerChannelRegistry implements Managed, ChannelRegistry {
     private static final Logger logger = LoggerFactory.getLogger(ServerChannelRegistry.class);
 
     private EventLoopGroup eventLoopGroup;
+    private HashMap<String, ChannelDetails> clientChannelMap = new HashMap<>();
 
     private ServerChannelRegistry() {
     }
@@ -47,7 +52,7 @@ public class ServerChannelRegistry implements Managed, ChannelRegistry {
 
                 @Override
                 protected void initChannel(SocketChannel ch) throws Exception {
-                    ch.pipeline().addLast(new EppClientDecoder(), new EppClientHandler());
+                    ch.pipeline().addLast(EppClientDecoder.getInstance(), EppClientHandler.getInstance());
                 }
             });
 
@@ -71,72 +76,25 @@ public class ServerChannelRegistry implements Managed, ChannelRegistry {
 
     @Override
     public void registerChannel(String serverId, Bootstrap bootstrap) {
-        // TODO Implement
+        Preconditions.checkNotNull(serverId, "serverId cannot be null!");
+        Preconditions.checkNotNull(bootstrap, "bootstrap cannot be null!");
+
+        if (clientChannelMap.containsKey(serverId)) {
+            throw new RuntimeException("already registered " + serverId);
+        }
+
+        clientChannelMap.put(serverId, ChannelDetails.getInstance(new NioEventLoopGroup(), bootstrap));
     }
 
     @Override
     public Bootstrap getChannelBootstrap(String serverId) {
-        return null;  //TODO Implement
+        Preconditions.checkNotNull(serverId, "serverId cannot be null!");
+
+        if (!clientChannelMap.containsKey(serverId)) {
+            return null;
+        }
+
+        return clientChannelMap.get(serverId).getBootstrap();
     }
 
-    public static class EppClientDecoder extends ByteToMessageDecoder {
-
-        @Override
-        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-            logger.error(cause.getMessage(), cause);
-            ctx.close();
-        }
-
-        @Override
-        protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
-            if (in.readableBytes() < 4) {
-                return;
-            }
-
-            int messageLength = in.getInt(0);
-            if (in.readableBytes() < messageLength) {
-                return;
-            } else {
-                // we can read a header
-                in.readInt();
-            }
-
-            // and add the full message to the buffer
-            out.add(in.readBytes(messageLength - 4));
-        }
-    }
-
-    public static class EppClientHandler extends ChannelHandlerAdapter {
-        private ByteBuf buf;
-
-        @Override
-        public void handlerAdded(ChannelHandlerContext ctx) {
-            buf = ctx.alloc().buffer(1024);
-        }
-
-        @Override
-        public void handlerRemoved(ChannelHandlerContext ctx) {
-            buf.release();
-            buf = null;
-        }
-
-        @Override
-        public void channelRead(ChannelHandlerContext ctx, Object msg) {
-            ByteBuf m = (ByteBuf) msg;
-            buf.writeBytes(m);
-            m.release();
-
-            byte[] readableBytes = new byte[buf.readableBytes()];
-            buf.readBytes(readableBytes);
-
-            logger.info(new String(readableBytes, CharsetUtil.UTF_8));
-            ctx.close();
-        }
-
-        @Override
-        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-            logger.error(cause.getMessage(), cause);
-            ctx.close();
-        }
-    }
 }
