@@ -38,9 +38,12 @@ public class ChannelRegistryImpl implements Managed, ChannelRegistry {
 
         // TODO - this will not be needed, right now we are only connecting mostly for the tests.
         EppProtocolBootstrap eppProtocolBootstrap = EppProtocolBootstrap.getInstance();
-        Bootstrap bootstrap = eppProtocolBootstrap.getBootstrap();
+
+        // TODO register the bootstrap, will need to be removed later
+        registerChannel("devvm", eppProtocolBootstrap);
 
         // start the client
+        Bootstrap bootstrap = eppProtocolBootstrap.getBootstrap();
         ChannelFuture future = bootstrap.connect("192.168.33.15", 8700).sync();
         future.channel().closeFuture().sync();
     }
