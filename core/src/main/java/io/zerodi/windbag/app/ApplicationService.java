@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.yammer.dropwizard.Service;
 import com.yammer.dropwizard.config.Bootstrap;
 import com.yammer.dropwizard.config.Environment;
-import io.zerodi.windbag.app.client.netty.ServerChannelRegistry;
+import io.zerodi.windbag.app.client.registery.ChannelRegistryImpl;
 import io.zerodi.windbag.app.healthcheck.ServerDefinitionHealthCheck;
 import io.zerodi.windbag.api.resources.ServerDetailsResource;
 
@@ -27,8 +27,8 @@ public class ApplicationService extends Service<ApplicationConfiguration> {
 
     @Override
     public void run(ApplicationConfiguration configuration, Environment environment) throws Exception {
-        ServerChannelRegistry serverChannelRegistry = ServerChannelRegistry.getInstance();
-        environment.manage(serverChannelRegistry);
+        ChannelRegistryImpl channelRegistryImpl = ChannelRegistryImpl.getInstance();
+        environment.manage(channelRegistryImpl);
 
         environment.addResource(ServerDetailsResource.getInstance(configuration.getServers()));
         environment.addHealthCheck(ServerDefinitionHealthCheck.getInstance(configuration.getServers()));

@@ -1,4 +1,4 @@
-package io.zerodi.windbag.app.client.netty;
+package io.zerodi.windbag.app.client.registery;
 
 import io.netty.bootstrap.Bootstrap;
 
@@ -14,11 +14,12 @@ public interface ChannelRegistry {
      * @param serverId needs to be unique
      * @param bootstrap
      */
-    public void registerChannel(String serverId, Bootstrap bootstrap);
+    public void registerChannel(String serverId, ProtocolBootstrap bootstrap);
 
     /**
+     *
      * @param serverId for which we would like to return the bootstrap
      * @return {@link io.netty.bootstrap.Bootstrap} associated with given serverId.
      */
-    public Bootstrap getChannelBootstrap(String serverId);
+    public ProtocolBootstrap getChannelBootstrap(String serverId);
 }

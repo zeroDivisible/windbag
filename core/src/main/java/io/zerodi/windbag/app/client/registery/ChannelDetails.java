@@ -1,4 +1,4 @@
-package io.zerodi.windbag.app.client.netty;
+package io.zerodi.windbag.app.client.registery;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.EventLoopGroup;
@@ -11,14 +11,14 @@ import io.netty.channel.EventLoopGroup;
 public class ChannelDetails {
 
     private final EventLoopGroup eventLoopGroup;
-    private final Bootstrap bootstrap;
+    private final ProtocolBootstrap bootstrap;
 
-    private ChannelDetails(EventLoopGroup eventLoopGroup, Bootstrap bootstrap) {
+    private ChannelDetails(EventLoopGroup eventLoopGroup, ProtocolBootstrap bootstrap) {
         this.eventLoopGroup = eventLoopGroup;
         this.bootstrap = bootstrap;
     }
 
-    public static ChannelDetails getInstance(EventLoopGroup eventLoopGroup, Bootstrap bootstrap) {
+    public static ChannelDetails getInstance(EventLoopGroup eventLoopGroup, ProtocolBootstrap bootstrap) {
         return new ChannelDetails(eventLoopGroup, bootstrap);
     }
 
@@ -26,7 +26,7 @@ public class ChannelDetails {
         return eventLoopGroup;
     }
 
-    public Bootstrap getBootstrap() {
+    public ProtocolBootstrap getBootstrap() {
         return bootstrap;
     }
 }

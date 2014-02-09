@@ -5,5 +5,6 @@ package io.zerodi.windbag.core;
  * @author zerodi
  */
 public enum Protocol {
-    EPP
+    NOOP,
+    EPP,
 }

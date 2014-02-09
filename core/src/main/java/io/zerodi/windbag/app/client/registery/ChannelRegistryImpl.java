@@ -1,45 +1,45 @@
-package io.zerodi.windbag.app.client.netty;
+package io.zerodi.windbag.app.client.registery;
 
-import com.google.common.base.Preconditions;
-import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.ByteBuf;
-import io.netty.channel.*;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.ByteToMessageDecoder;
-import io.netty.util.CharsetUtil;
-import io.zerodi.windbag.app.client.epp.EppClientDecoder;
-import io.zerodi.windbag.app.client.epp.EppClientHandler;
+import java.util.HashMap;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Preconditions;
 import com.yammer.dropwizard.lifecycle.Managed;
 
-import java.util.HashMap;
-import java.util.List;
+import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
+import io.zerodi.windbag.app.client.protocol.epp.EppClientDecoder;
+import io.zerodi.windbag.app.client.protocol.epp.EppClientHandler;
 
 /**
  * Simple, test implementation of TcpServer which is getting managed with the lifecycle of the whole stack.
  *
  * @author zerodi
  */
-public class ServerChannelRegistry implements Managed, ChannelRegistry {
-    private static final Logger logger = LoggerFactory.getLogger(ServerChannelRegistry.class);
+public class ChannelRegistryImpl implements Managed, ChannelRegistry {
+    private static final Logger logger = LoggerFactory.getLogger(ChannelRegistryImpl.class);
 
     private EventLoopGroup eventLoopGroup;
     private HashMap<String, ChannelDetails> clientChannelMap = new HashMap<>();
 
-    private ServerChannelRegistry() {
+    private ChannelRegistryImpl() {
     }
 
-    public static ServerChannelRegistry getInstance() {
-        return new ServerChannelRegistry();
+    public static ChannelRegistryImpl getInstance() {
+        return new ChannelRegistryImpl();
     }
 
     @Override
     public void start() throws Exception {
-        logger.info("starting ServerChannelRegistry");
+        logger.info("starting ChannelRegistryImpl");
         eventLoopGroup = new NioEventLoopGroup();
 
         try {
@@ -67,7 +67,7 @@ public class ServerChannelRegistry implements Managed, ChannelRegistry {
 
     @Override
     public void stop() throws Exception {
-        logger.info("stopping ServerChannelRegistry");
+        logger.info("stopping ChannelRegistryImpl");
 
         if (eventLoopGroup != null) {
             eventLoopGroup.shutdownGracefully();
@@ -75,7 +75,7 @@ public class ServerChannelRegistry implements Managed, ChannelRegistry {
     }
 
     @Override
-    public void registerChannel(String serverId, Bootstrap bootstrap) {
+    public void registerChannel(String serverId, ProtocolBootstrap bootstrap) {
         Preconditions.checkNotNull(serverId, "serverId cannot be null!");
         Preconditions.checkNotNull(bootstrap, "bootstrap cannot be null!");
 
@@ -87,7 +87,7 @@ public class ServerChannelRegistry implements Managed, ChannelRegistry {
     }
 
     @Override
-    public Bootstrap getChannelBootstrap(String serverId) {
+    public ProtocolBootstrap getChannelBootstrap(String serverId) {
         Preconditions.checkNotNull(serverId, "serverId cannot be null!");
 
         if (!clientChannelMap.containsKey(serverId)) {

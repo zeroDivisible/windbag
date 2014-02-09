@@ -1,4 +1,4 @@
-package io.zerodi.windbag.app.client.epp;
+package io.zerodi.windbag.app.client.protocol.epp;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerAdapter;
