@@ -3,6 +3,7 @@ package io.zerodi.windbag.app.client.registery;
 import java.util.Collection;
 import java.util.HashMap;
 
+import io.netty.channel.EventLoopGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,6 +35,8 @@ public class ChannelRegistryImpl implements Managed, ChannelRegistry {
     @Override
     public void start() throws Exception {
         logger.info("starting ChannelRegistryImpl");
+
+        // TODO - this will not be needed, right now we are only connecting mostly for the tests.
         EppProtocolBootstrap eppProtocolBootstrap = EppProtocolBootstrap.getInstance();
         Bootstrap bootstrap = eppProtocolBootstrap.getBootstrap();
 
@@ -48,7 +51,11 @@ public class ChannelRegistryImpl implements Managed, ChannelRegistry {
 
         Collection<ChannelDetails> values = clientChannelMap.values();
         for (ChannelDetails channelDetail : values) {
-            channelDetail.getEventLoopGroup().shutdownGracefully();
+            EventLoopGroup eventLoopGroup = channelDetail.getEventLoopGroup();
+
+            if (eventLoopGroup != null) {
+                eventLoopGroup.shutdownGracefully();
+            }
         }
     }
 

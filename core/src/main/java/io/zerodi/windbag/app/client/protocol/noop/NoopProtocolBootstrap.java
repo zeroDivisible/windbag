@@ -5,11 +5,16 @@ import io.zerodi.windbag.app.client.registery.ProtocolBootstrap;
 import io.zerodi.windbag.core.Protocol;
 
 /**
+ * Helper implementation of {@link io.zerodi.windbag.app.client.registery.ProtocolBootstrap}, designed to do nothing.
+ *
  * @author zerodi
  */
 public class NoopProtocolBootstrap implements ProtocolBootstrap {
 
+    private Bootstrap bootstrap;
+
     private NoopProtocolBootstrap() {
+        bootstrap = new Bootstrap();
     }
 
     public static NoopProtocolBootstrap getInstance() {
@@ -23,6 +28,6 @@ public class NoopProtocolBootstrap implements ProtocolBootstrap {
 
     @Override
     public Bootstrap getBootstrap() {
-        return new Bootstrap();
+        return bootstrap;
     }
 }
