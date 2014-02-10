@@ -4,10 +4,13 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.yammer.dropwizard.Service;
 import com.yammer.dropwizard.config.Bootstrap;
 import com.yammer.dropwizard.config.Environment;
+import io.zerodi.windbag.api.representations.ServerDetail;
 import io.zerodi.windbag.api.resources.ServerConfigurationResource;
 import io.zerodi.windbag.api.resources.ServerControlResource;
 import io.zerodi.windbag.app.client.registery.ChannelRegistryImpl;
 import io.zerodi.windbag.app.healthcheck.ServerDefinitionHealthCheck;
+
+import java.util.List;
 
 /**
  * Main class, spinning the core application.
@@ -28,12 +31,13 @@ public class ApplicationService extends Service<ApplicationConfiguration> {
 
     @Override
     public void run(ApplicationConfiguration configuration, Environment environment) throws Exception {
+        List<ServerDetail> defaultServers = configuration.getServers();
+        environment.addResource(ServerConfigurationResource.getInstance(defaultServers));
+        environment.addResource(ServerControlResource.getInstance());
+
         ChannelRegistryImpl channelRegistryImpl = ChannelRegistryImpl.getInstance();
         environment.manage(channelRegistryImpl);
 
-        environment.addResource(ServerConfigurationResource.getInstance(configuration.getServers()));
-        environment.addResource(ServerControlResource.getInstance());
-
-        environment.addHealthCheck(ServerDefinitionHealthCheck.getInstance(configuration.getServers()));
+        environment.addHealthCheck(ServerDefinitionHealthCheck.getInstance(defaultServers));
     }
 }
