@@ -4,9 +4,10 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.yammer.dropwizard.Service;
 import com.yammer.dropwizard.config.Bootstrap;
 import com.yammer.dropwizard.config.Environment;
+import io.zerodi.windbag.api.resources.ServerConfigurationResource;
+import io.zerodi.windbag.api.resources.ServerControlResource;
 import io.zerodi.windbag.app.client.registery.ChannelRegistryImpl;
 import io.zerodi.windbag.app.healthcheck.ServerDefinitionHealthCheck;
-import io.zerodi.windbag.api.resources.ServerDetailsResource;
 
 /**
  * Main class, spinning the core application.
@@ -30,7 +31,9 @@ public class ApplicationService extends Service<ApplicationConfiguration> {
         ChannelRegistryImpl channelRegistryImpl = ChannelRegistryImpl.getInstance();
         environment.manage(channelRegistryImpl);
 
-        environment.addResource(ServerDetailsResource.getInstance(configuration.getServers()));
+        environment.addResource(ServerConfigurationResource.getInstance(configuration.getServers()));
+        environment.addResource(ServerControlResource.getInstance());
+
         environment.addHealthCheck(ServerDefinitionHealthCheck.getInstance(configuration.getServers()));
     }
 }
