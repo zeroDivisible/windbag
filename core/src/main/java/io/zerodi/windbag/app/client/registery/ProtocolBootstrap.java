@@ -8,7 +8,14 @@ import io.zerodi.windbag.core.Protocol;
  */
 public interface ProtocolBootstrap {
 
+    /**
+     * @return obtains the associated protocol for this bootstrap
+     */
     public Protocol getProtocol();
 
+    /**
+     * @return obtains the {@link io.netty.bootstrap.Bootstrap} associated with this protocol (underlying class which netty uses to abstract
+     *         some of the communication logic)
+     */
     public Bootstrap getBootstrap();
 }
