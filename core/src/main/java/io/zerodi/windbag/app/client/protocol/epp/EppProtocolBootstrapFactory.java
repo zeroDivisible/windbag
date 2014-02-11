@@ -1,7 +1,7 @@
 package io.zerodi.windbag.app.client.protocol.epp;
 
 import io.zerodi.windbag.app.client.registry.ProtocolBootstrap;
-import io.zerodi.windbag.app.client.registry.ProtocolBootstrapFactory;
+import io.zerodi.windbag.app.client.protocol.ProtocolBootstrapFactory;
 
 /**
  * @author zerodi
