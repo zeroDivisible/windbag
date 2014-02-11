@@ -1,4 +1,4 @@
-package io.zerodi.windbag.app.client.registery;
+package io.zerodi.windbag.app.client.registry;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -13,7 +13,6 @@ import com.yammer.dropwizard.lifecycle.Managed;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.zerodi.windbag.app.client.protocol.epp.EppProtocolBootstrap;
 
 /**
  * Simple, test implementation of TcpServer which is getting managed with the lifecycle of the whole stack.
@@ -36,14 +35,10 @@ public class ChannelRegistryImpl implements Managed, ChannelRegistry {
     public void start() throws Exception {
         logger.info("starting ChannelRegistryImpl");
 
-        // TODO - this will not be needed, right now we are only connecting mostly for the tests.
-        EppProtocolBootstrap eppProtocolBootstrap = EppProtocolBootstrap.getInstance();
-
-        // TODO register the bootstrap, will need to be removed later
-        registerChannel("devvm", eppProtocolBootstrap);
+        ChannelDetails devvm = clientChannelMap.get("devvm");
+        Bootstrap bootstrap = devvm.getClientConnection().getProtocolBootstrap().getBootstrap();
 
         // start the client
-        Bootstrap bootstrap = eppProtocolBootstrap.getBootstrap();
         ChannelFuture future = bootstrap.connect("192.168.33.15", 8700).sync();
         future.channel().closeFuture().sync();
     }
@@ -63,29 +58,31 @@ public class ChannelRegistryImpl implements Managed, ChannelRegistry {
     }
 
     @Override
-    public void registerChannel(String serverId, ProtocolBootstrap bootstrap) {
-        Preconditions.checkNotNull(serverId, "serverId cannot be null!");
-        Preconditions.checkNotNull(bootstrap, "bootstrap cannot be null!");
-        Preconditions.checkNotNull(bootstrap.getBootstrap(), "bootstrap cannot be null!");
+    public void registerClientConnection(ClientConnection clientConnection) {
+        Preconditions.checkNotNull(clientConnection, "bootstrap cannot be null!");
+        String serverId = clientConnection.getServerDetail().getName();
+        Preconditions.checkNotNull(serverId, "clientConnection.getServerDetail().getName() cannot be null!");
+        Preconditions.checkNotNull(clientConnection.getProtocolBootstrap(), "clientConnection.getProtocolBootstrap() cannot be null!");
 
         if (clientChannelMap.containsKey(serverId)) {
             throw new RuntimeException("already registered " + serverId);
         }
 
         NioEventLoopGroup eventLoopGroup = new NioEventLoopGroup();
-        bootstrap.getBootstrap().group(eventLoopGroup);
-        clientChannelMap.put(serverId, ChannelDetails.getInstance(eventLoopGroup, bootstrap));
+        ProtocolBootstrap protocolBootstrap = clientConnection.getProtocolBootstrap();
+        protocolBootstrap.getBootstrap().group(eventLoopGroup);
+        clientChannelMap.put(serverId, ChannelDetails.getInstance(eventLoopGroup, clientConnection));
     }
 
     @Override
-    public ProtocolBootstrap getChannelBootstrap(String serverId) {
+    public ClientConnection getClientConnection(String serverId) {
         Preconditions.checkNotNull(serverId, "serverId cannot be null!");
 
         if (!clientChannelMap.containsKey(serverId)) {
             return null;
         }
 
-        return clientChannelMap.get(serverId).getBootstrap();
+        return clientChannelMap.get(serverId).getClientConnection();
     }
 
 }

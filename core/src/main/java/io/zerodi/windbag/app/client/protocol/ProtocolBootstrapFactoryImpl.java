@@ -4,8 +4,9 @@ import com.google.common.base.Preconditions;
 import io.zerodi.windbag.api.representations.ServerDetail;
 import io.zerodi.windbag.app.client.protocol.epp.EppProtocolBootstrapFactory;
 import io.zerodi.windbag.app.client.protocol.noop.NoopProtocolBootstrapFactory;
-import io.zerodi.windbag.app.client.registery.ProtocolBootstrap;
-import io.zerodi.windbag.app.client.registery.ProtocolBootstrapFactory;
+import io.zerodi.windbag.app.client.registry.ClientConnection;
+import io.zerodi.windbag.app.client.registry.ProtocolBootstrap;
+import io.zerodi.windbag.app.client.registry.ProtocolBootstrapFactory;
 import io.zerodi.windbag.core.Protocol;
 
 import java.util.HashMap;
@@ -28,13 +29,14 @@ public class ProtocolBootstrapFactoryImpl {
         return new ProtocolBootstrapFactoryImpl();
     }
 
-    public ProtocolBootstrap createBootstrap(ServerDetail serverDetail) {
+    public ClientConnection createClientConnection(ServerDetail serverDetail) {
         Preconditions.checkNotNull(serverDetail, "serverDetail cannot be null!");
         Preconditions.checkNotNull(serverDetail.getProtocol(), "serverDetail.getProtocol() cannot return null!");
 
         Protocol protocol = serverDetail.getProtocol();
-        ProtocolBootstrap protocolBootstrap = bootstrapFactories.get(protocol).newInstance();
+        ProtocolBootstrapFactory<? extends ProtocolBootstrap> protocolBootstrapFactory = bootstrapFactories.get(protocol);
 
-        return protocolBootstrap;
+        ProtocolBootstrap protocolBootstrap = protocolBootstrapFactory.newInstance();
+        return ClientConnection.getInstance(serverDetail, protocolBootstrap);
     }
 }

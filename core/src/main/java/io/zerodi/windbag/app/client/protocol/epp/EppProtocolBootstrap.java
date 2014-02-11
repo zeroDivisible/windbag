@@ -5,7 +5,7 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.zerodi.windbag.app.client.registery.ProtocolBootstrap;
+import io.zerodi.windbag.app.client.registry.ProtocolBootstrap;
 import io.zerodi.windbag.core.Protocol;
 
 /**

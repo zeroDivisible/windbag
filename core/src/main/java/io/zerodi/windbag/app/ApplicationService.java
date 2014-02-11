@@ -7,7 +7,9 @@ import com.yammer.dropwizard.config.Environment;
 import io.zerodi.windbag.api.representations.ServerDetail;
 import io.zerodi.windbag.api.resources.ServerConfigurationResource;
 import io.zerodi.windbag.api.resources.ServerControlResource;
-import io.zerodi.windbag.app.client.registery.ChannelRegistryImpl;
+import io.zerodi.windbag.app.client.protocol.ProtocolBootstrapFactoryImpl;
+import io.zerodi.windbag.app.client.registry.ChannelRegistryImpl;
+import io.zerodi.windbag.app.client.registry.ClientConnection;
 import io.zerodi.windbag.app.healthcheck.ServerDefinitionHealthCheck;
 
 import java.util.List;
@@ -35,9 +37,18 @@ public class ApplicationService extends Service<ApplicationConfiguration> {
         environment.addResource(ServerConfigurationResource.getInstance(defaultServers));
         environment.addResource(ServerControlResource.getInstance());
 
-        ChannelRegistryImpl channelRegistryImpl = ChannelRegistryImpl.getInstance();
-        environment.manage(channelRegistryImpl);
+        addDefaultServers(environment, defaultServers);
 
         environment.addHealthCheck(ServerDefinitionHealthCheck.getInstance(defaultServers));
+    }
+
+    private void addDefaultServers(Environment environment, List<ServerDetail> defaultServers) {
+        ProtocolBootstrapFactoryImpl protocolBootstrapFactory = ProtocolBootstrapFactoryImpl.getInstance();
+        ChannelRegistryImpl channelRegistryImpl = ChannelRegistryImpl.getInstance();
+        for (ServerDetail server : defaultServers) {
+            ClientConnection clientConnection = protocolBootstrapFactory.createClientConnection(server);
+            channelRegistryImpl.registerClientConnection(clientConnection);
+        }
+        environment.manage(channelRegistryImpl);
     }
 }

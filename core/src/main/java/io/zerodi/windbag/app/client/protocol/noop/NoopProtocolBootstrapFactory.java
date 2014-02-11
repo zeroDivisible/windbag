@@ -1,6 +1,7 @@
 package io.zerodi.windbag.app.client.protocol.noop;
 
-import io.zerodi.windbag.app.client.registery.ProtocolBootstrapFactory;
+import io.zerodi.windbag.app.client.registry.ProtocolBootstrap;
+import io.zerodi.windbag.app.client.registry.ProtocolBootstrapFactory;
 
 /**
  * @author zerodi
@@ -16,8 +17,11 @@ public class NoopProtocolBootstrapFactory implements ProtocolBootstrapFactory<No
         return new NoopProtocolBootstrapFactory();
     }
 
+    /**
+     * @return cached instance of {@link io.zerodi.windbag.app.client.protocol.noop.NoopProtocolBootstrap}
+     */
     @Override
-    public NoopProtocolBootstrap newInstance() {
+    public ProtocolBootstrap newInstance() {
         return NOOP_PROTOCOL_BOOTSTRAP;
     }
 }

@@ -1,11 +1,11 @@
 package io.zerodi.windbag.app.client.protocol.noop;
 
 import io.netty.bootstrap.Bootstrap;
-import io.zerodi.windbag.app.client.registery.ProtocolBootstrap;
+import io.zerodi.windbag.app.client.registry.ProtocolBootstrap;
 import io.zerodi.windbag.core.Protocol;
 
 /**
- * Helper implementation of {@link io.zerodi.windbag.app.client.registery.ProtocolBootstrap}, designed to do nothing.
+ * Helper implementation of {@link io.zerodi.windbag.app.client.registry.ProtocolBootstrap}, designed to do nothing.
  *
  * @author zerodi
  */

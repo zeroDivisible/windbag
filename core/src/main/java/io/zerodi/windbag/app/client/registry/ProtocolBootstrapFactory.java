@@ -1,9 +1,9 @@
-package io.zerodi.windbag.app.client.registery;
+package io.zerodi.windbag.app.client.registry;
 
 /**
  * @author zerodi
  */
 public interface ProtocolBootstrapFactory<T extends ProtocolBootstrap> {
 
-    public T newInstance();
+    public ProtocolBootstrap newInstance();
 }

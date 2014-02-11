@@ -1,4 +1,4 @@
-package io.zerodi.windbag.app.client.registery;
+package io.zerodi.windbag.app.client.registry;
 
 import io.netty.bootstrap.Bootstrap;
 import io.zerodi.windbag.core.Protocol;
