@@ -4,7 +4,9 @@ This projects is easing the pain of doing ad-hoc testing of TCP based servers. I
 
 * [dropwizard](http://www.dropwizard.io/),
 * [netty](http://netty.io/)
-* and [emberjs](http://emberjs.com/)
+* and
+    * either [ember.js](http://emberjs.com/)
+    * or [riot.js](https://moot.it/riotjs/)
 
 I didn't had an opportunity to do so during my normal job and always wanted to do something more ambitious using mentioned tools.
 

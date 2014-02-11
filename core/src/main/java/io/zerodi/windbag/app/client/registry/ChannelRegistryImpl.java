@@ -22,7 +22,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 public class ChannelRegistryImpl implements Managed, ChannelRegistry {
     private static final Logger logger = LoggerFactory.getLogger(ChannelRegistryImpl.class);
 
-    private HashMap<String, ChannelDetails> clientChannelMap = new HashMap<>();
+    private HashMap<String, ClientConnection> clientChannelMap = new HashMap<>();
 
     private ChannelRegistryImpl() {
     }
@@ -35,8 +35,8 @@ public class ChannelRegistryImpl implements Managed, ChannelRegistry {
     public void start() throws Exception {
         logger.info("starting ChannelRegistryImpl");
 
-        ChannelDetails devvm = clientChannelMap.get("devvm");
-        Bootstrap bootstrap = devvm.getClientConnection().getProtocolBootstrap().getBootstrap();
+        ClientConnection devvm = clientChannelMap.get("devvm");
+        Bootstrap bootstrap = devvm.getProtocolBootstrap().getBootstrap();
 
         // start the client
         ChannelFuture future = bootstrap.connect("192.168.33.15", 8700).sync();
@@ -47,9 +47,9 @@ public class ChannelRegistryImpl implements Managed, ChannelRegistry {
     public void stop() throws Exception {
         logger.info("stopping ChannelRegistryImpl");
 
-        Collection<ChannelDetails> values = clientChannelMap.values();
-        for (ChannelDetails channelDetail : values) {
-            EventLoopGroup eventLoopGroup = channelDetail.getEventLoopGroup();
+        Collection<ClientConnection> values = clientChannelMap.values();
+        for (ClientConnection clientConnection : values) {
+            EventLoopGroup eventLoopGroup = clientConnection.getEventLoopGroup();
 
             if (eventLoopGroup != null) {
                 eventLoopGroup.shutdownGracefully();
@@ -69,9 +69,8 @@ public class ChannelRegistryImpl implements Managed, ChannelRegistry {
         }
 
         NioEventLoopGroup eventLoopGroup = new NioEventLoopGroup();
-        ProtocolBootstrap protocolBootstrap = clientConnection.getProtocolBootstrap();
-        protocolBootstrap.getBootstrap().group(eventLoopGroup);
-        clientChannelMap.put(serverId, ChannelDetails.getInstance(eventLoopGroup, clientConnection));
+        clientConnection.replaceEventLookGroup(eventLoopGroup);
+        clientChannelMap.put(serverId, clientConnection);
     }
 
     @Override
@@ -82,7 +81,7 @@ public class ChannelRegistryImpl implements Managed, ChannelRegistry {
             return null;
         }
 
-        return clientChannelMap.get(serverId).getClientConnection();
+        return clientChannelMap.get(serverId);
     }
 
 }
