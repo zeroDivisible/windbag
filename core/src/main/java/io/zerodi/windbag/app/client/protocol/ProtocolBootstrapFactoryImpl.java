@@ -14,11 +14,14 @@ import java.util.HashMap;
  * @author zerodi
  */
 public class ProtocolBootstrapFactoryImpl {
-    private HashMap<Protocol, ProtocolBootstrapFactory<? extends ProtocolBootstrap>> bootstrapFactories = new HashMap<>();
+    private static final HashMap<Protocol, ProtocolBootstrapFactory<? extends ProtocolBootstrap>> bootstrapFactories = new HashMap<>();
+
+    static {
+        bootstrapFactories.put(Protocol.NOOP, NoopProtocolBootstrapFactory.getInstance());
+        bootstrapFactories.put(Protocol.EPP, EppProtocolBootstrapFactory.getInstance());
+    }
 
     private ProtocolBootstrapFactoryImpl() {
-        bootstrapFactories.put(Protocol.EPP, EppProtocolBootstrapFactory.getInstance());
-        bootstrapFactories.put(Protocol.NOOP, NoopProtocolBootstrapFactory.getInstance());
     }
 
     public static ProtocolBootstrapFactoryImpl getInstance() {
