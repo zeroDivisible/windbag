@@ -36,6 +36,6 @@ public class ProtocolBootstrapFactoryImpl {
         ProtocolBootstrapFactory<? extends ProtocolBootstrap> protocolBootstrapFactory = bootstrapFactories.get(protocol);
 
         ProtocolBootstrap protocolBootstrap = protocolBootstrapFactory.newInstance();
-        return ClientConnection.getInstance(serverDetail, protocolBootstrap);
+        return ClientConnection.getInstance(serverDetail, null, protocolBootstrap);
     }
 }
