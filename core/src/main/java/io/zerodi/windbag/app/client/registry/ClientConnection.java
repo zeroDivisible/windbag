@@ -1,6 +1,7 @@
 package io.zerodi.windbag.app.client.registry;
 
 import com.google.common.base.Preconditions;
+
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.EventLoopGroup;
@@ -15,6 +16,7 @@ public final class ClientConnection {
     private EventLoopGroup eventLoopGroup;
     private final ServerDetail serverDetail;
     private final ProtocolBootstrap protocolBootstrap;
+    private boolean isConnected = false;
 
     private ClientConnection(ServerDetail serverDetail, EventLoopGroup eventLoopGroup, ProtocolBootstrap protocolBootstrap) {
         this.serverDetail = serverDetail;
@@ -49,6 +51,13 @@ public final class ClientConnection {
         bootstrap.group(eventLoopGroup);
     }
 
+    /**
+     * Connects to the server represented by this client connection. It uses {@link #serverDetail} to obtain the details of the server,
+     * {@link #protocolBootstrap} to get the details about the protocol and {@link #eventLoopGroup} as the event group processing
+     * everything.
+     *
+     * @return {@link io.netty.channel.ChannelFuture} obtained after creating of the connection.
+     */
     public ChannelFuture connect() {
         eventLoopGroup = new NioEventLoopGroup();
         replaceEventLookGroup(eventLoopGroup);
@@ -61,6 +70,8 @@ public final class ClientConnection {
         String serverAddress = serverDetail.getServerAddress();
         int serverPort = serverDetail.getServerPort();
 
-        return protocolBootstrap.getBootstrap().connect(serverAddress, serverPort);
+        ChannelFuture connect = protocolBootstrap.getBootstrap().connect(serverAddress, serverPort);
+        isConnected = true;
+        return connect;
     }
 }

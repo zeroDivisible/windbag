@@ -1,7 +1,6 @@
 package io.zerodi.windbag.app.client.protocol.noop;
 
 import io.netty.bootstrap.Bootstrap;
-import io.zerodi.windbag.app.client.protocol.Message;
 import io.zerodi.windbag.app.client.registry.ProtocolBootstrap;
 import io.zerodi.windbag.core.Protocol;
 
@@ -30,10 +29,5 @@ public class NoopProtocolBootstrap implements ProtocolBootstrap {
     @Override
     public Bootstrap getBootstrap() {
         return bootstrap;
-    }
-
-    @Override
-    public void onMessage(Message message) {
-        //TODO Implement
     }
 }

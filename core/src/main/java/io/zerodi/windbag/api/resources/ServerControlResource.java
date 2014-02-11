@@ -4,18 +4,17 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import io.zerodi.windbag.app.client.protocol.Message;
+import io.zerodi.windbag.app.client.protocol.epp.EppMessageReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.yammer.metrics.annotation.Timed;
 
-import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.zerodi.windbag.api.ApiSettings;
-import io.zerodi.windbag.api.representations.ServerDetail;
 import io.zerodi.windbag.app.client.registry.ChannelRegistryImpl;
 import io.zerodi.windbag.app.client.registry.ClientConnection;
-import io.zerodi.windbag.app.client.registry.ProtocolBootstrap;
 
 /**
  * Resource which is controlling servers defined in this application
@@ -46,12 +45,14 @@ public class ServerControlResource {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
 
-        ChannelFuture connect = clientConnection.connect().sync();
+        ChannelFuture connectFuture = clientConnection.connect().sync();
+        EppMessageReader eppMessageReader = (EppMessageReader) connectFuture.channel().pipeline().last();
+        return eppMessageReader.getMessage();
 
         // TODO find way of closing a channel
         // future.channel().closeFuture().sync();
 
-        return "connecting to " + serverId;
+        // return "connecting to " + serverId;
     }
 
     @GET
