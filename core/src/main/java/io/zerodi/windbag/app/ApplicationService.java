@@ -34,15 +34,15 @@ public class ApplicationService extends Service<ApplicationConfiguration> {
     @Override
     public void run(ApplicationConfiguration configuration, Environment environment) throws Exception {
         List<ServerDetail> defaultServers = configuration.getServers();
-        environment.addResource(ServerConfigurationResource.getInstance(defaultServers));
-        environment.addResource(ServerControlResource.getInstance());
+        ChannelRegistryImpl channelRegistry = addDefaultServers(environment, defaultServers);
 
-        addDefaultServers(environment, defaultServers);
+        environment.addResource(ServerConfigurationResource.getInstance(defaultServers));
+        environment.addResource(ServerControlResource.getInstance(channelRegistry));
 
         environment.addHealthCheck(ServerDefinitionHealthCheck.getInstance(defaultServers));
     }
 
-    private void addDefaultServers(Environment environment, List<ServerDetail> defaultServers) {
+    private ChannelRegistryImpl addDefaultServers(Environment environment, List<ServerDetail> defaultServers) {
         ProtocolBootstrapFactoryImpl protocolBootstrapFactory = ProtocolBootstrapFactoryImpl.getInstance();
         ChannelRegistryImpl channelRegistryImpl = ChannelRegistryImpl.getInstance();
         for (ServerDetail server : defaultServers) {
@@ -50,5 +50,7 @@ public class ApplicationService extends Service<ApplicationConfiguration> {
             channelRegistryImpl.registerClientConnection(clientConnection);
         }
         environment.manage(channelRegistryImpl);
+
+        return channelRegistryImpl;
     }
 }

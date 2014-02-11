@@ -5,6 +5,9 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+
 /**
  * @author zerodi
  */
@@ -20,7 +23,9 @@ public class ServerDetail {
 
     @NotEmpty
     @JsonProperty
-    private String serverPort;
+    @Min(1)
+    @Max(65535)
+    private int serverPort;
 
     @NotEmpty
     @JsonProperty
@@ -34,7 +39,7 @@ public class ServerDetail {
         return serverAddress;
     }
 
-    public String getServerPort() {
+    public int getServerPort() {
         return serverPort;
     }
 
@@ -46,7 +51,7 @@ public class ServerDetail {
         this.serverAddress = serverAddress;
     }
 
-    public void setServerPort(String serverPort) {
+    public void setServerPort(int serverPort) {
         this.serverPort = serverPort;
     }
 

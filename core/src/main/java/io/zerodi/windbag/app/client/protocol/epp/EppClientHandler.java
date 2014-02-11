@@ -43,8 +43,9 @@ public class EppClientHandler extends ChannelHandlerAdapter {
         byte[] readableBytes = new byte[buf.readableBytes()];
         buf.readBytes(readableBytes);
 
-        logger.info(new String(readableBytes, CharsetUtil.UTF_8));
-        ctx.close();
+        String receivedMessage = new String(readableBytes, CharsetUtil.UTF_8);
+        logger.info(receivedMessage);
+//        ctx.close();
     }
 
     @Override

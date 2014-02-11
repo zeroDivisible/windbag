@@ -35,12 +35,7 @@ public class ChannelRegistryImpl implements Managed, ChannelRegistry {
     public void start() throws Exception {
         logger.info("starting ChannelRegistryImpl");
 
-        ClientConnection devvm = clientChannelMap.get("devvm");
-        Bootstrap bootstrap = devvm.getProtocolBootstrap().getBootstrap();
 
-        // start the client
-        ChannelFuture future = bootstrap.connect("192.168.33.15", 8700).sync();
-        future.channel().closeFuture().sync();
     }
 
     @Override
