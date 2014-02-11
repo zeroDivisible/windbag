@@ -3,15 +3,13 @@ package io.zerodi.windbag.app.client.registry;
 import java.util.Collection;
 import java.util.HashMap;
 
-import io.netty.channel.EventLoopGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Preconditions;
 import com.yammer.dropwizard.lifecycle.Managed;
 
-import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.ChannelFuture;
+import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 
 /**
@@ -34,7 +32,6 @@ public class ChannelRegistryImpl implements Managed, ChannelRegistry {
     @Override
     public void start() throws Exception {
         logger.info("starting ChannelRegistryImpl");
-
 
     }
 
@@ -63,8 +60,6 @@ public class ChannelRegistryImpl implements Managed, ChannelRegistry {
             throw new RuntimeException("already registered " + serverId);
         }
 
-        NioEventLoopGroup eventLoopGroup = new NioEventLoopGroup();
-        clientConnection.replaceEventLookGroup(eventLoopGroup);
         clientChannelMap.put(serverId, clientConnection);
     }
 

@@ -12,14 +12,14 @@ import io.netty.handler.codec.ByteToMessageDecoder;
 /**
  * @author zerodi
  */
-public class EppClientDecoder extends ByteToMessageDecoder {
-    private static final Logger logger = LoggerFactory.getLogger(EppClientDecoder.class);
+public class EppMessageDecoder extends ByteToMessageDecoder {
+    private static final Logger logger = LoggerFactory.getLogger(EppMessageDecoder.class);
 
-    private EppClientDecoder() {
+    private EppMessageDecoder() {
     }
 
-    public static EppClientDecoder getInstance() {
-        return new EppClientDecoder();
+    public static EppMessageDecoder getInstance() {
+        return new EppMessageDecoder();
     }
 
     @Override

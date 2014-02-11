@@ -4,14 +4,18 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.yammer.metrics.annotation.Timed;
+
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
 import io.zerodi.windbag.api.ApiSettings;
 import io.zerodi.windbag.api.representations.ServerDetail;
 import io.zerodi.windbag.app.client.registry.ChannelRegistryImpl;
 import io.zerodi.windbag.app.client.registry.ClientConnection;
+import io.zerodi.windbag.app.client.registry.ProtocolBootstrap;
 
 /**
  * Resource which is controlling servers defined in this application
@@ -21,6 +25,7 @@ import io.zerodi.windbag.app.client.registry.ClientConnection;
 @Path(ApiSettings.API_URL_PREFIX + "/server")
 @Produces(MediaType.APPLICATION_JSON)
 public class ServerControlResource {
+    private static final Logger logger = LoggerFactory.getLogger(ServerControlResource.class);
 
     private final ChannelRegistryImpl channelRegistry;
 
@@ -41,15 +46,10 @@ public class ServerControlResource {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
 
-        Bootstrap bootstrap = clientConnection.getProtocolBootstrap().getBootstrap();
-        ServerDetail serverDetail = clientConnection.getServerDetail();
-
-        String serverAddress = serverDetail.getServerAddress();
-        int serverPort = serverDetail.getServerPort();
-        ChannelFuture future = bootstrap.connect(serverAddress, serverPort).sync();
+        ChannelFuture connect = clientConnection.connect().sync();
 
         // TODO find way of closing a channel
-//        future.channel().closeFuture().sync();
+        // future.channel().closeFuture().sync();
 
         return "connecting to " + serverId;
     }

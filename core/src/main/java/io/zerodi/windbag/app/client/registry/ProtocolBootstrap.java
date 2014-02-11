@@ -1,6 +1,7 @@
 package io.zerodi.windbag.app.client.registry;
 
 import io.netty.bootstrap.Bootstrap;
+import io.zerodi.windbag.app.client.protocol.Message;
 import io.zerodi.windbag.core.Protocol;
 
 /**
@@ -18,4 +19,6 @@ public interface ProtocolBootstrap {
      *         some of the communication logic)
      */
     public Bootstrap getBootstrap();
+
+    public void onMessage(Message message);
 }

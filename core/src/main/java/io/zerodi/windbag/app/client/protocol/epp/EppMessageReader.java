@@ -6,26 +6,28 @@ import org.slf4j.LoggerFactory;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.util.CharsetUtil;
+import io.zerodi.windbag.app.client.registry.ProtocolBootstrap;
 
 /**
  * @author zerodi
  */
-public class EppClientHandler extends ChannelHandlerAdapter {
-    private static final Logger logger = LoggerFactory.getLogger(EppClientHandler.class);
+public class EppMessageReader extends ChannelHandlerAdapter {
+    private static final Logger logger = LoggerFactory.getLogger(EppMessageReader.class);
+    private final ProtocolBootstrap protocolBootstrap;
 
     private ByteBuf buf;
 
-    private EppClientHandler() {
+    private EppMessageReader(ProtocolBootstrap protocolBootstrap) {
+        this.protocolBootstrap = protocolBootstrap;
     }
 
-    public static EppClientHandler getInstance() {
-        return new EppClientHandler();
+    public static EppMessageReader getInstance(ProtocolBootstrap protocolBootstrap) {
+        return new EppMessageReader(protocolBootstrap);
     }
 
     @Override
     public void handlerAdded(ChannelHandlerContext ctx) {
-        buf = ctx.alloc().buffer(1024);
+        buf = ctx.alloc().buffer(2048);
     }
 
     @Override
@@ -43,8 +45,7 @@ public class EppClientHandler extends ChannelHandlerAdapter {
         byte[] readableBytes = new byte[buf.readableBytes()];
         buf.readBytes(readableBytes);
 
-        String receivedMessage = new String(readableBytes, CharsetUtil.UTF_8);
-        logger.info(receivedMessage);
+        protocolBootstrap.onMessage(EppMessage.getInstance(readableBytes));
 //        ctx.close();
     }
 
