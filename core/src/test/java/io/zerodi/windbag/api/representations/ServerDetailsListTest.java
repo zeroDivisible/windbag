@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.zerodi.windbag.core.Protocol;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -32,11 +33,13 @@ public class ServerDetailsListTest {
         devvm.setName("devvm");
         devvm.setServerAddress("192.168.33.15");
         devvm.setServerPort("700");
+        devvm.setProtocol(Protocol.EPP);
 
         machine2 = new ServerDetail();
         machine2.setName("machine2");
         machine2.setServerAddress("192.168.33.20");
         machine2.setServerPort("701");
+        machine2.setProtocol(Protocol.EPP);
 
         serverDetails.add(devvm);
         serverDetails.add(machine2);

@@ -1,5 +1,6 @@
 package io.zerodi.windbag.api.representations;
 
+import io.zerodi.windbag.core.Protocol;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -20,6 +21,10 @@ public class ServerDetail {
     @NotEmpty
     @JsonProperty
     private String serverPort;
+
+    @NotEmpty
+    @JsonProperty
+    private Protocol protocol;
 
     public String getName() {
         return name;
@@ -43,5 +48,13 @@ public class ServerDetail {
 
     public void setServerPort(String serverPort) {
         this.serverPort = serverPort;
+    }
+
+    public Protocol getProtocol() {
+        return protocol;
+    }
+
+    public void setProtocol(Protocol protocol) {
+        this.protocol = protocol;
     }
 }

@@ -3,12 +3,14 @@
         {
             "name": "devvm",
             "serverAddress": "192.168.33.15",
-            "serverPort": "700"
+            "serverPort": "700",
+            "protocol": "EPP"
         },
         {
             "name": "machine2",
             "serverAddress": "192.168.33.20",
-            "serverPort": "701"
+            "serverPort": "701",
+            "protocol": "EPP"
         }
 
     ]
