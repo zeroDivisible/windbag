@@ -18,16 +18,16 @@ import io.zerodi.windbag.api.representations.ServerDetailsList;
  */
 @Path(ApiSettings.API_URL_PREFIX + "/configuration/servers")
 @Produces(MediaType.APPLICATION_JSON)
-public class ServerDetailsResource {
+public class ServerConfigurationResource {
 
     private final List<ServerDetail> serverDetails;
 
-    private ServerDetailsResource(List<ServerDetail> serverDetails) {
+    private ServerConfigurationResource(List<ServerDetail> serverDetails) {
         this.serverDetails = serverDetails;
     }
 
-    public static ServerDetailsResource getInstance(List<ServerDetail> serverDetails) {
-        return new ServerDetailsResource(serverDetails);
+    public static ServerConfigurationResource getInstance(List<ServerDetail> serverDetails) {
+        return new ServerConfigurationResource(serverDetails);
     }
 
     @GET

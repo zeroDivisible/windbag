@@ -16,7 +16,6 @@ public class ApplicationConfiguration extends Configuration {
     @JsonProperty
     private List<ServerDetail> servers;
 
-
     public List<ServerDetail> getServers() {
         return servers;
     }

@@ -4,9 +4,15 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.yammer.dropwizard.Service;
 import com.yammer.dropwizard.config.Bootstrap;
 import com.yammer.dropwizard.config.Environment;
-import io.zerodi.windbag.app.client.netty.ServerChannelRegistry;
+import io.zerodi.windbag.api.representations.ServerDetail;
+import io.zerodi.windbag.api.resources.ServerConfigurationResource;
+import io.zerodi.windbag.api.resources.ServerControlResource;
+import io.zerodi.windbag.app.client.protocol.ProtocolBootstrapFactoryImpl;
+import io.zerodi.windbag.app.client.registry.ChannelRegistryImpl;
+import io.zerodi.windbag.app.client.registry.ClientConnection;
 import io.zerodi.windbag.app.healthcheck.ServerDefinitionHealthCheck;
-import io.zerodi.windbag.api.resources.ServerDetailsResource;
+
+import java.util.List;
 
 /**
  * Main class, spinning the core application.
@@ -27,10 +33,22 @@ public class ApplicationService extends Service<ApplicationConfiguration> {
 
     @Override
     public void run(ApplicationConfiguration configuration, Environment environment) throws Exception {
-        ServerChannelRegistry serverChannelRegistry = ServerChannelRegistry.getInstance();
-        environment.manage(serverChannelRegistry);
+        List<ServerDetail> defaultServers = configuration.getServers();
+        environment.addResource(ServerConfigurationResource.getInstance(defaultServers));
+        environment.addResource(ServerControlResource.getInstance());
 
-        environment.addResource(ServerDetailsResource.getInstance(configuration.getServers()));
-        environment.addHealthCheck(ServerDefinitionHealthCheck.getInstance(configuration.getServers()));
+        addDefaultServers(environment, defaultServers);
+
+        environment.addHealthCheck(ServerDefinitionHealthCheck.getInstance(defaultServers));
+    }
+
+    private void addDefaultServers(Environment environment, List<ServerDetail> defaultServers) {
+        ProtocolBootstrapFactoryImpl protocolBootstrapFactory = ProtocolBootstrapFactoryImpl.getInstance();
+        ChannelRegistryImpl channelRegistryImpl = ChannelRegistryImpl.getInstance();
+        for (ServerDetail server : defaultServers) {
+            ClientConnection clientConnection = protocolBootstrapFactory.createClientConnection(server);
+            channelRegistryImpl.registerClientConnection(clientConnection);
+        }
+        environment.manage(channelRegistryImpl);
     }
 }
