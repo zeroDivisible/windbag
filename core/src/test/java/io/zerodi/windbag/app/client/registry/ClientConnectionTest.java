@@ -1,7 +1,5 @@
 package io.zerodi.windbag.app.client.registry;
 
-import static org.fest.assertions.Assertions.assertThat;
-
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -9,13 +7,11 @@ import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.CharsetUtil;
 import io.zerodi.windbag.api.representations.ServerDetail;
-import io.zerodi.windbag.app.client.protocol.epp.EppMessageReader;
 import io.zerodi.windbag.app.client.protocol.epp.EppProtocolBootstrapFactory;
 import io.zerodi.windbag.core.Protocol;
 
@@ -36,16 +32,6 @@ public class ClientConnectionTest {
 
         ProtocolBootstrap eppProtocolBootstrap = EppProtocolBootstrapFactory.getInstance().newInstance();
         clientConnection = ClientConnection.getInstance(serverDetail, eppProtocolBootstrap);
-    }
-
-    @Test
-    public void itShouldConnectToRemoteMachine() throws InterruptedException {
-        // given
-        ChannelFuture sync = clientConnection.connect().sync();
-        EppMessageReader eppMessageReader = (EppMessageReader) sync.channel().pipeline().last();
-        String message = eppMessageReader.getMessage();
-
-        assertThat(message).isNotNull();
     }
 
     @Test

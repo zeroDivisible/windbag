@@ -53,13 +53,13 @@ public class ServerControlResource {
         EppMessageReader eppMessageReader = (EppMessageReader) connectFuture.channel().pipeline().last();
 
         ByteBuf byteBuf = Unpooled.buffer();
-        byteBuf.writeBytes(new String("<epp>dupa</epp>").getBytes(CharsetUtil.UTF_8));
+        byteBuf.writeBytes("<epp>dupa</epp>".getBytes(CharsetUtil.UTF_8));
 
         connectFuture.channel().writeAndFlush(byteBuf).sync();
 
-        String message = eppMessageReader.getMessage();
+//        String message = eppMessageReader.getMessage();
 
-        return message;
+        return "done.";
 
         // TODO find way of closing a channel
         // future.channel().closeFuture().sync();

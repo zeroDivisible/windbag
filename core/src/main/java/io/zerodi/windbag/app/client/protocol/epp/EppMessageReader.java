@@ -3,6 +3,7 @@ package io.zerodi.windbag.app.client.protocol.epp;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import io.zerodi.windbag.app.client.protocol.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,8 +16,6 @@ import io.netty.channel.ChannelHandlerContext;
  */
 public class EppMessageReader extends ChannelHandlerAdapter {
     private static final Logger logger = LoggerFactory.getLogger(EppMessageReader.class);
-    private final BlockingQueue<String> answer = new LinkedBlockingQueue<>();
-
     private ByteBuf buf;
 
     private EppMessageReader() {
@@ -46,28 +45,13 @@ public class EppMessageReader extends ChannelHandlerAdapter {
         byte[] readableBytes = new byte[buf.readableBytes()];
         buf.readBytes(readableBytes);
 
-        EppMessage message = (EppMessage) EppMessage.getInstance(readableBytes);
-        answer.offer(message.getMessage());
+        Message instance = EppMessage.getInstance(readableBytes);
+        logger.debug("{}", instance);
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        logger.error(cause.getMessage(), cause);
+        logger.error("while reading EPP message", cause);
         ctx.close();
-    }
-
-    public String getMessage() {
-        boolean interrupted = false;
-        for (;;) {
-            try {
-                String message = answer.take();
-                if (interrupted) {
-                    Thread.currentThread().interrupt();
-                }
-                return message;
-            } catch (InterruptedException e) {
-                interrupted = true;
-            }
-        }
     }
 }

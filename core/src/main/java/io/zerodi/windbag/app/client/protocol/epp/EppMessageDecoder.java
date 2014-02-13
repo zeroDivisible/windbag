@@ -26,7 +26,7 @@ public class EppMessageDecoder extends ByteToMessageDecoder {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        logger.error(cause.getMessage(), cause);
+        logger.error("while decoding EPP message", cause);
         ctx.close();
     }
 
