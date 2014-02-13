@@ -1,5 +1,10 @@
 package io.zerodi.windbag.app.client.registry;
 
+import static org.fest.assertions.Assertions.assertThat;
+
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -8,16 +13,11 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.util.CharsetUtil;
 import io.zerodi.windbag.api.representations.ServerDetail;
 import io.zerodi.windbag.app.client.protocol.epp.EppMessageReader;
 import io.zerodi.windbag.app.client.protocol.epp.EppProtocolBootstrapFactory;
 import io.zerodi.windbag.core.Protocol;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-
-import static org.fest.assertions.Assertions.assertThat;
 
 /**
  * @author zerodi
@@ -59,8 +59,9 @@ public class ClientConnectionTest {
         Channel ch = b.connect("192.168.33.15", 8700).sync().channel();
 
         ByteBuf byteBuf = Unpooled.buffer();
-        byteBuf.writeBytes(new String("<epp>dupa</epp>").getBytes(CharsetUtil.UTF_8));
+        byteBuf.writeBytes(new String("X").getBytes(CharsetUtil.UTF_8));
 
         ch.writeAndFlush(byteBuf).sync();
+        Thread.sleep(1000);
     }
 }
