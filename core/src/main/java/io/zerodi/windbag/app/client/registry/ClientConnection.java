@@ -16,16 +16,14 @@ public final class ClientConnection {
     private EventLoopGroup eventLoopGroup;
     private final ServerDetail serverDetail;
     private final ProtocolBootstrap protocolBootstrap;
-    private boolean isConnected = false;
 
-    private ClientConnection(ServerDetail serverDetail, EventLoopGroup eventLoopGroup, ProtocolBootstrap protocolBootstrap) {
+    private ClientConnection(ServerDetail serverDetail, ProtocolBootstrap protocolBootstrap) {
         this.serverDetail = serverDetail;
-        this.eventLoopGroup = eventLoopGroup;
         this.protocolBootstrap = protocolBootstrap;
     }
 
-    public static ClientConnection getInstance(ServerDetail serverDetail, EventLoopGroup eventLoopGroup, ProtocolBootstrap protocolBootstrap) {
-        return new ClientConnection(serverDetail, eventLoopGroup, protocolBootstrap);
+    public static ClientConnection getInstance(ServerDetail serverDetail, ProtocolBootstrap protocolBootstrap) {
+        return new ClientConnection(serverDetail, protocolBootstrap);
     }
 
     public ProtocolBootstrap getProtocolBootstrap() {
@@ -70,8 +68,6 @@ public final class ClientConnection {
         String serverAddress = serverDetail.getServerAddress();
         int serverPort = serverDetail.getServerPort();
 
-        ChannelFuture connect = protocolBootstrap.getBootstrap().connect(serverAddress, serverPort);
-        isConnected = true;
-        return connect;
+        return protocolBootstrap.getBootstrap().connect(serverAddress, serverPort);
     }
 }

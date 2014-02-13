@@ -1,5 +1,7 @@
 package io.zerodi.windbag.app.client.protocol.epp;
 
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +30,7 @@ public class EppProtocolBootstrap implements ProtocolBootstrap {
 
             @Override
             protected void initChannel(SocketChannel ch) throws Exception {
-                ch.pipeline().addLast(EppMessageDecoder.getInstance(), EppMessageReader.getInstance());
+                ch.pipeline().addLast(new LoggingHandler(LogLevel.DEBUG), EppMessageDecoder.getInstance(), EppMessageReader.getInstance());
             }
         });
     }

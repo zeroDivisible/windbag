@@ -4,15 +4,19 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import io.zerodi.windbag.app.client.protocol.Message;
-import io.zerodi.windbag.app.client.protocol.epp.EppMessageReader;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.EmptyByteBuf;
+import io.netty.buffer.Unpooled;
+import io.netty.util.CharsetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.yammer.metrics.annotation.Timed;
 
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.zerodi.windbag.api.ApiSettings;
+import io.zerodi.windbag.app.client.protocol.epp.EppMessageReader;
 import io.zerodi.windbag.app.client.registry.ChannelRegistryImpl;
 import io.zerodi.windbag.app.client.registry.ClientConnection;
 
@@ -47,12 +51,18 @@ public class ServerControlResource {
 
         ChannelFuture connectFuture = clientConnection.connect().sync();
         EppMessageReader eppMessageReader = (EppMessageReader) connectFuture.channel().pipeline().last();
-        return eppMessageReader.getMessage();
+
+        ByteBuf byteBuf = Unpooled.buffer();
+        byteBuf.writeBytes(new String("<epp>dupa</epp>").getBytes(CharsetUtil.UTF_8));
+
+        connectFuture.channel().writeAndFlush(byteBuf).sync();
+
+        String message = eppMessageReader.getMessage();
+
+        return message;
 
         // TODO find way of closing a channel
         // future.channel().closeFuture().sync();
-
-        // return "connecting to " + serverId;
     }
 
     @GET
