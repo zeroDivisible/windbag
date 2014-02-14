@@ -19,6 +19,8 @@ import io.zerodi.windbag.app.client.registry.ChannelRegistryImpl;
 
 import java.util.concurrent.TimeUnit;
 
+import static javax.ws.rs.core.Response.Status;
+
 /**
  * Resource which is controlling servers defined in this application
  *
@@ -43,10 +45,7 @@ public class ServerControlResource {
     @Path("{serverId}/connect")
     @Timed
     public String connectToServer(@PathParam("serverId") String serverId) throws InterruptedException {
-        Connection connection = channelRegistry.getConnection(serverId);
-        if (connection == null) {
-            throw new WebApplicationException(Response.Status.NOT_FOUND);
-        }
+        Connection connection = findServer(serverId);
 
         // connects and waits till the connection is successful.
         boolean connected = connection.connect().awaitUninterruptibly(10, TimeUnit.SECONDS);
@@ -54,7 +53,7 @@ public class ServerControlResource {
         if (connected) {
             logger.debug("connection successful for {}", serverId);
         } else {
-            throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
+            throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR);
         }
 
         return "done.";
@@ -64,6 +63,10 @@ public class ServerControlResource {
     @Path("{serverId}/disconnect")
     @Timed
     public String disconnectFromServer(@PathParam("serverId") String serverId) {
+        Connection connection = findServer(serverId);
+        if (connection.isConnected()) {
+            connection.disconnect();
+        }
         return "disconnecting from " + serverId;
     }
 
@@ -73,11 +76,27 @@ public class ServerControlResource {
     public String sendMessage(@PathParam("serverId") String serverId, @PathParam("message") String message) throws InterruptedException {
         Connection connection = channelRegistry.getConnection(serverId);
         if (connection == null) {
-            throw new WebApplicationException(Response.Status.NOT_FOUND);
+            throw new WebApplicationException(Status.NOT_FOUND);
         }
 
         connection.sendMessage(null).sync();
         return "done.";
     }
 
+    /**
+     * @param serverId
+     *            which we would like to retrieve from the registry
+     * @return found {@link io.zerodi.windbag.app.client.protocol.Connection}
+     *
+     * @throws javax.ws.rs.WebApplicationException
+     *             with status of {@link javax.ws.rs.core.Response.Status#NOT_FOUND NOT_FOUND} if none matches the name.
+     */
+    private Connection findServer(String serverId) {
+        Connection connection = channelRegistry.getConnection(serverId);
+        if (connection == null) {
+            throw new WebApplicationException(Status.NOT_FOUND);
+        }
+
+        return connection;
+    }
 }

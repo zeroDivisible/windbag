@@ -11,10 +11,24 @@ import io.zerodi.windbag.app.client.registry.ProtocolBootstrap;
  */
 public interface Connection {
 
+    /**
+     * @return {@link io.netty.channel.ChannelFuture} returned when opening a channel to remote server.
+     */
     public ChannelFuture connect();
+
+    /**
+     * @return {@link io.netty.channel.ChannelFuture} returned when closing a channel to remote server.
+     */
     public ChannelFuture disconnect();
+
+    /**
+     * @return {@link io.netty.channel.ChannelFuture} returned when reopening a channel to remote server.
+     */
     public ChannelFuture reconnect();
 
+    /**
+     * @return <code>true</code> if channel to remote server is open
+     */
     public boolean isConnected();
 
     public ChannelFuture sendMessage(Message message);

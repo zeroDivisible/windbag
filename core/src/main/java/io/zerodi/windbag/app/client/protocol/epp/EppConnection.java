@@ -2,19 +2,19 @@ package io.zerodi.windbag.app.client.protocol.epp;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import io.netty.channel.Channel;
+import io.netty.channel.*;
 import io.netty.util.CharsetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.zerodi.windbag.api.representations.ServerDetail;
 import io.zerodi.windbag.app.client.protocol.Connection;
 import io.zerodi.windbag.app.client.protocol.Message;
 import io.zerodi.windbag.app.client.registry.ProtocolBootstrap;
+
+import java.util.concurrent.Future;
 
 /**
  * @author zerodi
@@ -74,14 +74,20 @@ public class EppConnection implements Connection {
 
     @Override
     public ChannelFuture disconnect() {
-        // TODO Implement
-        logger.debug("disconnecting");
         if (channel != null) {
-            channel.close();
+            connected = false;
+            ChannelFuture channelFuture = channel.close().addListener(new ChannelFutureListener() {
+                @Override
+                public void operationComplete(ChannelFuture future) throws Exception {
+                    logger.debug("disconnected.");
+                    connected = false;
+                }
+            });
+            return channelFuture;
+        } else {
+            connected = false;
+            return null;
         }
-
-        connected = false;
-        return null;
     }
 
     @Override
