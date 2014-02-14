@@ -3,14 +3,14 @@ package io.zerodi.windbag.app.client.registry;
 import java.util.Collection;
 import java.util.HashMap;
 
+import io.zerodi.windbag.api.representations.ServerDetail;
+import io.zerodi.windbag.app.client.protocol.Connection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Preconditions;
 import com.yammer.dropwizard.lifecycle.Managed;
-
 import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
 
 /**
  * Simple, test implementation of TcpServer which is getting managed with the lifecycle of the whole stack.
@@ -20,7 +20,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 public class ChannelRegistryImpl implements Managed, ChannelRegistry {
     private static final Logger logger = LoggerFactory.getLogger(ChannelRegistryImpl.class);
 
-    private HashMap<String, ClientConnection> clientChannelMap = new HashMap<>();
+    private HashMap<String, Connection> connectionHashMap = new HashMap<>();
 
     private ChannelRegistryImpl() {
     }
@@ -31,47 +31,47 @@ public class ChannelRegistryImpl implements Managed, ChannelRegistry {
 
     @Override
     public void start() throws Exception {
-        logger.info("starting ChannelRegistryImpl");
+        logger.info("starting channel registry");
 
     }
 
     @Override
     public void stop() throws Exception {
-        logger.info("stopping ChannelRegistryImpl");
+        logger.info("stopping channel registry");
 
-        Collection<ClientConnection> values = clientChannelMap.values();
-        for (ClientConnection clientConnection : values) {
-            EventLoopGroup eventLoopGroup = clientConnection.getEventLoopGroup();
-
-            if (eventLoopGroup != null) {
-                eventLoopGroup.shutdownGracefully();
+        Collection<Connection> values = connectionHashMap.values();
+        for (Connection connection : values) {
+            if (connection.isConnected()) {
+                connection.disconnect();
             }
         }
     }
 
     @Override
-    public void registerClientConnection(ClientConnection clientConnection) {
-        Preconditions.checkNotNull(clientConnection, "bootstrap cannot be null!");
-        String serverId = clientConnection.getServerDetail().getName();
-        Preconditions.checkNotNull(serverId, "clientConnection.getServerDetail().getName() cannot be null!");
-        Preconditions.checkNotNull(clientConnection.getProtocolBootstrap(), "clientConnection.getProtocolBootstrap() cannot be null!");
+    public void registerConnection(Connection connection) {
+        Preconditions.checkNotNull(connection.getProtocolBootstrap(), "connection.getProtocolBootstrap() cannot be null!");
 
-        if (clientChannelMap.containsKey(serverId)) {
+        ServerDetail serverDetail = connection.getServerDetail();
+        Preconditions.checkNotNull(serverDetail, "connection.getServerDetail() cannot be null!");
+        String serverId = serverDetail.getName();
+        Preconditions.checkNotNull(serverId, "clientConnection.getServerDetail().getName() cannot be null!");
+
+        if (connectionHashMap.containsKey(serverId)) {
             throw new RuntimeException("already registered " + serverId);
         }
 
-        clientChannelMap.put(serverId, clientConnection);
+        connectionHashMap.put(serverId, connection);
     }
 
     @Override
-    public ClientConnection getClientConnection(String serverId) {
+    public Connection getConnection(String serverId) {
         Preconditions.checkNotNull(serverId, "serverId cannot be null!");
 
-        if (!clientChannelMap.containsKey(serverId)) {
+        if (!connectionHashMap.containsKey(serverId)) {
             return null;
         }
 
-        return clientChannelMap.get(serverId);
+        return connectionHashMap.get(serverId);
     }
 
 }

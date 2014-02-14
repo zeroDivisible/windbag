@@ -7,9 +7,9 @@ import com.yammer.dropwizard.config.Environment;
 import io.zerodi.windbag.api.representations.ServerDetail;
 import io.zerodi.windbag.api.resources.ServerConfigurationResource;
 import io.zerodi.windbag.api.resources.ServerControlResource;
+import io.zerodi.windbag.app.client.protocol.Connection;
 import io.zerodi.windbag.app.client.protocol.ProtocolBootstrapFactoryImpl;
 import io.zerodi.windbag.app.client.registry.ChannelRegistryImpl;
-import io.zerodi.windbag.app.client.registry.ClientConnection;
 import io.zerodi.windbag.app.healthcheck.ServerDefinitionHealthCheck;
 
 import java.util.List;
@@ -46,8 +46,8 @@ public class ApplicationService extends Service<ApplicationConfiguration> {
         ProtocolBootstrapFactoryImpl protocolBootstrapFactory = ProtocolBootstrapFactoryImpl.getInstance();
         ChannelRegistryImpl channelRegistryImpl = ChannelRegistryImpl.getInstance();
         for (ServerDetail server : defaultServers) {
-            ClientConnection clientConnection = protocolBootstrapFactory.createClientConnection(server);
-            channelRegistryImpl.registerClientConnection(clientConnection);
+            Connection clientConnection = protocolBootstrapFactory.createConnection(server);
+            channelRegistryImpl.registerConnection(clientConnection);
         }
         environment.manage(channelRegistryImpl);
 

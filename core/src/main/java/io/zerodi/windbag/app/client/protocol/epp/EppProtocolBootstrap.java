@@ -26,13 +26,7 @@ public class EppProtocolBootstrap implements ProtocolBootstrap {
         bootstrap.channel(NioSocketChannel.class);
         bootstrap.option(ChannelOption.SO_KEEPALIVE, true);
 
-        bootstrap.handler(new ChannelInitializer<SocketChannel>() {
-
-            @Override
-            protected void initChannel(SocketChannel ch) throws Exception {
-                ch.pipeline().addLast(new LoggingHandler(LogLevel.DEBUG), EppMessageDecoder.getInstance(), EppMessageReader.getInstance());
-            }
-        });
+        bootstrap.handler(ChannelConfigurator.getInstance());
     }
 
     public static EppProtocolBootstrap getInstance() {

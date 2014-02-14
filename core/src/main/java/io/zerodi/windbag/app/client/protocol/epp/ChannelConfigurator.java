@@ -1,4 +1,4 @@
-package io.zerodi.windbag.app.client.registry;
+package io.zerodi.windbag.app.client.protocol.epp;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
@@ -8,13 +8,21 @@ import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
-import io.zerodi.windbag.app.client.protocol.epp.EppMessageDecoder;
 
 /**
  * Configures a channel for handling EPP messages.
+ *
  * @author zerodi
  */
 public class ChannelConfigurator extends ChannelInitializer<SocketChannel> {
+
+    private ChannelConfigurator() {
+    }
+
+    public static ChannelConfigurator getInstance() {
+        return new ChannelConfigurator();
+    }
+
     @Override
     protected void initChannel(SocketChannel ch) throws Exception {
         ChannelPipeline pipeline = ch.pipeline();
@@ -24,6 +32,6 @@ public class ChannelConfigurator extends ChannelInitializer<SocketChannel> {
         pipeline.addLast("epp-message-decoder", EppMessageDecoder.getInstance());
         pipeline.addLast("string-decoder", new StringDecoder());
         pipeline.addLast("string-encoder", new StringEncoder());
-        pipeline.addLast("test-handler", new TestHandler());
+        pipeline.addLast("test-handler", EppMessageReceiver.getInstance());
     }
 }

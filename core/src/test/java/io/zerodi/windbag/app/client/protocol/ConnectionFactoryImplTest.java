@@ -1,18 +1,18 @@
 package io.zerodi.windbag.app.client.protocol;
 
-import io.zerodi.windbag.api.representations.ServerDetail;
-import io.zerodi.windbag.app.client.registry.ClientConnection;
-import io.zerodi.windbag.app.client.registry.ProtocolBootstrap;
-import io.zerodi.windbag.core.Protocol;
+import static org.fest.assertions.Assertions.assertThat;
+
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.fest.assertions.Assertions.assertThat;
+import io.zerodi.windbag.api.representations.ServerDetail;
+import io.zerodi.windbag.app.client.registry.ProtocolBootstrap;
+import io.zerodi.windbag.core.Protocol;
 
 /**
  * @author zerodi
  */
-public class ProtocolBootstrapFactoryImplTest {
+public class ConnectionFactoryImplTest {
 
     private ProtocolBootstrapFactoryImpl bootstrapFactory;
 
@@ -28,8 +28,8 @@ public class ProtocolBootstrapFactoryImplTest {
         serverDetail.setProtocol(Protocol.NOOP);
 
         // when
-        ClientConnection clientConnection = bootstrapFactory.createClientConnection(serverDetail);
-        ProtocolBootstrap protocolBootstrap = clientConnection.getProtocolBootstrap();
+        Connection connection = bootstrapFactory.createConnection(serverDetail);
+        ProtocolBootstrap protocolBootstrap = connection.getProtocolBootstrap();
 
         // then
         assertThat(protocolBootstrap).isNotNull();

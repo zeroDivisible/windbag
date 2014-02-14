@@ -1,6 +1,7 @@
 package io.zerodi.windbag.app.client.registry;
 
 import io.zerodi.windbag.api.representations.ServerDetail;
+import io.zerodi.windbag.app.client.protocol.Connection;
 import io.zerodi.windbag.app.client.protocol.ProtocolBootstrapFactoryImpl;
 import io.zerodi.windbag.core.Protocol;
 import org.testng.annotations.BeforeMethod;
@@ -29,13 +30,13 @@ public class ChannelRegistryImplTest {
         serverDetail.setName("serverId");
         serverDetail.setProtocol(Protocol.NOOP);
 
-        ClientConnection clientConnection = protocolBootstrapFactory.createClientConnection(serverDetail);
+        Connection connection = protocolBootstrapFactory.createConnection(serverDetail);
 
         // when
-        channelRegistryImpl.registerClientConnection(clientConnection);
-        ProtocolBootstrap returnedBootstrap = channelRegistryImpl.getClientConnection("serverId").getProtocolBootstrap();
+        channelRegistryImpl.registerConnection(connection);
+        ProtocolBootstrap returnedBootstrap = channelRegistryImpl.getConnection("serverId").getProtocolBootstrap();
 
         // then
-        assertThat(returnedBootstrap).isEqualTo(clientConnection.getProtocolBootstrap());
+        assertThat(returnedBootstrap).isEqualTo(connection.getProtocolBootstrap());
     }
 }

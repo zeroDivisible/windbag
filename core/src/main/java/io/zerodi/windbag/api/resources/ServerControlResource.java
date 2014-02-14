@@ -4,21 +4,18 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.EmptyByteBuf;
-import io.netty.buffer.Unpooled;
-import io.netty.util.CharsetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.yammer.metrics.annotation.Timed;
 
-import io.netty.channel.Channel;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
+import io.netty.util.CharsetUtil;
 import io.zerodi.windbag.api.ApiSettings;
-import io.zerodi.windbag.app.client.protocol.epp.EppMessageReader;
+import io.zerodi.windbag.app.client.protocol.Connection;
 import io.zerodi.windbag.app.client.registry.ChannelRegistryImpl;
-import io.zerodi.windbag.app.client.registry.ClientConnection;
 
 /**
  * Resource which is controlling servers defined in this application
@@ -44,25 +41,13 @@ public class ServerControlResource {
     @Path("{serverId}/connect")
     @Timed
     public String connectToServer(@PathParam("serverId") String serverId) throws InterruptedException {
-        ClientConnection clientConnection = channelRegistry.getClientConnection(serverId);
-        if (clientConnection == null) {
+        Connection connection = channelRegistry.getConnection(serverId);
+        if (connection == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
 
-        ChannelFuture connectFuture = clientConnection.connect().sync();
-        EppMessageReader eppMessageReader = (EppMessageReader) connectFuture.channel().pipeline().last();
-
-        ByteBuf byteBuf = Unpooled.buffer();
-        byteBuf.writeBytes("<epp>dupa</epp>".getBytes(CharsetUtil.UTF_8));
-
-        connectFuture.channel().writeAndFlush(byteBuf).sync();
-
-//        String message = eppMessageReader.getMessage();
-
+        ChannelFuture connectFuture = connection.connect().sync();
         return "done.";
-
-        // TODO find way of closing a channel
-        // future.channel().closeFuture().sync();
     }
 
     @GET
@@ -75,8 +60,14 @@ public class ServerControlResource {
     @GET
     @Path("{serverId}/send/{message}")
     @Timed
-    public String sendMessage(@PathParam("serverId") String serverId, @PathParam("message") String message) {
-        return "will send '" + message + "' to " + serverId;
+    public String sendMessage(@PathParam("serverId") String serverId, @PathParam("message") String message) throws InterruptedException {
+        Connection connection = channelRegistry.getConnection(serverId);
+        if (connection == null) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
+
+        connection.sendMessage(null).sync();
+        return "done.";
     }
 
 }
