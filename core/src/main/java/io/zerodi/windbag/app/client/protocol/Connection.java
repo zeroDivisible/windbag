@@ -12,10 +12,10 @@ import io.zerodi.windbag.app.client.registry.ProtocolBootstrap;
 public interface Connection {
 
     public ChannelFuture connect();
+    public ChannelFuture disconnect();
+    public ChannelFuture reconnect();
 
     public boolean isConnected();
-
-    public ChannelFuture disconnect();
 
     public ChannelFuture sendMessage(Message message);
 

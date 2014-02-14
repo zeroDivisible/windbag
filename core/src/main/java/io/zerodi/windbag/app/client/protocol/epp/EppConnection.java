@@ -86,6 +86,12 @@ public class EppConnection implements Connection {
     }
 
     @Override
+    public ChannelFuture reconnect() {
+        disconnect();
+        return connect();
+    }
+
+    @Override
     public ChannelFuture sendMessage(Message message) {
         logger.debug("sending message...");
 
