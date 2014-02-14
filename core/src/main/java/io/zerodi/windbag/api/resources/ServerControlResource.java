@@ -17,6 +17,8 @@ import io.zerodi.windbag.api.ApiSettings;
 import io.zerodi.windbag.app.client.protocol.Connection;
 import io.zerodi.windbag.app.client.registry.ChannelRegistryImpl;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Resource which is controlling servers defined in this application
  *
@@ -46,7 +48,15 @@ public class ServerControlResource {
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
 
-        ChannelFuture connectFuture = connection.connect().sync();
+        // connects and waits till the connection is successful.
+        boolean connected = connection.connect().awaitUninterruptibly(10, TimeUnit.SECONDS);
+
+        if (connected) {
+            logger.debug("connection successful for {}", serverId);
+        } else {
+            throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
+        }
+
         return "done.";
     }
 
