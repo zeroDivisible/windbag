@@ -81,7 +81,6 @@ public class EppConnection implements Connection {
         }
 
         connected = false;
-
         return null;
     }
 
@@ -100,8 +99,7 @@ public class EppConnection implements Connection {
         byteBuf.writeBytes("X".getBytes(CharsetUtil.UTF_8));
 
         try {
-            ChannelFuture sendingFuture = channel.writeAndFlush(byteBuf).sync();
-            return sendingFuture;
+            return channel.writeAndFlush(byteBuf).sync();
         } catch (InterruptedException e) {
             logger.error("while sending message", e);
             return null;
