@@ -27,11 +27,9 @@ public class ChannelConfigurator extends ChannelInitializer<SocketChannel> {
     protected void initChannel(SocketChannel ch) throws Exception {
         ChannelPipeline pipeline = ch.pipeline();
 
-        pipeline.addLast("logger", new LoggingHandler(LogLevel.DEBUG));
         pipeline.addLast("length-prepender", new LengthFieldPrepender(4, true));
         pipeline.addLast("epp-message-decoder", EppMessageDecoder.getInstance());
         pipeline.addLast("string-decoder", new StringDecoder());
         pipeline.addLast("string-encoder", new StringEncoder());
-        pipeline.addLast("test-handler", EppMessageReceiver.getInstance());
     }
 }

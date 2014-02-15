@@ -1,25 +1,25 @@
 package io.zerodi.windbag.api.resources;
 
+import static javax.ws.rs.core.Response.Status;
+
+import java.util.concurrent.TimeUnit;
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.yammer.metrics.annotation.Timed;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
-import io.netty.util.CharsetUtil;
+import io.netty.channel.ChannelFutureListener;
 import io.zerodi.windbag.api.ApiSettings;
 import io.zerodi.windbag.app.client.protocol.Connection;
+import io.zerodi.windbag.app.client.protocol.Message;
+import io.zerodi.windbag.app.client.protocol.epp.EppMessage;
+import io.zerodi.windbag.app.client.protocol.epp.ResponseReceiver;
 import io.zerodi.windbag.app.client.registry.ChannelRegistryImpl;
-
-import java.util.concurrent.TimeUnit;
-
-import static javax.ws.rs.core.Response.Status;
 
 /**
  * Resource which is controlling servers defined in this application
@@ -76,14 +76,25 @@ public class ServerControlResource {
     @GET
     @Path("{serverId}/send/{message}")
     @Timed
-    public String sendMessage(@PathParam("serverId") String serverId, @PathParam("message") String message) throws InterruptedException {
+    public String sendMessage(@PathParam("serverId") String serverId, @PathParam("message") final String message)
+            throws InterruptedException {
         Connection connection = channelRegistry.getConnection(serverId);
         if (connection == null) {
             throw new WebApplicationException(Status.NOT_FOUND);
         }
 
-        connection.sendMessage(null).sync();
-        return "done.";
+        if (!connection.isConnected()) {
+            connection.connect().sync();
+        }
+
+        final Message messageToSend = EppMessage.getInstance(message);
+        connection.sendMessage(messageToSend).sync();
+
+        while (messageToSend.getResponse() == null) {
+            Thread.sleep(1000);
+        }
+
+        return messageToSend.getResponse();
     }
 
     /**
