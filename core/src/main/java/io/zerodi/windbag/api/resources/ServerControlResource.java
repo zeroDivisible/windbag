@@ -48,14 +48,17 @@ public class ServerControlResource {
         Connection connection = findServer(serverId);
 
         // connects and waits till the connection is successful.
-        boolean connected = connection.connect().awaitUninterruptibly(10, TimeUnit.SECONDS);
+        ChannelFuture connectionFuture = connection.connect();
+        if (connectionFuture != null) {
+            boolean connected = connectionFuture.awaitUninterruptibly(10, TimeUnit.SECONDS);
 
-        if (connected) {
-            logger.debug("connection successful for {}", serverId);
-        } else {
-            throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR);
+            if (connected) {
+                logger.debug("connection successful for {}", serverId);
+            } else {
+                throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR);
+            }
+
         }
-
         return "done.";
     }
 
