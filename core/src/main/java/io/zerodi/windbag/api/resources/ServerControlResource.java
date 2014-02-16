@@ -81,10 +81,6 @@ public class ServerControlResource {
             throw new WebApplicationException(Status.NOT_FOUND);
         }
 
-        if (!connection.isConnected()) {
-            connection.connect().sync();
-        }
-
         final Message messageToSend = StringMessage.getInstance(message);
         connection.sendMessage(messageToSend).sync();
 
