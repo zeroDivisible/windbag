@@ -2,6 +2,7 @@
 ext {
     dropwizardVersion = '0.6.2'
     festAssertionsVersion = '1.4'
+    lmaxDisruptor = '3.2.0'
     logbackVersion = '1.1.0'
     mockitoVersion = '1.9.5'
     nettyVersion = '5.0.0.Alpha1'
@@ -20,5 +21,8 @@ ext {
             testNg:                 dependencies.create("org.testng:testng:${testNgVersion}"),
             festAssertions:         dependencies.create("org.easytesting:fest-assert:${festAssertionsVersion}"),
             mockito:                dependencies.create("org.mockito:mockito-all:${mockitoVersion}"),
+
+            // pure gold
+            lmaxDisruptor:          dependencies.create("com.lmax:disruptor:${lmaxDisruptor}")
     ]
 }

@@ -1,8 +1,8 @@
-package io.zerodi.windbag.app.client.protocol.epp;
+package io.zerodi.windbag.app.protocol.epp;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.zerodi.windbag.app.client.protocol.Message;
+import io.zerodi.windbag.app.protocol.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

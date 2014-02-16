@@ -7,19 +7,17 @@ import java.util.concurrent.TimeUnit;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
+import io.zerodi.windbag.app.protocol.StringMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.yammer.metrics.annotation.Timed;
 
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
 import io.zerodi.windbag.api.ApiSettings;
-import io.zerodi.windbag.app.client.protocol.Connection;
-import io.zerodi.windbag.app.client.protocol.Message;
-import io.zerodi.windbag.app.client.protocol.epp.EppMessage;
-import io.zerodi.windbag.app.client.protocol.epp.ResponseReceiver;
-import io.zerodi.windbag.app.client.registry.ChannelRegistryImpl;
+import io.zerodi.windbag.app.protocol.Connection;
+import io.zerodi.windbag.app.protocol.Message;
+import io.zerodi.windbag.app.registry.ChannelRegistryImpl;
 
 /**
  * Resource which is controlling servers defined in this application
@@ -87,7 +85,7 @@ public class ServerControlResource {
             connection.connect().sync();
         }
 
-        final Message messageToSend = EppMessage.getInstance(message);
+        final Message messageToSend = StringMessage.getInstance(message);
         connection.sendMessage(messageToSend).sync();
 
         while (messageToSend.getResponse() == null) {
@@ -100,7 +98,7 @@ public class ServerControlResource {
     /**
      * @param serverId
      *            which we would like to retrieve from the registry
-     * @return found {@link io.zerodi.windbag.app.client.protocol.Connection}
+     * @return found {@link io.zerodi.windbag.app.protocol.Connection}
      *
      * @throws javax.ws.rs.WebApplicationException
      *             with status of {@link javax.ws.rs.core.Response.Status#NOT_FOUND NOT_FOUND} if none matches the name.

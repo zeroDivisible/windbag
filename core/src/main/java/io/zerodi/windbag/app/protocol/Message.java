@@ -1,4 +1,4 @@
-package io.zerodi.windbag.app.client.protocol;
+package io.zerodi.windbag.app.protocol;
 
 import io.netty.buffer.ByteBuf;
 
@@ -10,7 +10,7 @@ public interface Message {
 
     public String getResponse();
 
-    public ByteBuf getByteBuf();
+    public ByteBuf asByteBuf();
 
     public void setResponse(String response);
 }

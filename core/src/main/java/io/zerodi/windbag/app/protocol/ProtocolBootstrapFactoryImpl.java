@@ -1,12 +1,12 @@
-package io.zerodi.windbag.app.client.protocol;
+package io.zerodi.windbag.app.protocol;
 
 import java.util.HashMap;
 
 import com.google.common.base.Preconditions;
 
 import io.zerodi.windbag.api.representations.ServerDetail;
-import io.zerodi.windbag.app.client.protocol.epp.EppConnectionFactory;
-import io.zerodi.windbag.app.client.protocol.noop.NoopConnectionFactory;
+import io.zerodi.windbag.app.protocol.epp.EppConnectionFactory;
+import io.zerodi.windbag.app.protocol.noop.NoopConnectionFactory;
 import io.zerodi.windbag.core.Protocol;
 
 /**

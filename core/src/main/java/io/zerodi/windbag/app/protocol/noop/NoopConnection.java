@@ -1,10 +1,11 @@
-package io.zerodi.windbag.app.client.protocol.noop;
+package io.zerodi.windbag.app.protocol.noop;
 
 import io.netty.channel.ChannelFuture;
 import io.zerodi.windbag.api.representations.ServerDetail;
-import io.zerodi.windbag.app.client.protocol.Connection;
-import io.zerodi.windbag.app.client.protocol.Message;
-import io.zerodi.windbag.app.client.registry.ProtocolBootstrap;
+import io.zerodi.windbag.app.protocol.Connection;
+import io.zerodi.windbag.app.protocol.Message;
+import io.zerodi.windbag.app.protocol.MessageExchange;
+import io.zerodi.windbag.app.registry.ProtocolBootstrap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,5 +68,10 @@ public class NoopConnection implements Connection {
     @Override
     public ServerDetail getServerDetail() {
         return serverDetail;
+    }
+
+    @Override
+    public MessageExchange getMessageExchange() {
+        return null;  //TODO Implement
     }
 }

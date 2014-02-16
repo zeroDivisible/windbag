@@ -1,16 +1,15 @@
-package io.zerodi.windbag.app.client.registry;
+package io.zerodi.windbag.app.registry;
 
 import java.util.Collection;
 import java.util.HashMap;
 
 import io.zerodi.windbag.api.representations.ServerDetail;
-import io.zerodi.windbag.app.client.protocol.Connection;
+import io.zerodi.windbag.app.protocol.Connection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Preconditions;
 import com.yammer.dropwizard.lifecycle.Managed;
-import io.netty.channel.EventLoopGroup;
 
 /**
  * Simple, test implementation of TcpServer which is getting managed with the lifecycle of the whole stack.

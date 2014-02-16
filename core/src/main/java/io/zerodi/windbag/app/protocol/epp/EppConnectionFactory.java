@@ -1,8 +1,8 @@
-package io.zerodi.windbag.app.client.protocol.epp;
+package io.zerodi.windbag.app.protocol.epp;
 
 import io.zerodi.windbag.api.representations.ServerDetail;
-import io.zerodi.windbag.app.client.protocol.Connection;
-import io.zerodi.windbag.app.client.protocol.ConnectionFactory;
+import io.zerodi.windbag.app.protocol.Connection;
+import io.zerodi.windbag.app.protocol.ConnectionFactory;
 
 /**
  * @author zerodi

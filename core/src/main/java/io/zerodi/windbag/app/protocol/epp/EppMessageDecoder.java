@@ -1,9 +1,7 @@
-package io.zerodi.windbag.app.client.protocol.epp;
+package io.zerodi.windbag.app.protocol.epp;
 
 import java.util.List;
 
-import io.netty.channel.ChannelPromise;
-import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

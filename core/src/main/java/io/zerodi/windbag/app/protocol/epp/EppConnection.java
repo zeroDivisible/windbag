@@ -1,18 +1,17 @@
-package io.zerodi.windbag.app.client.protocol.epp;
+package io.zerodi.windbag.app.protocol.epp;
 
 import io.netty.channel.*;
+import io.zerodi.windbag.app.protocol.MessageExchange;
+import io.zerodi.windbag.app.protocol.MessageExchangeImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.util.CharsetUtil;
 import io.zerodi.windbag.api.representations.ServerDetail;
-import io.zerodi.windbag.app.client.protocol.Connection;
-import io.zerodi.windbag.app.client.protocol.Message;
-import io.zerodi.windbag.app.client.registry.ProtocolBootstrap;
+import io.zerodi.windbag.app.protocol.Connection;
+import io.zerodi.windbag.app.protocol.Message;
+import io.zerodi.windbag.app.registry.ProtocolBootstrap;
 
 /**
  * @author zerodi
@@ -22,8 +21,8 @@ public class EppConnection implements Connection {
 
     private final ServerDetail serverDetail;
     private ProtocolBootstrap protocolBootstrap;
-    private boolean connected = false;
     private Channel channel = null;
+    private MessageExchange messageExchange = MessageExchangeImpl.getInstance();
 
     private EppConnection(ServerDetail serverDetail, ProtocolBootstrap protocolBootstrap) {
         this.serverDetail = serverDetail;
@@ -36,7 +35,7 @@ public class EppConnection implements Connection {
 
     @Override
     public ChannelFuture connect() {
-        if (!connected) {
+        if (!isConnected()) {
             String serverAddress = serverDetail.getServerAddress();
             int serverPort = serverDetail.getServerPort();
 
@@ -49,14 +48,13 @@ public class EppConnection implements Connection {
                 bootstrap.group(eventLoopGroup);
             }
 
-            ChannelFuture connectionFuture = null;
-            try {
-                connectionFuture = bootstrap.connect(serverAddress, serverPort).sync();
-                channel = connectionFuture.channel();
-                connected = true;
-            } catch (InterruptedException e) {
-                logger.error("cannot connect to EPP server", e);
-            }
+            ChannelFuture connectionFuture = bootstrap.connect(serverAddress, serverPort);
+            connectionFuture.addListener(new ChannelFutureListener() {
+                @Override
+                public void operationComplete(ChannelFuture future) throws Exception {
+                    channel = future.channel();
+                }
+            });
             return connectionFuture;
         } else {
             // TODO find a way to return completed future.
@@ -66,28 +64,26 @@ public class EppConnection implements Connection {
 
     @Override
     public boolean isConnected() {
-        return connected;
+        if (channel == null) {
+            return false;
+        }
+
+        return channel.isActive();
     }
 
     @Override
     public ChannelFuture disconnect() {
         if (channel != null) {
-            ChannelFuture channelFuture = null;
+            ChannelFuture channelFuture;
             try {
-                channelFuture = channel.close().addListener(new ChannelFutureListener() {
-                    @Override
-                    public void operationComplete(ChannelFuture future) throws Exception {
-                        logger.debug("disconnected.");
-                        connected = false;
-                    }
-                }).sync();
+                channelFuture = channel.close().sync();
+                channel = null;
             } catch (InterruptedException e) {
                 logger.error("while disconnecting from remote server", e);
                 throw new RuntimeException(e); // TODO handle better than this.
             }
             return channelFuture;
         } else {
-            connected = false;
             return null;
         }
     }
@@ -102,10 +98,8 @@ public class EppConnection implements Connection {
     public ChannelFuture sendMessage(Message message) {
         logger.debug("sending message...");
 
-        // TODO test write, fix it later
-
         channel.pipeline().addLast("response-receiver", ResponseReceiver.getInstance(message));
-        return channel.writeAndFlush(message.getByteBuf());
+        return channel.writeAndFlush(message.asByteBuf());
     }
 
     @Override
@@ -116,5 +110,10 @@ public class EppConnection implements Connection {
     @Override
     public ServerDetail getServerDetail() {
         return serverDetail;
+    }
+
+    @Override
+    public MessageExchange getMessageExchange() {
+        return messageExchange;
     }
 }

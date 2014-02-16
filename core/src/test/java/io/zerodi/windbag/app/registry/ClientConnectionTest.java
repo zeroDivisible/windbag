@@ -1,7 +1,7 @@
-package io.zerodi.windbag.app.client.registry;
+package io.zerodi.windbag.app.registry;
 
-import io.zerodi.windbag.app.client.protocol.Connection;
-import io.zerodi.windbag.app.client.protocol.epp.ChannelConfigurator;
+import io.zerodi.windbag.app.protocol.Connection;
+import io.zerodi.windbag.app.protocol.epp.ChannelConfigurator;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 

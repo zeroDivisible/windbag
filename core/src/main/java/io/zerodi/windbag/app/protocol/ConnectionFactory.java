@@ -1,4 +1,4 @@
-package io.zerodi.windbag.app.client.protocol;
+package io.zerodi.windbag.app.protocol;
 
 
 import io.zerodi.windbag.api.representations.ServerDetail;

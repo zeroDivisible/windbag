@@ -7,9 +7,9 @@ import com.yammer.dropwizard.config.Environment;
 import io.zerodi.windbag.api.representations.ServerDetail;
 import io.zerodi.windbag.api.resources.ServerConfigurationResource;
 import io.zerodi.windbag.api.resources.ServerControlResource;
-import io.zerodi.windbag.app.client.protocol.Connection;
-import io.zerodi.windbag.app.client.protocol.ProtocolBootstrapFactoryImpl;
-import io.zerodi.windbag.app.client.registry.ChannelRegistryImpl;
+import io.zerodi.windbag.app.protocol.Connection;
+import io.zerodi.windbag.app.protocol.ProtocolBootstrapFactoryImpl;
+import io.zerodi.windbag.app.registry.ChannelRegistryImpl;
 import io.zerodi.windbag.app.healthcheck.ServerDefinitionHealthCheck;
 
 import java.util.List;

@@ -1,8 +1,8 @@
-package io.zerodi.windbag.app.client.protocol;
+package io.zerodi.windbag.app.protocol;
 
 import io.netty.channel.ChannelFuture;
 import io.zerodi.windbag.api.representations.ServerDetail;
-import io.zerodi.windbag.app.client.registry.ProtocolBootstrap;
+import io.zerodi.windbag.app.registry.ProtocolBootstrap;
 
 /**
  * Interface abstracting connection to a remote server.
@@ -36,4 +36,6 @@ public interface Connection {
     public ProtocolBootstrap getProtocolBootstrap();
 
     public ServerDetail getServerDetail();
+
+    public MessageExchange getMessageExchange();
 }
