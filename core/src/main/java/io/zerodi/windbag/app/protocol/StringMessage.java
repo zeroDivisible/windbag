@@ -6,6 +6,8 @@ import io.netty.util.CharsetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 /**
  * @author zerodi
  */
@@ -13,24 +15,24 @@ public class StringMessage implements Message {
     private static final Logger logger = LoggerFactory.getLogger(StringMessage.class);
 
     private final String message;
-    private String response;
+    private final MessageType messageType;
 
-    private StringMessage(byte[] message) {
+    private StringMessage(byte[] message, MessageType messageType) {
+        this.messageType = messageType;
         this.message = new String(message, CharsetUtil.UTF_8);
-        logger.debug("new EPP Message: {}", message);
     }
 
-    public StringMessage(String message) {
+    public StringMessage(String message, MessageType messageType) {
         this.message = message;
-        logger.debug("new EPP Message: {}", message);
+        this.messageType = messageType;
     }
 
-    public static Message getInstance(byte[] message) {
-        return new StringMessage(message);
+    public static Message getInstance(byte[] message, MessageType messageType) {
+        return new StringMessage(message, messageType);
     }
 
-    public static Message getInstance(String message) {
-        return new StringMessage(message);
+    public static Message getInstance(String message, MessageType messageType) {
+        return new StringMessage(message, messageType);
     }
 
     public String getMessage() {
@@ -38,13 +40,16 @@ public class StringMessage implements Message {
     }
 
     @Override
-    public String toString() {
-        return "StringMessage{" + "message='" + message + '\'' + '}';
+    public MessageType getType() {
+        return messageType;
     }
 
     @Override
-    public String getResponse() {
-        return response;
+    public String toString() {
+        return "StringMessage{" +
+                "message='" + message + '\'' +
+                ", messageType=" + messageType +
+                '}';
     }
 
     @Override
@@ -53,11 +58,5 @@ public class StringMessage implements Message {
         byteBuf.writeBytes(message.getBytes(CharsetUtil.UTF_8));
 
         return byteBuf;
-    }
-
-    @Override
-    public void setResponse(String response) {
-        this.response = response;
-
     }
 }

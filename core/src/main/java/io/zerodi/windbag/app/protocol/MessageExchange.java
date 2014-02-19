@@ -12,10 +12,14 @@ package io.zerodi.windbag.app.protocol;
  */
 public interface MessageExchange {
 
-    public Response postMessage(Message message);
-    public Response getResponse(Message message);
+    public void postMessage(Message message);
 
-    public Message getMessage(Response response);
+    /**
+     * This is a simple notification object which will be notified when the next message will reach the exchange.
+     *
+     * @param object
+     */
+    public void offerNotificationObject(Object object);
 
-    public boolean hasMessage(Message message);
+    public Message getLastMessage();
 }

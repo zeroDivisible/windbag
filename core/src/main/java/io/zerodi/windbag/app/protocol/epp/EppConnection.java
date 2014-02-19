@@ -1,8 +1,7 @@
 package io.zerodi.windbag.app.protocol.epp;
 
+import com.google.common.base.Preconditions;
 import io.netty.channel.*;
-import io.zerodi.windbag.app.protocol.MessageExchange;
-import io.zerodi.windbag.app.protocol.MessageExchangeImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,7 +10,11 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.zerodi.windbag.api.representations.ServerDetail;
 import io.zerodi.windbag.app.protocol.Connection;
 import io.zerodi.windbag.app.protocol.Message;
+import io.zerodi.windbag.app.protocol.MessageExchange;
+import io.zerodi.windbag.app.protocol.MessageExchangeImpl;
 import io.zerodi.windbag.app.registry.ProtocolBootstrap;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author zerodi
@@ -53,8 +56,17 @@ public class EppConnection implements Connection {
                 @Override
                 public void operationComplete(ChannelFuture future) throws Exception {
                     channel = future.channel();
+                    future.channel().pipeline().addLast(ResponseReceiver.getInstance(getMessageExchange()));
                 }
             });
+
+            try {
+                // EPP Server will be greeting us with a greeting message - let's report that one here
+                connectionFuture.await(10, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                logger.error("while connecting to server", e);
+                throw new RuntimeException(e); // TODO created specialized exception type, not the generic RuntimeException.
+            }
             return connectionFuture;
         } else {
             // TODO find a way to return completed future.
@@ -95,11 +107,24 @@ public class EppConnection implements Connection {
     }
 
     @Override
-    public ChannelFuture sendMessage(Message message) {
-        logger.debug("sending message...");
+    public Message sendMessage(Message message) {
+        Preconditions.checkNotNull(message, "message cannot be null!");
+        Preconditions.checkArgument(isConnected(), "connection needs to be open and active to send the messages!");
 
-        channel.pipeline().addLast("response-receiver", ResponseReceiver.getInstance(message));
-        return channel.writeAndFlush(message.asByteBuf());
+        getMessageExchange().postMessage(message);
+
+        ResponseReceiver responseReceiver = (ResponseReceiver) ResponseReceiver.getInstance(getMessageExchange());
+        channel.pipeline().addLast("response-receiver", responseReceiver);
+        channel.writeAndFlush(message.asByteBuf());
+
+        while (!responseReceiver.ifFinished()) {
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        return getMessageExchange().getLastMessage();
     }
 
     @Override

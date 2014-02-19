@@ -54,7 +54,7 @@ public class NoopConnection implements Connection {
     }
 
     @Override
-    public ChannelFuture sendMessage(Message message) {
+    public Message sendMessage(Message message) {
         logger.debug("sending message");
 
         return null;

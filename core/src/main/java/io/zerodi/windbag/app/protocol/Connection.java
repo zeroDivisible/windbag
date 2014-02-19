@@ -4,6 +4,8 @@ import io.netty.channel.ChannelFuture;
 import io.zerodi.windbag.api.representations.ServerDetail;
 import io.zerodi.windbag.app.registry.ProtocolBootstrap;
 
+import java.util.concurrent.Future;
+
 /**
  * Interface abstracting connection to a remote server.
  *
@@ -31,7 +33,7 @@ public interface Connection {
      */
     public boolean isConnected();
 
-    public ChannelFuture sendMessage(Message message);
+    public Message sendMessage(Message message);
 
     public ProtocolBootstrap getProtocolBootstrap();
 

@@ -2,11 +2,13 @@ package io.zerodi.windbag.api.resources;
 
 import static javax.ws.rs.core.Response.Status;
 
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
+import io.zerodi.windbag.app.protocol.MessageType;
 import io.zerodi.windbag.app.protocol.StringMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,7 +59,7 @@ public class ServerControlResource {
             }
 
         }
-        return "done.";
+        return "" + connection.getMessageExchange();
     }
 
     @GET
@@ -68,7 +70,7 @@ public class ServerControlResource {
         if (connection.isConnected()) {
             connection.disconnect();
         }
-        return "disconnecting from " + serverId;
+        return "" + connection.getMessageExchange();
     }
 
     @GET
@@ -81,14 +83,22 @@ public class ServerControlResource {
             throw new WebApplicationException(Status.NOT_FOUND);
         }
 
-        final Message messageToSend = StringMessage.getInstance(message);
-        connection.sendMessage(messageToSend).sync();
+        final Message messageToSend = StringMessage.getInstance(message, MessageType.OUTBOUND);
+        Message response = connection.sendMessage(messageToSend);
 
-        while (messageToSend.getResponse() == null) {
-            Thread.sleep(1000);
+        return "" + response;
+    }
+
+    @GET
+    @Path("{serverId}/messages")
+    @Timed
+    public String getMessages(@PathParam("serverId") String serverId) {
+        Connection connection = channelRegistry.getConnection(serverId);
+        if (connection == null) {
+            throw new WebApplicationException(Status.NOT_FOUND);
         }
 
-        return messageToSend.getResponse();
+        return "" + connection.getMessageExchange();
     }
 
     /**
