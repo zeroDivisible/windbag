@@ -1,9 +1,8 @@
 package io.zerodi.windbag.api.representations;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.zerodi.windbag.core.Protocol;
 import org.hibernate.validator.constraints.NotEmpty;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;

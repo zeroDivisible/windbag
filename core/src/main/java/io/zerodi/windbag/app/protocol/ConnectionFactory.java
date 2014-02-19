@@ -8,5 +8,5 @@ import io.zerodi.windbag.api.representations.ServerDetail;
  */
 public interface ConnectionFactory {
 
-    public Connection newConnection(ServerDetail serverDetail);
+  public Connection newConnection(ServerDetail serverDetail);
 }

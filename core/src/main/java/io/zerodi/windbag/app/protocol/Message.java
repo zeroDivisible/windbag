@@ -9,9 +9,9 @@ import io.netty.buffer.ByteBuf;
  */
 public interface Message {
 
-    public String getMessage();
+	public String getMessage();
 
-    public MessageType getType();
+	public MessageType getType();
 
-    public ByteBuf asByteBuf();
+	public ByteBuf asByteBuf();
 }

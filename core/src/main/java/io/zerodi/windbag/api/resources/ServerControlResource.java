@@ -1,25 +1,21 @@
 package io.zerodi.windbag.api.resources;
 
-import static javax.ws.rs.core.Response.Status;
-
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-
-import io.zerodi.windbag.app.protocol.MessageType;
-import io.zerodi.windbag.app.protocol.StringMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.yammer.metrics.annotation.Timed;
-
 import io.netty.channel.ChannelFuture;
 import io.zerodi.windbag.api.ApiSettings;
 import io.zerodi.windbag.app.protocol.Connection;
 import io.zerodi.windbag.app.protocol.Message;
+import io.zerodi.windbag.app.protocol.MessageType;
+import io.zerodi.windbag.app.protocol.StringMessage;
 import io.zerodi.windbag.app.registry.ChannelRegistryImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import java.util.concurrent.TimeUnit;
+
+import static javax.ws.rs.core.Response.Status;
 
 /**
  * Resource which is controlling servers defined in this application

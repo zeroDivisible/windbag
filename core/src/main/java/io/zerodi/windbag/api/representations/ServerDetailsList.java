@@ -7,23 +7,24 @@ import java.util.List;
 
 /**
  * Class which abstracts returning the details of {@link ServerDetail}
+ *
  * @author zerodi
  */
 @JsonRootName("server_details")
 public class ServerDetailsList {
 
-    private List<ServerDetail> serverDetails;
+  private List<ServerDetail> serverDetails;
 
-    private ServerDetailsList(List<ServerDetail> serverDetails) {
-        this.serverDetails = serverDetails;
-    }
+  private ServerDetailsList(List<ServerDetail> serverDetails) {
+    this.serverDetails = serverDetails;
+  }
 
-    public static ServerDetailsList getInstance(List<ServerDetail> serverDetails) {
-        return new ServerDetailsList(serverDetails);
-    }
+  public static ServerDetailsList getInstance(List<ServerDetail> serverDetails) {
+    return new ServerDetailsList(serverDetails);
+  }
 
-    @JsonValue
-    public List<ServerDetail> getServerDetails() {
-        return serverDetails;
-    }
+  @JsonValue
+  public List<ServerDetail> getServerDetails() {
+    return serverDetails;
+  }
 }

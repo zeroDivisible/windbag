@@ -1,11 +1,11 @@
 package io.zerodi.windbag.app.protocol.epp;
 
 import com.google.common.base.Preconditions;
-import io.netty.channel.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
+import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.zerodi.windbag.api.representations.ServerDetail;
 import io.zerodi.windbag.app.protocol.Connection;
@@ -13,6 +13,8 @@ import io.zerodi.windbag.app.protocol.Message;
 import io.zerodi.windbag.app.protocol.MessageExchange;
 import io.zerodi.windbag.app.protocol.MessageExchangeImpl;
 import io.zerodi.windbag.app.registry.ProtocolBootstrap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 
