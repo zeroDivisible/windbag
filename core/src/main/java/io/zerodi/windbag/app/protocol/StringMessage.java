@@ -13,7 +13,7 @@ import io.netty.util.CharsetUtil;
 @JsonRootName("result")
 public class StringMessage implements Message {
 
-	@JsonProperty("raw_response")
+	@JsonProperty("raw_message")
 	private final String message;
 
 	@JsonProperty("message_type")

@@ -113,20 +113,22 @@ public class EppConnection implements Connection {
 		Preconditions.checkNotNull(message, "message cannot be null!");
 		Preconditions.checkArgument(isConnected(), "connection needs to be open and active to send the messages!");
 
-		getMessageExchange().postMessage(message);
+		synchronized (this) {
+			getMessageExchange().postMessage(message);
 
-		ResponseReceiver responseReceiver = (ResponseReceiver) ResponseReceiver.getInstance(getMessageExchange());
-		channel.pipeline().addLast("response-receiver", responseReceiver);
-		channel.writeAndFlush(message.asByteBuf());
+			ResponseReceiver responseReceiver = (ResponseReceiver) ResponseReceiver.getInstance(getMessageExchange());
+			channel.pipeline().addLast("response-receiver", responseReceiver);
+			channel.writeAndFlush(message.asByteBuf());
 
-		while (!responseReceiver.ifFinished()) {
-			try {
-				Thread.sleep(2);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+			while (!responseReceiver.ifFinished()) {
+				try {
+					Thread.sleep(2);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
+			return getMessageExchange().getLastMessage();
 		}
-		return getMessageExchange().getLastMessage();
 	}
 
 	@Override
