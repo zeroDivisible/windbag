@@ -24,7 +24,7 @@ public class StringMessage implements Message {
 		this.message = new String(message, CharsetUtil.UTF_8);
 	}
 
-	public StringMessage(String message, MessageType messageType) {
+	private StringMessage(String message, MessageType messageType) {
 		this.message = message;
 		this.messageType = messageType;
 	}
