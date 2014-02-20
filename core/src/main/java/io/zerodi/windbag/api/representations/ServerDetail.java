@@ -1,6 +1,7 @@
 package io.zerodi.windbag.api.representations;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
 import io.zerodi.windbag.core.Protocol;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -17,11 +18,11 @@ public class ServerDetail {
     private String name;
 
     @NotEmpty
-    @JsonProperty
+    @JsonProperty("server_address")
     private String serverAddress;
 
     @NotEmpty
-    @JsonProperty
+    @JsonProperty("server_port")
     @Min(1)
     @Max(65535)
     private int serverPort;
