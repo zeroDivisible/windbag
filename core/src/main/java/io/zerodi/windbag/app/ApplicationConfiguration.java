@@ -12,11 +12,11 @@ import java.util.List;
  */
 public class ApplicationConfiguration extends Configuration {
 
-    @NotEmpty
-    @JsonProperty
-    private List<ServerDetail> servers;
+	@NotEmpty
+	@JsonProperty
+	private List<ServerDetail> servers;
 
-    public List<ServerDetail> getServers() {
-        return servers;
-    }
+	public List<ServerDetail> getServers() {
+		return servers;
+	}
 }

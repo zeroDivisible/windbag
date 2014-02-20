@@ -2,13 +2,13 @@
 # those are the default servers which the applications knows about
 servers:
   - name: devvm
-    serverAddress: 192.168.33.15
-    serverPort: 8700
+    server_address: 192.168.33.15
+    server_port: 8700
     protocol: EPP
 
   - name: devvm2
-    serverAddress: 192.168.33.20
-    serverPort: 701
+    server_address: 192.168.33.20
+    server_port: 701
     protocol: EPP
 
 
