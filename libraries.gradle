@@ -19,6 +19,6 @@ ext {
             // test
             testNg:                 dependencies.create("org.testng:testng:${testNgVersion}"),
             festAssertions:         dependencies.create("org.easytesting:fest-assert:${festAssertionsVersion}"),
-            mockito:                dependencies.create("org.mockito:mockito-all:${mockitoVersion}"),
+            mockito:                dependencies.create("org.mockito:mockito-all:${mockitoVersion}")
     ]
 }
