@@ -3,7 +3,7 @@ package io.zerodi.windbag.api.resources;
 import com.yammer.metrics.annotation.Timed;
 import io.netty.channel.ChannelFuture;
 import io.zerodi.windbag.api.ApiSettings;
-import io.zerodi.windbag.api.representations.MessagePostingResult;
+import io.zerodi.windbag.api.representations.MessageList;
 import io.zerodi.windbag.app.protocol.Connection;
 import io.zerodi.windbag.app.protocol.Message;
 import io.zerodi.windbag.app.protocol.MessageType;
@@ -73,29 +73,29 @@ public class ServerControlResource {
 	@GET
 	@Path("{serverId}/send/{message}")
 	@Timed
-	public MessagePostingResult sendMessage(@PathParam("serverId") String serverId, @PathParam("message") final String message)
+	public Message sendMessage(@PathParam("serverId") String serverId, @PathParam("message") final String message)
 			throws InterruptedException {
 		Connection connection = channelRegistry.getConnection(serverId);
 		if (connection == null) {
 			throw new WebApplicationException(Status.NOT_FOUND);
 		}
 
-		final Message messageToSend = StringMessage.getInstance(message, MessageType.OUTBOUND);
+		Message messageToSend = StringMessage.getInstance(message, MessageType.OUTBOUND);
 		Message response = connection.sendMessage(messageToSend);
 
-		return MessagePostingResult.getInstance(response);
+		return response;
 	}
 
 	@GET
 	@Path("{serverId}/messages")
 	@Timed
-	public String getMessages(@PathParam("serverId") String serverId) {
+	public MessageList getMessages(@PathParam("serverId") String serverId) {
 		Connection connection = channelRegistry.getConnection(serverId);
 		if (connection == null) {
 			throw new WebApplicationException(Status.NOT_FOUND);
 		}
 
-		return "" + connection.getMessageExchange();
+		return MessageList.getInstance(connection.getMessageExchange().getLast(10));
 	}
 
 	/**
