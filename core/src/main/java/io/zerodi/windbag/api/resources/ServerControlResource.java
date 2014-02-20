@@ -41,33 +41,21 @@ public class ServerControlResource {
 	@GET
 	@Path("{serverId}/connect")
 	@Timed
-	public String connectToServer(@PathParam("serverId") String serverId) throws InterruptedException {
+	public Message connectToServer(@PathParam("serverId") String serverId) throws InterruptedException {
 		Connection connection = findServer(serverId);
 
 		// connects and waits till the connection is successful.
-		ChannelFuture connectionFuture = connection.connect();
-		if (connectionFuture != null) {
-			boolean connected = connectionFuture.awaitUninterruptibly(10, TimeUnit.SECONDS);
-
-			if (connected) {
-				logger.debug("connection successful for {}", serverId);
-			} else {
-				throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR);
-			}
-
-		}
-		return "" + connection.getMessageExchange();
+		Message connectionResult = connection.connect();
+		logger.debug("connection successful for {}", serverId);
+		return connectionResult;
 	}
 
 	@GET
 	@Path("{serverId}/disconnect")
 	@Timed
-	public String disconnectFromServer(@PathParam("serverId") String serverId) {
+	public Message disconnectFromServer(@PathParam("serverId") String serverId) {
 		Connection connection = findServer(serverId);
-		if (connection.isConnected()) {
-			connection.disconnect();
-		}
-		return "" + connection.getMessageExchange();
+		return connection.disconnect();
 	}
 
 	@GET

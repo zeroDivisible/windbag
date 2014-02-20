@@ -14,7 +14,7 @@ import java.util.List;
  */
 public interface MessageExchange {
 
-	public void postMessage(Message message);
+	public Message postMessage(Message message);
 
 	public Message getLastMessage();
 

@@ -22,7 +22,7 @@ public class ResponseReceiver extends SimpleChannelInboundHandler<String> {
         this.messageExchange = messageExchange;
     }
 
-    public static SimpleChannelInboundHandler<String> getInstance(MessageExchange messageExchange) {
+    public static ResponseReceiver getInstance(MessageExchange messageExchange) {
         return new ResponseReceiver(messageExchange);
     }
 

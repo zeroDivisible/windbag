@@ -5,8 +5,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.BlockingDeque;
-import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * Implementation of {@link io.zerodi.windbag.app.protocol.MessageExchange}
@@ -14,8 +12,6 @@ import java.util.concurrent.LinkedBlockingDeque;
  * @author zerodi
  */
 public class MessageExchangeImpl implements MessageExchange {
-	private static final Logger logger = LoggerFactory.getLogger(MessageExchangeImpl.class);
-
 	private List<Message> messages = new ArrayList<>();
 
 	private MessageExchangeImpl() {
@@ -26,8 +22,9 @@ public class MessageExchangeImpl implements MessageExchange {
 	}
 
 	@Override
-	public void postMessage(Message message) {
+	public Message postMessage(Message message) {
 		messages.add(message);
+		return message;
 	}
 
 	@Override

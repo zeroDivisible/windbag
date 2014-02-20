@@ -7,5 +7,6 @@ package io.zerodi.windbag.app.protocol;
  */
 public enum MessageType {
 	INBOUND,
-	OUTBOUND
+	OUTBOUND,
+	SYSTEM
 }

@@ -2,16 +2,10 @@ package io.zerodi.windbag.app.protocol.epp;
 
 import com.google.common.base.Preconditions;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.zerodi.windbag.api.representations.ServerDetail;
-import io.zerodi.windbag.app.protocol.Connection;
-import io.zerodi.windbag.app.protocol.Message;
-import io.zerodi.windbag.app.protocol.MessageExchange;
-import io.zerodi.windbag.app.protocol.MessageExchangeImpl;
+import io.zerodi.windbag.app.protocol.*;
 import io.zerodi.windbag.app.registry.ProtocolBootstrap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +33,7 @@ public class EppConnection implements Connection {
 	}
 
 	@Override
-	public ChannelFuture connect() {
+	public Message connect() {
 		if (!isConnected()) {
 			String serverAddress = serverDetail.getServerAddress();
 			int serverPort = serverDetail.getServerPort();
@@ -53,57 +47,57 @@ public class EppConnection implements Connection {
 				bootstrap.group(eventLoopGroup);
 			}
 
+			final ResponseReceiver responseReceiver = ResponseReceiver.getInstance(getMessageExchange());
 			ChannelFuture connectionFuture = bootstrap.connect(serverAddress, serverPort);
 			connectionFuture.addListener(new ChannelFutureListener() {
 				@Override
 				public void operationComplete(ChannelFuture future) throws Exception {
 					channel = future.channel();
-					future.channel().pipeline().addLast(ResponseReceiver.getInstance(getMessageExchange()));
+					future.channel().pipeline().addLast(responseReceiver);
 				}
 			});
 
-			try {
-				// EPP Server will be greeting us with a greeting message - let's report that one here
-				connectionFuture.await(10, TimeUnit.SECONDS);
-			} catch (InterruptedException e) {
-				logger.error("while connecting to server", e);
-				throw new RuntimeException(e); // TODO created specialized exception type, not the generic RuntimeException.
+			connectionFuture.awaitUninterruptibly(20, TimeUnit.SECONDS);
+
+			while (!responseReceiver.ifFinished()) {
+				try {
+					Thread.sleep(2);
+				} catch (InterruptedException e) {
+					logger.error("while waiting for response after sending a message", e);
+					throw new RuntimeException(e);
+				}
 			}
-			return connectionFuture;
+			return getMessageExchange().getLastMessage();
 		} else {
 			// TODO find a way to return completed future.
-			return null;
+			return getMessageExchange().postMessage(StringMessage.getInstance("server already connected; doing nothing", MessageType.SYSTEM));
 		}
 	}
 
 	@Override
 	public boolean isConnected() {
-		if (channel == null) {
-			return false;
-		}
+		return channel != null && channel.isActive();
 
-		return channel.isActive();
 	}
 
 	@Override
-	public ChannelFuture disconnect() {
-		if (channel != null) {
-			ChannelFuture channelFuture;
+	public Message disconnect() {
+		if (isConnected()) {
 			try {
-				channelFuture = channel.close().sync();
+				channel.close().sync();
 				channel = null;
 			} catch (InterruptedException e) {
 				logger.error("while disconnecting from remote server", e);
 				throw new RuntimeException(e); // TODO handle better than this.
 			}
-			return channelFuture;
+			return getMessageExchange().postMessage(StringMessage.getInstance("disconnected", MessageType.SYSTEM));
 		} else {
-			return null;
+			return getMessageExchange().postMessage(StringMessage.getInstance("doing nothing; was not connected", MessageType.SYSTEM));
 		}
 	}
 
 	@Override
-	public ChannelFuture reconnect() {
+	public Message reconnect() {
 		disconnect();
 		return connect();
 	}
@@ -116,7 +110,7 @@ public class EppConnection implements Connection {
 		synchronized (this) {
 			getMessageExchange().postMessage(message);
 
-			ResponseReceiver responseReceiver = (ResponseReceiver) ResponseReceiver.getInstance(getMessageExchange());
+			ResponseReceiver responseReceiver = ResponseReceiver.getInstance(getMessageExchange());
 			channel.pipeline().addLast("response-receiver", responseReceiver);
 			channel.writeAndFlush(message.asByteBuf());
 
@@ -124,7 +118,8 @@ public class EppConnection implements Connection {
 				try {
 					Thread.sleep(2);
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					logger.error("while waiting for response after sending a message", e);
+					throw new RuntimeException(e);
 				}
 			}
 			return getMessageExchange().getLastMessage();
