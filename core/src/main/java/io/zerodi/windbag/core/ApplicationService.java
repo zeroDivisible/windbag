@@ -2,6 +2,7 @@ package io.zerodi.windbag.core;
 
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.yammer.dropwizard.Service;
+import com.yammer.dropwizard.assets.AssetsBundle;
 import com.yammer.dropwizard.config.Bootstrap;
 import com.yammer.dropwizard.config.Environment;
 import com.yammer.dropwizard.views.ViewBundle;
@@ -31,8 +32,9 @@ public class ApplicationService extends Service<ApplicationConfiguration> {
 	public void initialize(Bootstrap<ApplicationConfiguration> bootstrap) {
 		bootstrap.setName("windbag");
 		bootstrap.getObjectMapperFactory().enable(SerializationFeature.WRAP_ROOT_VALUE);
-		bootstrap.addBundle(new ViewBundle());
 
+		bootstrap.addBundle(new AssetsBundle("/assets"));
+		bootstrap.addBundle(new ViewBundle());
 	}
 
 	@Override
