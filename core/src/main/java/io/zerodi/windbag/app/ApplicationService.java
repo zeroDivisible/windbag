@@ -21,36 +21,37 @@ import java.util.List;
  */
 public class ApplicationService extends Service<ApplicationConfiguration> {
 
-    public static void main(String[] args) throws Exception {
-        new ApplicationService().run(args);
-    }
+	public static void main(String[] args) throws Exception {
+		new ApplicationService().run(args);
+	}
 
-    @Override
-    public void initialize(Bootstrap<ApplicationConfiguration> bootstrap) {
-        bootstrap.setName("windbag");
-        bootstrap.getObjectMapperFactory().enable(SerializationFeature.WRAP_ROOT_VALUE);
-    }
+	@Override
+	public void initialize(Bootstrap<ApplicationConfiguration> bootstrap) {
+		bootstrap.setName("windbag");
+		bootstrap.getObjectMapperFactory().enable(SerializationFeature.WRAP_ROOT_VALUE);
 
-    @Override
-    public void run(ApplicationConfiguration configuration, Environment environment) throws Exception {
-        List<ServerDetail> defaultServers = configuration.getServers();
-        ChannelRegistryImpl channelRegistry = addDefaultServers(environment, defaultServers);
+	}
 
-        environment.addResource(ServerConfigurationResource.getInstance(defaultServers));
-        environment.addResource(ServerControlResource.getInstance(channelRegistry));
+	@Override
+	public void run(ApplicationConfiguration configuration, Environment environment) throws Exception {
+		List<ServerDetail> defaultServers = configuration.getServers();
+		ChannelRegistryImpl channelRegistry = addDefaultServers(environment, defaultServers);
 
-        environment.addHealthCheck(ServerDefinitionHealthCheck.getInstance(defaultServers));
-    }
+		environment.addResource(ServerConfigurationResource.getInstance(defaultServers));
+		environment.addResource(ServerControlResource.getInstance(channelRegistry));
 
-    private ChannelRegistryImpl addDefaultServers(Environment environment, List<ServerDetail> defaultServers) {
-        ProtocolBootstrapFactoryImpl protocolBootstrapFactory = ProtocolBootstrapFactoryImpl.getInstance();
-        ChannelRegistryImpl channelRegistryImpl = ChannelRegistryImpl.getInstance();
-        for (ServerDetail server : defaultServers) {
-            Connection clientConnection = protocolBootstrapFactory.createConnection(server);
-            channelRegistryImpl.registerConnection(clientConnection);
-        }
-        environment.manage(channelRegistryImpl);
+		environment.addHealthCheck(ServerDefinitionHealthCheck.getInstance(defaultServers));
+	}
 
-        return channelRegistryImpl;
-    }
+	private ChannelRegistryImpl addDefaultServers(Environment environment, List<ServerDetail> defaultServers) {
+		ProtocolBootstrapFactoryImpl protocolBootstrapFactory = ProtocolBootstrapFactoryImpl.getInstance();
+		ChannelRegistryImpl channelRegistryImpl = ChannelRegistryImpl.getInstance();
+		for (ServerDetail server : defaultServers) {
+			Connection clientConnection = protocolBootstrapFactory.createConnection(server);
+			channelRegistryImpl.registerConnection(clientConnection);
+		}
+		environment.manage(channelRegistryImpl);
+
+		return channelRegistryImpl;
+	}
 }
