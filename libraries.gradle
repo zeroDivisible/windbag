@@ -11,6 +11,7 @@ ext {
     libraries = [
             dropwizardCore:         dependencies.create("com.yammer.dropwizard:dropwizard-core:${dropwizardVersion}"),
             dropwizardTesting:      dependencies.create("com.yammer.dropwizard:dropwizard-testing:${dropwizardVersion}"),
+            dropwizardViews:        dependencies.create("com.yammer.dropwizard:dropwizard-views:${dropwizardVersion}"),
             netty:                  dependencies.create("io.netty:netty-all:${nettyVersion}"),
 
             // logging
