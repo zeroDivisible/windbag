@@ -1,8 +1,8 @@
-package io.zerodi.windbag.app.protocol.noop;
+package io.zerodi.windbag.core.protocol.noop;
 
 import io.zerodi.windbag.api.representations.ServerDetail;
-import io.zerodi.windbag.app.protocol.Connection;
-import io.zerodi.windbag.app.protocol.ConnectionFactory;
+import io.zerodi.windbag.core.protocol.Connection;
+import io.zerodi.windbag.core.protocol.ConnectionFactory;
 
 /**
  * @author zerodi

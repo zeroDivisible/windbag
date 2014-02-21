@@ -1,4 +1,4 @@
-package io.zerodi.windbag.app.protocol.noop;
+package io.zerodi.windbag.core.protocol.noop;
 
 import io.netty.bootstrap.Bootstrap;
 import io.zerodi.windbag.app.registry.ProtocolBootstrap;

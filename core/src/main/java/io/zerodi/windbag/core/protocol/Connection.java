@@ -1,6 +1,5 @@
-package io.zerodi.windbag.app.protocol;
+package io.zerodi.windbag.core.protocol;
 
-import io.netty.channel.ChannelFuture;
 import io.zerodi.windbag.api.representations.ServerDetail;
 import io.zerodi.windbag.app.registry.ProtocolBootstrap;
 

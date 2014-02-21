@@ -1,9 +1,8 @@
-package io.zerodi.windbag.app.protocol.noop;
+package io.zerodi.windbag.core.protocol.noop;
 
-import io.netty.channel.ChannelFuture;
 import io.zerodi.windbag.api.representations.ServerDetail;
-import io.zerodi.windbag.app.protocol.*;
 import io.zerodi.windbag.app.registry.ProtocolBootstrap;
+import io.zerodi.windbag.core.protocol.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -3,7 +3,7 @@ package io.zerodi.windbag.app.registry;
 import com.google.common.base.Preconditions;
 import com.yammer.dropwizard.lifecycle.Managed;
 import io.zerodi.windbag.api.representations.ServerDetail;
-import io.zerodi.windbag.app.protocol.Connection;
+import io.zerodi.windbag.core.protocol.Connection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

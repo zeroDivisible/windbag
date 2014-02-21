@@ -1,4 +1,4 @@
-package io.zerodi.windbag.app.protocol;
+package io.zerodi.windbag.core.protocol;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;

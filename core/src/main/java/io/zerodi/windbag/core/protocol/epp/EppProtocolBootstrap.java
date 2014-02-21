@@ -1,4 +1,4 @@
-package io.zerodi.windbag.app.protocol.epp;
+package io.zerodi.windbag.core.protocol.epp;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelOption;

@@ -1,12 +1,15 @@
-package io.zerodi.windbag.app.protocol.epp;
+package io.zerodi.windbag.core.protocol.epp;
 
 import com.google.common.base.Preconditions;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.*;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
+import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.zerodi.windbag.api.representations.ServerDetail;
-import io.zerodi.windbag.app.protocol.*;
 import io.zerodi.windbag.app.registry.ProtocolBootstrap;
+import io.zerodi.windbag.core.protocol.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

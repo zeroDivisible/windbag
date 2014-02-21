@@ -1,13 +1,10 @@
-package io.zerodi.windbag.app.protocol;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+package io.zerodi.windbag.core.protocol;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Implementation of {@link io.zerodi.windbag.app.protocol.MessageExchange}
+ * Implementation of {@link MessageExchange}
  *
  * @author zerodi
  */
