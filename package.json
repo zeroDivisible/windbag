@@ -1,4 +1,8 @@
 {
+  "scripts": {
+      "preinstall": "npm install --save broccoli",
+      "preinstall": "npm install broccoli-cli"
+  },
   "dependencies": {
     "broccoli": ">= 0.2.0"
   }
