@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "broccoli": ">= 0.2.0"
+  }
+}
+
