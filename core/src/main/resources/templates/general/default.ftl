@@ -37,38 +37,13 @@
             <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
         </div>
         <div class="col-md-10">
-            <div class="btn-group">
-                <div class="btn-group">
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                        domain
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">Dropdown link</a></li>
-                        <li><a href="#">Dropdown link</a></li>
-                    </ul>
-                </div>
-                <div class="btn-group">
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                        host
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">Dropdown link</a></li>
-                        <li><a href="#">Dropdown link</a></li>
-                    </ul>
-                </div>
-                <div class="btn-group">
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                        contact
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">Dropdown link</a></li>
-                        <li><a href="#">Dropdown link</a></li>
-                    </ul>
-                </div>
-            </div>
+            <ul class="nav nav-pills">
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        domain <span class="caret"></span>
+                    </a>
+                </li>
+            </ul>
         </div>
         <div class="col-md-10">
             <h2>Heading</h2>
