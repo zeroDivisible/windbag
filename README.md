@@ -6,9 +6,7 @@ This projects is easing the pain of doing ad-hoc testing of TCP based servers. I
 
 * [dropwizard](http://www.dropwizard.io/),
 * [netty](http://netty.io/)
-* and
-    * either [ember.js](http://emberjs.com/)
-    * or [riot.js](https://moot.it/riotjs/)
+* and [ember.js](http://emberjs.com/)
 
 (I didn't had an opportunity to do so during my normal job and always wanted to do something more ambitious using mentioned tools.)
 
@@ -16,4 +14,15 @@ On a daily basis, I'm working with servers using [Extensible Provisioning Protoc
 
 While implementing the whole tool, I will try to be generic enough, so introduction of new protocols which the server will be capable of speaking to, should be relatively straightforward.
 
-Readme will be updated as more features will be added.
+###Installation & building.
+
+Project is using ``gradle`` as the build tool, which simplifies management of dependencies and creation of build files for specific IDE's.
+
+Also, as a nice nifty hack - though it's not mandatory, there is a ``npm's`` ``package.json`` file present, which, after running
+
+```
+npm install
+```
+
+from the directory of the project, installs ``gulp``. Then, when developing, one can just open a terminal window and run ``gulp``, which starts watching of static files in ``core/src/main/resources`` and each time any of those is being updated, it automatically copies them to the build folder (saving a lot of server restarts).
+
