@@ -1,6 +1,6 @@
 package io.zerodi.windbag.app.registry;
 
-import io.zerodi.windbag.app.protocol.Connection;
+import io.zerodi.windbag.core.protocol.Connection;
 
 /**
  * Interface for registries of channels

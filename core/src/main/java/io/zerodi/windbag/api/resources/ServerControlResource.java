@@ -3,10 +3,10 @@ package io.zerodi.windbag.api.resources;
 import com.yammer.metrics.annotation.Timed;
 import io.zerodi.windbag.api.ApiSettings;
 import io.zerodi.windbag.api.representations.MessageList;
-import io.zerodi.windbag.app.protocol.Connection;
-import io.zerodi.windbag.app.protocol.Message;
-import io.zerodi.windbag.app.protocol.MessageType;
-import io.zerodi.windbag.app.protocol.StringMessage;
+import io.zerodi.windbag.core.protocol.Connection;
+import io.zerodi.windbag.core.protocol.Message;
+import io.zerodi.windbag.core.protocol.MessageType;
+import io.zerodi.windbag.core.protocol.StringMessage;
 import io.zerodi.windbag.app.registry.ChannelRegistryImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,7 +95,7 @@ public class ServerControlResource {
 
 	/**
 	 * @param serverId which we would like to retrieve from the registry
-	 * @return found {@link io.zerodi.windbag.app.protocol.Connection}
+	 * @return found {@link io.zerodi.windbag.core.protocol.Connection}
 	 * @throws javax.ws.rs.WebApplicationException with status of {@link javax.ws.rs.core.Response.Status#NOT_FOUND NOT_FOUND} if none matches the name.
 	 */
 	private Connection findServer(String serverId) {

@@ -1,10 +1,12 @@
 package io.zerodi.windbag.app.protocol.epp;
 
 import io.zerodi.windbag.api.representations.ServerDetail;
-import io.zerodi.windbag.app.protocol.Connection;
-import io.zerodi.windbag.app.protocol.MessageExchange;
-import io.zerodi.windbag.app.protocol.MessageExchangeImpl;
+import io.zerodi.windbag.core.protocol.Connection;
+import io.zerodi.windbag.core.protocol.MessageExchange;
+import io.zerodi.windbag.core.protocol.MessageExchangeImpl;
 import io.zerodi.windbag.app.registry.ProtocolBootstrap;
+import io.zerodi.windbag.core.protocol.epp.EppConnection;
+import io.zerodi.windbag.core.protocol.epp.EppProtocolBootstrap;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
