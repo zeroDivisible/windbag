@@ -42,34 +42,33 @@
 </script>
 
 <script type="text/x-handlebars" id="index">
-        <div class="col-md-10">
-            <ul class="nav nav-pills">
-                <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        domain <span class="caret"></span>
-                    </a>
-                </li>
-            </ul>
-        </div>
+<div class="col-md-10">
+	<ul class="nav nav-pills">
+		<li class="dropdown">
+			<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+				domain <span class="caret"></span>
+			</a>
+		</li>
+	</ul>
+</div>
 
-        <div class="col-md-10">
-            <h2>Heading</h2>
+<div class="col-md-10">
+	<h2>Heading</h2>
 
-            <p>Donec id elit non
-               magna mollis euismod. Donec sed odio dui. </p>
+	<p>Donec id elit non
+		magna mollis euismod. Donec sed odio dui. </p>
 
-            <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-        </div>
+	<p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+</div>
 
-        <div class="col-md-10">
-            <h2>Heading</h2>
+<div class="col-md-10">
+	<h2>Heading</h2>
 
-            <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum
-                nibh, ut
-                fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+	<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum
+		fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
 
-            <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-        </div>
+	<p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+</div>
 </script>
 
 <!-- /container -->
