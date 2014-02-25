@@ -1,0 +1,10 @@
+{
+  "scripts": {
+      "preinstall-gulp": "npm install gulp",
+      "preinstall-gulp-cli": "npm install --save-dev gulp"
+  },
+  "dependencies": {
+    "gulp": ">= 3.5.2"
+  }
+}
+
