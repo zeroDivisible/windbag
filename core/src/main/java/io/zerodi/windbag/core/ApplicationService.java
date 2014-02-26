@@ -51,6 +51,6 @@ public class ApplicationService extends Service<ApplicationConfiguration> {
 		environment.addResource(ServerControlResource.getInstance(configuration, connectionRegistry));
 		environment.addResource(WebAppController.getInstance());
 
-		environment.addHealthCheck(ServerDefinitionHealthCheck.getInstance(defaultServers));
+		environment.addHealthCheck(ServerDefinitionHealthCheck.getInstance(configuration));
 	}
 }

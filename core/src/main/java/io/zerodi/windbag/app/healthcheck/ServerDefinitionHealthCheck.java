@@ -2,6 +2,7 @@ package io.zerodi.windbag.app.healthcheck;
 
 import com.yammer.metrics.core.HealthCheck;
 import io.zerodi.windbag.api.representations.ServerDetail;
+import io.zerodi.windbag.core.ApplicationConfiguration;
 
 import java.util.List;
 
@@ -12,23 +13,24 @@ import java.util.List;
  */
 public class ServerDefinitionHealthCheck extends HealthCheck {
 
-  private final List<ServerDetail> servers;
+	private final ApplicationConfiguration configuration;
 
-  private ServerDefinitionHealthCheck(List<ServerDetail> servers) {
-    super("server-definitions");
-    this.servers = servers;
-  }
+	private ServerDefinitionHealthCheck(ApplicationConfiguration configuration) {
+		super("server-definitions");
+		this.configuration = configuration;
+	}
 
-  public static ServerDefinitionHealthCheck getInstance(List<ServerDetail> servers) {
-    return new ServerDefinitionHealthCheck(servers);
-  }
+	public static ServerDefinitionHealthCheck getInstance(ApplicationConfiguration configuration) {
+		return new ServerDefinitionHealthCheck(configuration);
+	}
 
-  @Override
-  protected Result check() throws Exception {
-    if (servers == null || servers.isEmpty()) {
-      return Result.unhealthy("no server definitions found");
-    }
+	@Override
+	protected Result check() throws Exception {
+		List<ServerDetail> servers = configuration.getServers();
+		if (servers == null || servers.isEmpty()) {
+			return Result.unhealthy("no server definitions found");
+		}
 
-    return Result.healthy();
-  }
+		return Result.healthy();
+	}
 }
