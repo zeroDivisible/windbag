@@ -47,7 +47,7 @@ public class ApplicationService extends Service<ApplicationConfiguration> {
 
 		environment.manage(connectionRegistry); // registry of open connections will need to be shut down along with the main application.
 
-		environment.addResource(ServerConfigurationResource.getInstance(defaultServers));
+		environment.addResource(ServerConfigurationResource.getInstance(configuration));
 		environment.addResource(ServerControlResource.getInstance(configuration, connectionRegistry));
 		environment.addResource(WebAppController.getInstance());
 

@@ -47,7 +47,6 @@ public class ServerControlResource {
 	@Timed
 	public Message connectToServer(@PathParam("serverId") String serverId) throws InterruptedException {
 		ServerDetail server = findServer(serverId);
-
 		Connection connection = connectionRegistry.createAndRegisterConnection(server);
 
 		// connects and waits till the connection is successful.
