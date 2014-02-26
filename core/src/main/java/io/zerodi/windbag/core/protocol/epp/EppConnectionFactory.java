@@ -23,7 +23,8 @@ public class EppConnectionFactory implements ConnectionFactory {
 
 	@Override
 	public Connection newConnection(ServerDetail serverDetail) {
-		Handler eppHandler = EppHandler.getInstance(serverDetail, EppProtocolBootstrap.getInstance());
-		return ConnectionImpl.getInstance(eppHandler);
+		EppProtocolBootstrap protocolBootstrap = EppProtocolBootstrap.getInstance();
+		Handler eppHandler = EppHandler.getInstance(serverDetail, protocolBootstrap);
+		return ConnectionImpl.getInstance(eppHandler, serverDetail, protocolBootstrap);
 	}
 }

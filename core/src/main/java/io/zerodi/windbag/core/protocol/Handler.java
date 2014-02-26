@@ -25,4 +25,6 @@ public interface Handler {
 	public boolean isConnected();
 
 	public Message sendMessage(Message message);
+
+	MessageExchange getMessageExchange();
 }

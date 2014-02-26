@@ -11,7 +11,7 @@ import java.util.HashMap;
 /**
  * @author zerodi
  */
-public class ProtocolBootstrapFactoryImpl {
+public class ProtocolBootstrapFactoryRegistry {
     private static final HashMap<Protocol, ConnectionFactory> bootstrapFactories = new HashMap<>();
 
     static {
@@ -19,11 +19,11 @@ public class ProtocolBootstrapFactoryImpl {
         bootstrapFactories.put(Protocol.EPP, EppConnectionFactory.getInstance());
     }
 
-    private ProtocolBootstrapFactoryImpl() {
+    private ProtocolBootstrapFactoryRegistry() {
     }
 
-    public static ProtocolBootstrapFactoryImpl getInstance() {
-        return new ProtocolBootstrapFactoryImpl();
+    public static ProtocolBootstrapFactoryRegistry getInstance() {
+        return new ProtocolBootstrapFactoryRegistry();
     }
 
     public Connection createConnection(ServerDetail serverDetail) {

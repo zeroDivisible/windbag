@@ -3,6 +3,8 @@ package io.zerodi.windbag.api.resources;
 import com.yammer.metrics.annotation.Timed;
 import io.zerodi.windbag.api.ApiSettings;
 import io.zerodi.windbag.api.representations.MessageList;
+import io.zerodi.windbag.api.representations.ServerDetail;
+import io.zerodi.windbag.core.ApplicationConfiguration;
 import io.zerodi.windbag.core.protocol.Connection;
 import io.zerodi.windbag.core.protocol.Message;
 import io.zerodi.windbag.core.protocol.MessageType;
@@ -13,6 +15,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+
+import java.util.List;
 
 import static javax.ws.rs.core.Response.Status;
 
@@ -26,66 +30,74 @@ import static javax.ws.rs.core.Response.Status;
 public class ServerControlResource {
 	private static final Logger logger = LoggerFactory.getLogger(ServerControlResource.class);
 
-	private final ConnectionRegistryImpl channelRegistry;
+	private final ApplicationConfiguration configuration;
+	private final ConnectionRegistryImpl connectionRegistry;
 
-	private ServerControlResource(ConnectionRegistryImpl channelRegistry) {
-		this.channelRegistry = channelRegistry;
+	private ServerControlResource(ApplicationConfiguration configuration, ConnectionRegistryImpl connectionRegistry) {
+		this.configuration = configuration;
+		this.connectionRegistry = connectionRegistry;
 	}
 
-	public static ServerControlResource getInstance(ConnectionRegistryImpl channelRegistry) {
-		return new ServerControlResource(channelRegistry);
+	public static ServerControlResource getInstance(ApplicationConfiguration configuration, ConnectionRegistryImpl connectionRegistry) {
+		return new ServerControlResource(configuration, connectionRegistry);
 	}
 
 	@GET
 	@Path("{serverId}/connect")
 	@Timed
 	public Message connectToServer(@PathParam("serverId") String serverId) throws InterruptedException {
-		Connection connection = findServer(serverId);
+		ServerDetail server = findServer(serverId);
+
+		Connection connection = connectionRegistry.createAndRegisterConnection(server);
 
 		// connects and waits till the connection is successful.
-		Message connectionResult = connection.connect();
+		Message connectionResult = connection.getHandler().connect();
 		logger.debug("connection successful for {}", serverId);
 		return connectionResult;
 	}
 
 	@GET
-	@Path("{serverId}/disconnect")
+	@Path("{serverId}/{connectionId}/disconnect")
 	@Timed
-	public Message disconnectFromServer(@PathParam("serverId") String serverId) {
-		Connection connection = findServer(serverId);
-		return connection.disconnect();
+	public Message disconnectFromServer(@PathParam("serverId") String serverId, @PathParam("connectionId") Long connectionId) {
+		Connection connection = connectionRegistry.getForServerWithId(serverId, connectionId);
+		if (connection == null) {
+			throw new WebApplicationException(Status.NOT_FOUND);
+		}
+
+		return connection.getHandler().disconnect();
 	}
 
 	@GET
-	@Path("{serverId}/send/{message}")
+	@Path("{serverId}/{connectionId}/send/{message}")
 	@Timed
-	public Message sendMessage(@PathParam("serverId") String serverId, @PathParam("message") final String message)
+	public Message sendMessage(@PathParam("serverId") String serverId, @PathParam("connectionId") Long connectionId, @PathParam("message") final String message)
 			throws InterruptedException {
-		Connection connection = channelRegistry.getConnection(serverId);
+		Connection connection = connectionRegistry.getForServerWithId(serverId, connectionId);
 		if (connection == null) {
 			throw new WebApplicationException(Status.NOT_FOUND);
 		}
 
 		Message messageToSend = StringMessage.getInstance(message, MessageType.OUTBOUND);
-		return connection.sendMessage(messageToSend);
+		return connection.getHandler().sendMessage(messageToSend);
 	}
 
 	@POST
-	@Path("{serverId}/send")
-	public Message postMessage(@PathParam("serverId") String serverId, String message) {
-		Connection connection = channelRegistry.getConnection(serverId);
+	@Path("{serverId}/{connectionId}/send")
+	public Message postMessage(@PathParam("serverId") String serverId, @PathParam("connectionId") Long connectionId, String message) {
+		Connection connection = connectionRegistry.getForServerWithId(serverId, connectionId);
 		if (connection == null) {
 			throw new WebApplicationException(Status.NOT_FOUND);
 		}
 
-		return connection.sendMessage(StringMessage.getInstance(message, MessageType.OUTBOUND));
+		return connection.getHandler().sendMessage(StringMessage.getInstance(message, MessageType.OUTBOUND));
 	}
 
 	@GET
-	@Path("{serverId}/messages")
+	@Path("{serverId}/{connectionId}/messages")
 	@Timed
-	public MessageList getMessages(@PathParam("serverId") String serverId) {
-		Connection connection = channelRegistry.getConnection(serverId);
+	public MessageList getMessages(@PathParam("serverId") String serverId, @PathParam("connectionId") Long connectionId) {
+		Connection connection = connectionRegistry.getForServerWithId(serverId, connectionId);
 		if (connection == null) {
 			throw new WebApplicationException(Status.NOT_FOUND);
 		}
@@ -98,12 +110,13 @@ public class ServerControlResource {
 	 * @return found {@link io.zerodi.windbag.core.protocol.Connection}
 	 * @throws javax.ws.rs.WebApplicationException with status of {@link javax.ws.rs.core.Response.Status#NOT_FOUND NOT_FOUND} if none matches the name.
 	 */
-	private Connection findServer(String serverId) {
-		Connection connection = channelRegistry.getConnection(serverId);
-		if (connection == null) {
-			throw new WebApplicationException(Status.NOT_FOUND);
+	private ServerDetail findServer(String serverId) {
+		for (ServerDetail serverDetail : configuration.getServers()) {
+			if (serverDetail.getName().equals(serverId)) {
+				return serverDetail;
+			}
 		}
 
-		return connection;
+		throw new WebApplicationException(Status.NOT_FOUND);
 	}
 }

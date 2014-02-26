@@ -5,6 +5,7 @@ import com.yammer.dropwizard.lifecycle.Managed;
 import io.zerodi.windbag.api.representations.ServerDetail;
 import io.zerodi.windbag.core.protocol.Connection;
 import io.zerodi.windbag.core.protocol.Handler;
+import io.zerodi.windbag.core.protocol.ProtocolBootstrapFactoryRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,15 +19,17 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class ConnectionRegistryImpl implements Managed, ConnectionRegistry {
 	private static final Logger logger = LoggerFactory.getLogger(ConnectionRegistryImpl.class);
+	private final ProtocolBootstrapFactoryRegistry protocolBootstrapFactoryRegistry;
 
 	private AtomicLong connectionIdGenerator = new AtomicLong();
 	private Map<String, List<Connection>> connectionHashMap = new HashMap<>();
 
-	private ConnectionRegistryImpl() {
+	private ConnectionRegistryImpl(ProtocolBootstrapFactoryRegistry protocolBootstrapFactoryRegistry) {
+		this.protocolBootstrapFactoryRegistry = protocolBootstrapFactoryRegistry;
 	}
 
-	public static ConnectionRegistryImpl getInstance() {
-		return new ConnectionRegistryImpl();
+	public static ConnectionRegistryImpl getInstance(ProtocolBootstrapFactoryRegistry protocolBootstrapFactoryRegistry) {
+		return new ConnectionRegistryImpl(protocolBootstrapFactoryRegistry);
 	}
 
 	@Override
@@ -68,8 +71,16 @@ public class ConnectionRegistryImpl implements Managed, ConnectionRegistry {
 			connectionHashMap.put(serverId, connections);
 		}
 
-		connection.setId(connectionIdGenerator.getAndIncrement());
+		connection.setId(connectionIdGenerator.incrementAndGet());
 		connections.add(connection);
+	}
+
+	@Override
+	public Connection createAndRegisterConnection(ServerDetail serverDetail) {
+		Connection connection = protocolBootstrapFactoryRegistry.createConnection(serverDetail);
+		registerConnection(connection);
+
+		return connection;
 	}
 
 	@Override

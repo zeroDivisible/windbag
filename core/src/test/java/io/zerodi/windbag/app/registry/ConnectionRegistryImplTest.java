@@ -1,9 +1,9 @@
 package io.zerodi.windbag.app.registry;
 
 import io.zerodi.windbag.api.representations.ServerDetail;
-import io.zerodi.windbag.core.protocol.Connection;
-import io.zerodi.windbag.core.protocol.ProtocolBootstrapFactoryImpl;
 import io.zerodi.windbag.core.Protocol;
+import io.zerodi.windbag.core.protocol.Connection;
+import io.zerodi.windbag.core.protocol.ProtocolBootstrapFactoryRegistry;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -17,12 +17,12 @@ import static org.fest.assertions.Assertions.assertThat;
 public class ConnectionRegistryImplTest {
 
 	private ConnectionRegistryImpl channelRegistryImpl;
-	private ProtocolBootstrapFactoryImpl protocolBootstrapFactory;
+	private ProtocolBootstrapFactoryRegistry protocolBootstrapFactory;
 
 	@BeforeMethod
 	public void setUp() throws Exception {
-		channelRegistryImpl = ConnectionRegistryImpl.getInstance();
-		protocolBootstrapFactory = ProtocolBootstrapFactoryImpl.getInstance();
+		protocolBootstrapFactory = ProtocolBootstrapFactoryRegistry.getInstance();
+		channelRegistryImpl = ConnectionRegistryImpl.getInstance(protocolBootstrapFactory);
 	}
 
 	@Test
@@ -41,6 +41,6 @@ public class ConnectionRegistryImplTest {
 		// then
 		assertThat(connection.getId()).isNotEqualTo(0);
 		assertThat(connections).hasSize(1);
-		assertThat(connections).containsOnly(connection);
+		assertThat(connections.get(0)).isEqualTo(connection);
 	}
 }

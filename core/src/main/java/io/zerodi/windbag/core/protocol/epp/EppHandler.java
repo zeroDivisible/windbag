@@ -130,16 +130,6 @@ public class EppHandler implements Handler {
 	}
 
 	@Override
-	public ProtocolBootstrap getProtocolBootstrap() {
-		return protocolBootstrap;
-	}
-
-	@Override
-	public ServerDetail getServerDetail() {
-		return serverDetail;
-	}
-
-	@Override
 	public MessageExchange getMessageExchange() {
 		return messageExchange;
 	}
