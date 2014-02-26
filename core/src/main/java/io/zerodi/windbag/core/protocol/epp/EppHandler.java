@@ -2,18 +2,16 @@ package io.zerodi.windbag.core.protocol.epp;
 
 import com.google.common.base.Preconditions;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.zerodi.windbag.api.representations.ServerDetail;
 import io.zerodi.windbag.app.registry.ProtocolBootstrap;
+import io.zerodi.windbag.core.ApplicationConfiguration;
 import io.zerodi.windbag.core.protocol.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * @author zerodi
@@ -23,16 +21,19 @@ public class EppHandler implements Handler {
 
 	private final ServerDetail serverDetail;
 	private ProtocolBootstrap protocolBootstrap;
+	private final ApplicationConfiguration configuration;
 	private Channel channel = null;
 	private MessageExchange messageExchange = MessageExchangeImpl.getInstance();
+	private ExecutorService executorService = Executors.newCachedThreadPool();
 
-	private EppHandler(ServerDetail serverDetail, ProtocolBootstrap protocolBootstrap) {
+	private EppHandler(ServerDetail serverDetail, ProtocolBootstrap protocolBootstrap, ApplicationConfiguration configuration) {
 		this.serverDetail = serverDetail;
 		this.protocolBootstrap = protocolBootstrap;
+		this.configuration = configuration;
 	}
 
-	public static Handler getInstance(ServerDetail serverDetail, ProtocolBootstrap protocolBootstrap) {
-		return new EppHandler(serverDetail, protocolBootstrap);
+	public static Handler getInstance(ServerDetail serverDetail, ProtocolBootstrap protocolBootstrap, ApplicationConfiguration configuration) {
+		return new EppHandler(serverDetail, protocolBootstrap, configuration);
 	}
 
 	@Override
@@ -50,26 +51,41 @@ public class EppHandler implements Handler {
 				bootstrap.group(eventLoopGroup);
 			}
 
-			final ResponseReceiver responseReceiver = ResponseReceiver.getInstance(getMessageExchange());
+			final ResponseReceiver responseReceiver = ResponseReceiver.getInstance(getMessageExchange(), configuration);
 			ChannelFuture connectionFuture = bootstrap.connect(serverAddress, serverPort);
 			connectionFuture.addListener(new ChannelFutureListener() {
 				@Override
 				public void operationComplete(ChannelFuture future) throws Exception {
 					channel = future.channel();
-					future.channel().pipeline().addLast(responseReceiver);
+					ChannelPipeline pipeline = channel.pipeline();
+					pipeline.addLast(responseReceiver);
 				}
 			});
 
-			connectionFuture.awaitUninterruptibly(20, TimeUnit.SECONDS);
+			connectionFuture.awaitUninterruptibly(configuration.getConnectionTimeoutSeconds(), TimeUnit.SECONDS);
 
-			while (!responseReceiver.ifFinished()) {
-				try {
-					Thread.sleep(2);
-				} catch (InterruptedException e) {
-					logger.error("while waiting for response after sending a message", e);
-					throw new RuntimeException(e);
+			Future<Object> submit = executorService.submit(new Callable<Object>() {
+				@Override
+				public Object call() throws Exception {
+					while (!responseReceiver.ifFinished()) {
+						try {
+							Thread.sleep(2);
+						} catch (InterruptedException e) {
+							logger.error("while waiting for response after sending a message", e);
+							throw new RuntimeException(e);
+						}
+					}
+					return new Object();
 				}
+			});
+
+			try {
+				submit.get(configuration.getResponseTimeoutSeconds(), TimeUnit.SECONDS);
+			} catch (InterruptedException | ExecutionException | TimeoutException e) {
+				logger.error("while waiting for the response after sending message", e);
+				throw new RuntimeException(e);
 			}
+
 			return getMessageExchange().getLastMessage();
 		} else {
 			// TODO find a way to return completed future.
@@ -87,6 +103,8 @@ public class EppHandler implements Handler {
 	public Message disconnect() {
 		if (isConnected()) {
 			try {
+				executorService.shutdown();
+
 				channel.close().sync();
 				channel = null;
 			} catch (InterruptedException e) {
@@ -97,6 +115,7 @@ public class EppHandler implements Handler {
 		} else {
 			return getMessageExchange().postMessage(StringMessage.getInstance("doing nothing; was not connected", MessageType.SYSTEM));
 		}
+
 	}
 
 	@Override
@@ -113,7 +132,7 @@ public class EppHandler implements Handler {
 		synchronized (this) {
 			getMessageExchange().postMessage(message);
 
-			ResponseReceiver responseReceiver = ResponseReceiver.getInstance(getMessageExchange());
+			ResponseReceiver responseReceiver = ResponseReceiver.getInstance(getMessageExchange(), configuration);
 			channel.pipeline().addLast("response-receiver", responseReceiver);
 			channel.writeAndFlush(message.asByteBuf());
 

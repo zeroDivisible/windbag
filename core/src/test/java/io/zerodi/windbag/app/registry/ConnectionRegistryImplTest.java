@@ -1,6 +1,7 @@
 package io.zerodi.windbag.app.registry;
 
 import io.zerodi.windbag.api.representations.ServerDetail;
+import io.zerodi.windbag.core.ApplicationConfiguration;
 import io.zerodi.windbag.core.Protocol;
 import io.zerodi.windbag.core.protocol.BootstrappedConnectionFactory;
 import io.zerodi.windbag.core.protocol.Connection;
@@ -18,10 +19,11 @@ public class ConnectionRegistryImplTest {
 
 	private ConnectionRegistryImpl channelRegistryImpl;
 	private BootstrappedConnectionFactory protocolBootstrapFactory;
+	private ApplicationConfiguration applicationConfiguration;
 
 	@BeforeMethod
 	public void setUp() throws Exception {
-		protocolBootstrapFactory = BootstrappedConnectionFactory.getInstance();
+		protocolBootstrapFactory = BootstrappedConnectionFactory.getInstance(applicationConfiguration);
 		channelRegistryImpl = ConnectionRegistryImpl.getInstance(protocolBootstrapFactory);
 	}
 

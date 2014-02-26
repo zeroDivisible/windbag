@@ -1,6 +1,7 @@
 package io.zerodi.windbag.app.protocol.epp;
 
 import io.zerodi.windbag.api.representations.ServerDetail;
+import io.zerodi.windbag.core.ApplicationConfiguration;
 import io.zerodi.windbag.core.protocol.Handler;
 import io.zerodi.windbag.core.protocol.MessageExchange;
 import io.zerodi.windbag.core.protocol.MessageExchangeImpl;
@@ -16,20 +17,22 @@ import static org.fest.assertions.Assertions.assertThat;
  */
 public class EppConnectionTest {
 
-    private MessageExchange messageExchange;
+	private MessageExchange messageExchange;
 
-    private ServerDetail serverDetail;
+	private ServerDetail serverDetail;
 
-    private ProtocolBootstrap protocolBootstrap;
+	private ProtocolBootstrap protocolBootstrap;
 
-    private Handler handler;
+	private Handler handler;
 
-    @BeforeMethod
-    public void setUp() throws Exception {
-        messageExchange = MessageExchangeImpl.getInstance();
-        serverDetail = new ServerDetail();
-        protocolBootstrap = EppProtocolBootstrap.getInstance();
+	private ApplicationConfiguration applicationConfiguration;
 
-        handler = EppHandler.getInstance(serverDetail, protocolBootstrap);
-    }
+	@BeforeMethod
+	public void setUp() throws Exception {
+		messageExchange = MessageExchangeImpl.getInstance();
+		serverDetail = new ServerDetail();
+		protocolBootstrap = EppProtocolBootstrap.getInstance();
+
+		handler = EppHandler.getInstance(serverDetail, protocolBootstrap, applicationConfiguration);
+	}
 }

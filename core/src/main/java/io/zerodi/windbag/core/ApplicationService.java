@@ -35,7 +35,7 @@ public class ApplicationService extends Service<ApplicationConfiguration> {
 
 	@Override
 	public void run(ApplicationConfiguration configuration, Environment environment) throws Exception {
-		BootstrappedConnectionFactory bootstrappedConnectionFactory = BootstrappedConnectionFactory.getInstance();
+		BootstrappedConnectionFactory bootstrappedConnectionFactory = BootstrappedConnectionFactory.getInstance(configuration);
 		ConnectionRegistryImpl connectionRegistry = ConnectionRegistryImpl.getInstance(bootstrappedConnectionFactory);
 
 		environment.manage(connectionRegistry); // registry of open connections will need to be shut down along with the main application.
