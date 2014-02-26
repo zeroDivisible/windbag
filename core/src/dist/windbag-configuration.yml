@@ -8,7 +8,7 @@ servers:
 
   - name: devvm2
     server_address: 192.168.33.20
-    server_port: 701
+    server_port: 700
     protocol: EPP
 
 

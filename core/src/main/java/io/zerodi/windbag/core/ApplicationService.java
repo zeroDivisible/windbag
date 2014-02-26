@@ -13,7 +13,7 @@ import io.zerodi.windbag.api.resources.WebAppController;
 import io.zerodi.windbag.app.healthcheck.ServerDefinitionHealthCheck;
 import io.zerodi.windbag.core.protocol.Connection;
 import io.zerodi.windbag.core.protocol.ProtocolBootstrapFactoryImpl;
-import io.zerodi.windbag.app.registry.ChannelRegistryImpl;
+import io.zerodi.windbag.app.registry.ConnectionRegistryImpl;
 
 import java.util.List;
 
@@ -40,7 +40,7 @@ public class ApplicationService extends Service<ApplicationConfiguration> {
 	@Override
 	public void run(ApplicationConfiguration configuration, Environment environment) throws Exception {
 		List<ServerDetail> defaultServers = configuration.getServers();
-		ChannelRegistryImpl channelRegistry = addDefaultServers(environment, defaultServers);
+		ConnectionRegistryImpl channelRegistry = addDefaultServers(environment, defaultServers);
 
 		environment.addResource(ServerConfigurationResource.getInstance(defaultServers));
 		environment.addResource(ServerControlResource.getInstance(channelRegistry));
@@ -49,9 +49,9 @@ public class ApplicationService extends Service<ApplicationConfiguration> {
 		environment.addHealthCheck(ServerDefinitionHealthCheck.getInstance(defaultServers));
 	}
 
-	private ChannelRegistryImpl addDefaultServers(Environment environment, List<ServerDetail> defaultServers) {
+	private ConnectionRegistryImpl addDefaultServers(Environment environment, List<ServerDetail> defaultServers) {
 		ProtocolBootstrapFactoryImpl protocolBootstrapFactory = ProtocolBootstrapFactoryImpl.getInstance();
-		ChannelRegistryImpl channelRegistryImpl = ChannelRegistryImpl.getInstance();
+		ConnectionRegistryImpl channelRegistryImpl = ConnectionRegistryImpl.getInstance();
 		for (ServerDetail server : defaultServers) {
 			Connection clientConnection = protocolBootstrapFactory.createConnection(server);
 			channelRegistryImpl.registerConnection(clientConnection);

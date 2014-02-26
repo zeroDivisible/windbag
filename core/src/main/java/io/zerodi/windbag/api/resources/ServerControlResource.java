@@ -7,7 +7,7 @@ import io.zerodi.windbag.core.protocol.Connection;
 import io.zerodi.windbag.core.protocol.Message;
 import io.zerodi.windbag.core.protocol.MessageType;
 import io.zerodi.windbag.core.protocol.StringMessage;
-import io.zerodi.windbag.app.registry.ChannelRegistryImpl;
+import io.zerodi.windbag.app.registry.ConnectionRegistryImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,13 +26,13 @@ import static javax.ws.rs.core.Response.Status;
 public class ServerControlResource {
 	private static final Logger logger = LoggerFactory.getLogger(ServerControlResource.class);
 
-	private final ChannelRegistryImpl channelRegistry;
+	private final ConnectionRegistryImpl channelRegistry;
 
-	private ServerControlResource(ChannelRegistryImpl channelRegistry) {
+	private ServerControlResource(ConnectionRegistryImpl channelRegistry) {
 		this.channelRegistry = channelRegistry;
 	}
 
-	public static ServerControlResource getInstance(ChannelRegistryImpl channelRegistry) {
+	public static ServerControlResource getInstance(ConnectionRegistryImpl channelRegistry) {
 		return new ServerControlResource(channelRegistry);
 	}
 

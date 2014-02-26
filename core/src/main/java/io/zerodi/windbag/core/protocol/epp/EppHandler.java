@@ -18,21 +18,21 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author zerodi
  */
-public class EppConnection implements Connection {
-	private static final Logger logger = LoggerFactory.getLogger(EppConnection.class);
+public class EppHandler implements Handler {
+	private static final Logger logger = LoggerFactory.getLogger(EppHandler.class);
 
 	private final ServerDetail serverDetail;
 	private ProtocolBootstrap protocolBootstrap;
 	private Channel channel = null;
 	private MessageExchange messageExchange = MessageExchangeImpl.getInstance();
 
-	private EppConnection(ServerDetail serverDetail, ProtocolBootstrap protocolBootstrap) {
+	private EppHandler(ServerDetail serverDetail, ProtocolBootstrap protocolBootstrap) {
 		this.serverDetail = serverDetail;
 		this.protocolBootstrap = protocolBootstrap;
 	}
 
-	public static Connection getInstance(ServerDetail serverDetail, ProtocolBootstrap protocolBootstrap) {
-		return new EppConnection(serverDetail, protocolBootstrap);
+	public static Handler getInstance(ServerDetail serverDetail, ProtocolBootstrap protocolBootstrap) {
+		return new EppHandler(serverDetail, protocolBootstrap);
 	}
 
 	@Override
