@@ -2,8 +2,8 @@ package io.zerodi.windbag.app.registry;
 
 import io.zerodi.windbag.api.representations.ServerDetail;
 import io.zerodi.windbag.core.Protocol;
+import io.zerodi.windbag.core.protocol.BootstrappedConnectionFactory;
 import io.zerodi.windbag.core.protocol.Connection;
-import io.zerodi.windbag.core.protocol.ProtocolBootstrapFactoryRegistry;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -17,11 +17,11 @@ import static org.fest.assertions.Assertions.assertThat;
 public class ConnectionRegistryImplTest {
 
 	private ConnectionRegistryImpl channelRegistryImpl;
-	private ProtocolBootstrapFactoryRegistry protocolBootstrapFactory;
+	private BootstrappedConnectionFactory protocolBootstrapFactory;
 
 	@BeforeMethod
 	public void setUp() throws Exception {
-		protocolBootstrapFactory = ProtocolBootstrapFactoryRegistry.getInstance();
+		protocolBootstrapFactory = BootstrappedConnectionFactory.getInstance();
 		channelRegistryImpl = ConnectionRegistryImpl.getInstance(protocolBootstrapFactory);
 	}
 

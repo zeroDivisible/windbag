@@ -2,8 +2,8 @@ package io.zerodi.windbag.app.protocol;
 
 import static org.fest.assertions.Assertions.assertThat;
 
+import io.zerodi.windbag.core.protocol.BootstrappedConnectionFactory;
 import io.zerodi.windbag.core.protocol.Connection;
-import io.zerodi.windbag.core.protocol.ProtocolBootstrapFactoryRegistry;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -16,11 +16,11 @@ import io.zerodi.windbag.core.Protocol;
  */
 public class ConnectionFactoryImplTest {
 
-    private ProtocolBootstrapFactoryRegistry bootstrapFactory;
+    private BootstrappedConnectionFactory bootstrapFactory;
 
     @BeforeMethod
     public void setUp() throws Exception {
-        bootstrapFactory = ProtocolBootstrapFactoryRegistry.getInstance();
+        bootstrapFactory = BootstrappedConnectionFactory.getInstance();
     }
 
     @Test
