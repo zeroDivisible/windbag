@@ -2,6 +2,7 @@ package io.zerodi.windbag.api.resources;
 
 import com.yammer.metrics.annotation.Timed;
 import io.zerodi.windbag.api.ApiSettings;
+import io.zerodi.windbag.api.representations.ConnectionList;
 import io.zerodi.windbag.api.representations.MessageList;
 import io.zerodi.windbag.api.representations.ServerDetail;
 import io.zerodi.windbag.core.ApplicationConfiguration;
@@ -53,6 +54,13 @@ public class ServerControlResource {
 		Message connectionResult = connection.getHandler().connect();
 		logger.debug("connection successful for {}", serverId);
 		return connectionResult;
+	}
+
+	@GET
+	@Path("{serverId}/connections")
+	public ConnectionList getConnections(@PathParam("serverId") String serverId) {
+		List<Connection> connections = connectionRegistry.getAllForServer(serverId);
+		return ConnectionList.getInstance(connections);
 	}
 
 	@GET
