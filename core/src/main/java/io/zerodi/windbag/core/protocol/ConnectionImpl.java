@@ -17,7 +17,7 @@ public class ConnectionImpl implements Connection {
 	private final Handler handler;
 	private final ServerDetail serverDetail;
 	private final ProtocolBootstrap protocolBootstrap;
-	private long connectionid;
+	private long connectionId;
 
 	private ConnectionImpl(Handler handler, ServerDetail serverDetail, ProtocolBootstrap protocolBootstrap) {
 		this.handler = handler;
@@ -32,12 +32,12 @@ public class ConnectionImpl implements Connection {
 	@JsonValue
 	@Override
 	public long getId() {
-		return connectionid;
+		return connectionId;
 	}
 
 	@Override
-	public void setId(long connectionid) {
-		this.connectionid = connectionid;
+	public void setId(long connectionId) {
+		this.connectionId = connectionId;
 	}
 
 	@Override
