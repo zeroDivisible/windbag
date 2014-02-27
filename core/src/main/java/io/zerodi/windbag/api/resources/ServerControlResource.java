@@ -2,7 +2,7 @@ package io.zerodi.windbag.api.resources;
 
 import com.yammer.metrics.annotation.Timed;
 import io.zerodi.windbag.api.ApiSettings;
-import io.zerodi.windbag.api.representations.ConnectionList;
+import io.zerodi.windbag.api.representations.ConnectionDetailList;
 import io.zerodi.windbag.api.representations.MessageList;
 import io.zerodi.windbag.api.representations.ServerDetail;
 import io.zerodi.windbag.core.ApplicationConfiguration;
@@ -57,10 +57,10 @@ public class ServerControlResource {
 	}
 
 	@GET
-	@Path("{serverId}/connections")
-	public ConnectionList getConnections(@PathParam("serverId") String serverId) {
+	@Path("{serverId}/active-connections")
+	public ConnectionDetailList getConnections(@PathParam("serverId") String serverId) {
 		List<Connection> connections = connectionRegistry.getAllForServer(serverId);
-		return ConnectionList.getInstance(connections);
+		return ConnectionDetailList.getInstance(connections);
 	}
 
 	@GET

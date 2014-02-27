@@ -1,6 +1,5 @@
 package io.zerodi.windbag.core.protocol;
 
-import com.fasterxml.jackson.annotation.JsonValue;
 import io.zerodi.windbag.api.representations.ServerDetail;
 import io.zerodi.windbag.app.registry.ProtocolBootstrap;
 import org.slf4j.Logger;
@@ -29,7 +28,6 @@ public class ConnectionImpl implements Connection {
 		return new ConnectionImpl(handler, serverDetail, protocolBootstrap);
 	}
 
-	@JsonValue
 	@Override
 	public long getId() {
 		return connectionId;
