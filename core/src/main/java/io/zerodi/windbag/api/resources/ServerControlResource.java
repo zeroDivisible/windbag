@@ -72,7 +72,7 @@ public class ServerControlResource {
 			throw new WebApplicationException(Status.NOT_FOUND);
 		}
 
-		return connection.getHandler().disconnect();
+		return connectionRegistry.disconnectAndDeregister(connection);
 	}
 
 	@GET

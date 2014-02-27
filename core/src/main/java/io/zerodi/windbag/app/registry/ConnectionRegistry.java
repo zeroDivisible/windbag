@@ -2,6 +2,7 @@ package io.zerodi.windbag.app.registry;
 
 import io.zerodi.windbag.api.representations.ServerDetail;
 import io.zerodi.windbag.core.protocol.Connection;
+import io.zerodi.windbag.core.protocol.Message;
 
 import java.util.List;
 
@@ -13,6 +14,8 @@ import java.util.List;
 public interface ConnectionRegistry {
 
 	public void registerConnection(Connection connection);
+
+	public Message disconnectAndDeregister(Connection connection);
 
 	public Connection createAndRegisterConnection(ServerDetail serverDetail);
 

@@ -6,6 +6,7 @@ import io.zerodi.windbag.api.representations.ServerDetail;
 import io.zerodi.windbag.core.protocol.BootstrappedConnectionFactory;
 import io.zerodi.windbag.core.protocol.Connection;
 import io.zerodi.windbag.core.protocol.Handler;
+import io.zerodi.windbag.core.protocol.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,6 +74,15 @@ public class ConnectionRegistryImpl implements Managed, ConnectionRegistry {
 
 		connection.setId(connectionIdGenerator.incrementAndGet());
 		connections.add(connection);
+	}
+
+	@Override
+	public Message disconnectAndDeregister(Connection connection) {
+		ServerDetail detail = connection.getServerDetail();
+		List<Connection> connections = getAllForServer(detail.getName());
+		connections.remove(connection);
+
+		return connection.getHandler().disconnect();
 	}
 
 	@Override
