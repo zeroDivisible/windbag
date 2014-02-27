@@ -2,8 +2,9 @@ package io.zerodi.windbag.app.protocol;
 
 import static org.fest.assertions.Assertions.assertThat;
 
+import io.zerodi.windbag.core.ApplicationConfiguration;
+import io.zerodi.windbag.core.protocol.BootstrappedConnectionFactory;
 import io.zerodi.windbag.core.protocol.Connection;
-import io.zerodi.windbag.core.protocol.ProtocolBootstrapFactoryImpl;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -16,25 +17,27 @@ import io.zerodi.windbag.core.Protocol;
  */
 public class ConnectionFactoryImplTest {
 
-    private ProtocolBootstrapFactoryImpl bootstrapFactory;
+	private BootstrappedConnectionFactory bootstrapFactory;
 
-    @BeforeMethod
-    public void setUp() throws Exception {
-        bootstrapFactory = ProtocolBootstrapFactoryImpl.getInstance();
-    }
+	private ApplicationConfiguration applicationConfiguration;
 
-    @Test
-    public void itShouldAllowToCreateProtocolBootstrapFromServerDetail() {
-        // given
-        ServerDetail serverDetail = new ServerDetail();
-        serverDetail.setProtocol(Protocol.NOOP);
+	@BeforeMethod
+	public void setUp() throws Exception {
+		bootstrapFactory = BootstrappedConnectionFactory.getInstance(applicationConfiguration);
+	}
 
-        // when
-        Connection connection = bootstrapFactory.createConnection(serverDetail);
-        ProtocolBootstrap protocolBootstrap = connection.getProtocolBootstrap();
+	@Test
+	public void itShouldAllowToCreateProtocolBootstrapFromServerDetail() {
+		// given
+		ServerDetail serverDetail = new ServerDetail();
+		serverDetail.setProtocol(Protocol.NOOP);
 
-        // then
-        assertThat(protocolBootstrap).isNotNull();
-        assertThat(protocolBootstrap.getProtocol()).isEqualTo(Protocol.NOOP);
-    }
+		// when
+		Connection connection = bootstrapFactory.createConnection(serverDetail);
+		ProtocolBootstrap protocolBootstrap = connection.getProtocolBootstrap();
+
+		// then
+		assertThat(protocolBootstrap).isNotNull();
+		assertThat(protocolBootstrap.getProtocol()).isEqualTo(Protocol.NOOP);
+	}
 }

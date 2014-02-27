@@ -1,5 +1,6 @@
 package io.zerodi.windbag.app.registry;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import io.netty.bootstrap.Bootstrap;
 import io.zerodi.windbag.core.Protocol;
 
@@ -11,6 +12,7 @@ public interface ProtocolBootstrap {
 	/**
 	 * @return obtains the associated protocol for this bootstrap
 	 */
+	@JsonValue
 	public Protocol getProtocol();
 
 	/**

@@ -9,19 +9,19 @@ import org.slf4j.LoggerFactory;
 /**
  * @author zerodi
  */
-public class NoopConnection implements Connection {
-	private static final Logger logger = LoggerFactory.getLogger(NoopConnection.class);
+public class NoopHandler implements Handler {
+	private static final Logger logger = LoggerFactory.getLogger(NoopHandler.class);
 	private final ServerDetail serverDetail;
 	private final ProtocolBootstrap protocolBootstrap;
 	private boolean connected = false;
 
-	private NoopConnection(ServerDetail serverDetail, ProtocolBootstrap protocolBootstrap) {
+	private NoopHandler(ServerDetail serverDetail, ProtocolBootstrap protocolBootstrap) {
 		this.serverDetail = serverDetail;
 		this.protocolBootstrap = protocolBootstrap;
 	}
 
-	public static NoopConnection getInstance(ServerDetail serverDetail, ProtocolBootstrap protocolBootstrap) {
-		return new NoopConnection(serverDetail, protocolBootstrap);
+	public static NoopHandler getInstance(ServerDetail serverDetail, ProtocolBootstrap protocolBootstrap) {
+		return new NoopHandler(serverDetail, protocolBootstrap);
 	}
 
 	@Override
@@ -54,16 +54,6 @@ public class NoopConnection implements Connection {
 		logger.debug("sending message");
 
 		return null;
-	}
-
-	@Override
-	public ProtocolBootstrap getProtocolBootstrap() {
-		return protocolBootstrap;
-	}
-
-	@Override
-	public ServerDetail getServerDetail() {
-		return serverDetail;
 	}
 
 	@Override
