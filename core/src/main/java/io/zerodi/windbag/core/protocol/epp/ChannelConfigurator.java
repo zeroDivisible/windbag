@@ -14,20 +14,26 @@ import io.netty.handler.codec.string.StringEncoder;
  */
 public class ChannelConfigurator extends ChannelInitializer<SocketChannel> {
 
-    private ChannelConfigurator() {
-    }
+	private ChannelConfigurator() {
+	}
 
-    public static ChannelConfigurator getInstance() {
-        return new ChannelConfigurator();
-    }
+	public static ChannelConfigurator getInstance() {
+		return new ChannelConfigurator();
+	}
 
-    @Override
-    protected void initChannel(SocketChannel ch) throws Exception {
-        ChannelPipeline pipeline = ch.pipeline();
+	@Override
+	protected void initChannel(SocketChannel ch) throws
+	                                             Exception {
+		ChannelPipeline pipeline = ch.pipeline();
 
-        pipeline.addLast("message-length-adder", new LengthFieldPrepender(4, true));
-        pipeline.addLast("epp-message-decoder", EppMessageDecoder.getInstance());
-        pipeline.addLast("string-decoder", new StringDecoder());
-        pipeline.addLast("string-encoder", new StringEncoder());
-    }
+		pipeline.addLast("message-length-adder",
+		                 new LengthFieldPrepender(4,
+		                                          true));
+		pipeline.addLast("epp-message-decoder",
+		                 EppMessageDecoder.getInstance());
+		pipeline.addLast("string-decoder",
+		                 new StringDecoder());
+		pipeline.addLast("string-encoder",
+		                 new StringEncoder());
+	}
 }

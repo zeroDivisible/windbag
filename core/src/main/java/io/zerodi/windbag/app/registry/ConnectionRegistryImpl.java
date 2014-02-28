@@ -22,8 +22,8 @@ public class ConnectionRegistryImpl implements Managed, ConnectionRegistry {
 	private static final Logger logger = LoggerFactory.getLogger(ConnectionRegistryImpl.class);
 	private final BootstrappedConnectionFactory bootstrappedConnectionFactory;
 
-	private AtomicLong connectionIdGenerator = new AtomicLong();
-	private Map<String, List<Connection>> connectionHashMap = new HashMap<>();
+	private AtomicLong                    connectionIdGenerator = new AtomicLong();
+	private Map<String, List<Connection>> connectionHashMap     = new HashMap<>();
 
 	private ConnectionRegistryImpl(BootstrappedConnectionFactory bootstrappedConnectionFactory) {
 		this.bootstrappedConnectionFactory = bootstrappedConnectionFactory;
@@ -34,12 +34,14 @@ public class ConnectionRegistryImpl implements Managed, ConnectionRegistry {
 	}
 
 	@Override
-	public void start() throws Exception {
+	public void start() throws
+	                    Exception {
 		logger.info("starting channel registry");
 	}
 
 	@Override
-	public void stop() throws Exception {
+	public void stop() throws
+	                   Exception {
 		logger.info("stopping channel registry");
 
 		Collection<List<Connection>> values = connectionHashMap.values();
@@ -58,18 +60,23 @@ public class ConnectionRegistryImpl implements Managed, ConnectionRegistry {
 
 	@Override
 	public void registerConnection(Connection connection) {
-		Preconditions.checkNotNull(connection.getProtocolBootstrap(), "connection.getProtocolBootstrap() cannot be null!");
-		Preconditions.checkArgument(connection.getId() == 0, "connection.getId() == 0 is not fulfilled, cannot register connection twice!");
+		Preconditions.checkNotNull(connection.getProtocolBootstrap(),
+		                           "connection.getProtocolBootstrap() cannot be null!");
+		Preconditions.checkArgument(connection.getId() == 0,
+		                            "connection.getId() == 0 is not fulfilled, cannot register connection twice!");
 
 		ServerDetail serverDetail = connection.getServerDetail();
-		Preconditions.checkNotNull(serverDetail, "connection.getServerDetail() cannot be null!");
+		Preconditions.checkNotNull(serverDetail,
+		                           "connection.getServerDetail() cannot be null!");
 		String serverId = serverDetail.getName();
-		Preconditions.checkNotNull(serverId, "clientConnection.getServerDetail().getName() cannot be null!");
+		Preconditions.checkNotNull(serverId,
+		                           "clientConnection.getServerDetail().getName() cannot be null!");
 
 		List<Connection> connections = connectionHashMap.get(serverId);
 		if (connections == null) {
 			connections = new ArrayList<>();
-			connectionHashMap.put(serverId, connections);
+			connectionHashMap.put(serverId,
+			                      connections);
 		}
 
 		connection.setId(connectionIdGenerator.incrementAndGet());
@@ -82,7 +89,8 @@ public class ConnectionRegistryImpl implements Managed, ConnectionRegistry {
 		List<Connection> connections = getAllForServer(detail.getName());
 		connections.remove(connection);
 
-		return connection.getHandler().disconnect();
+		return connection.getHandler()
+		                 .disconnect();
 	}
 
 	@Override
@@ -95,17 +103,20 @@ public class ConnectionRegistryImpl implements Managed, ConnectionRegistry {
 
 	@Override
 	public List<Connection> getAllForServer(String serverId) {
-		Preconditions.checkNotNull(serverId, "serverId cannot be null!");
+		Preconditions.checkNotNull(serverId,
+		                           "serverId cannot be null!");
 
 		if (!connectionHashMap.containsKey(serverId)) {
-			connectionHashMap.put(serverId, new ArrayList<Connection>());
+			connectionHashMap.put(serverId,
+			                      new ArrayList<Connection>());
 		}
 
 		return connectionHashMap.get(serverId);
 	}
 
 	@Override
-	public Connection getForServerWithId(String serverId, long connectionId) {
+	public Connection getForServerWithId(String serverId,
+	                                     long connectionId) {
 		List<Connection> allConnectionsForServer = connectionHashMap.get(serverId);
 		for (Connection connection : allConnectionsForServer) {
 			if (connection.getId() == connectionId) {

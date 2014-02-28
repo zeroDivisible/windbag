@@ -12,29 +12,30 @@ import org.slf4j.LoggerFactory;
  * @author zerodi
  */
 public class EppProtocolBootstrap implements ProtocolBootstrap {
-    private static final Logger logger = LoggerFactory.getLogger(EppProtocolBootstrap.class);
+	private static final Logger logger = LoggerFactory.getLogger(EppProtocolBootstrap.class);
 
-    private Bootstrap bootstrap = null;
+	private Bootstrap bootstrap = null;
 
-    private EppProtocolBootstrap() {
-        bootstrap = new Bootstrap();
-        bootstrap.channel(NioSocketChannel.class);
-        bootstrap.option(ChannelOption.SO_KEEPALIVE, true);
+	private EppProtocolBootstrap() {
+		bootstrap = new Bootstrap();
+		bootstrap.channel(NioSocketChannel.class);
+		bootstrap.option(ChannelOption.SO_KEEPALIVE,
+		                 true);
 
-        bootstrap.handler(ChannelConfigurator.getInstance());
-    }
+		bootstrap.handler(ChannelConfigurator.getInstance());
+	}
 
-    public static EppProtocolBootstrap getInstance() {
-        return new EppProtocolBootstrap();
-    }
+	public static EppProtocolBootstrap getInstance() {
+		return new EppProtocolBootstrap();
+	}
 
-    @Override
-    public Protocol getProtocol() {
-        return Protocol.EPP;
-    }
+	@Override
+	public Protocol getProtocol() {
+		return Protocol.EPP;
+	}
 
-    @Override
-    public Bootstrap getBootstrap() {
-        return bootstrap;
-    }
+	@Override
+	public Bootstrap getBootstrap() {
+		return bootstrap;
+	}
 }

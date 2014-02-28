@@ -11,23 +11,23 @@ import io.zerodi.windbag.core.Protocol;
  */
 public class NoopProtocolBootstrap implements ProtocolBootstrap {
 
-    private Bootstrap bootstrap;
+	private Bootstrap bootstrap;
 
-    private NoopProtocolBootstrap() {
-        bootstrap = new Bootstrap();
-    }
+	private NoopProtocolBootstrap() {
+		bootstrap = new Bootstrap();
+	}
 
-    public static NoopProtocolBootstrap getInstance() {
-        return new NoopProtocolBootstrap();
-    }
+	public static NoopProtocolBootstrap getInstance() {
+		return new NoopProtocolBootstrap();
+	}
 
-    @Override
-    public Protocol getProtocol() {
-        return Protocol.NOOP;
-    }
+	@Override
+	public Protocol getProtocol() {
+		return Protocol.NOOP;
+	}
 
-    @Override
-    public Bootstrap getBootstrap() {
-        return bootstrap;
-    }
+	@Override
+	public Bootstrap getBootstrap() {
+		return bootstrap;
+	}
 }

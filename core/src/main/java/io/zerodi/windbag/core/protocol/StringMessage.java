@@ -19,22 +19,29 @@ public class StringMessage implements Message {
 	@JsonProperty("message_type")
 	private final MessageType messageType;
 
-	private StringMessage(byte[] message, MessageType messageType) {
+	private StringMessage(byte[] message,
+	                      MessageType messageType) {
 		this.messageType = messageType;
-		this.message = new String(message, CharsetUtil.UTF_8);
+		this.message = new String(message,
+		                          CharsetUtil.UTF_8);
 	}
 
-	private StringMessage(String message, MessageType messageType) {
+	private StringMessage(String message,
+	                      MessageType messageType) {
 		this.message = message;
 		this.messageType = messageType;
 	}
 
-	public static Message getInstance(byte[] message, MessageType messageType) {
-		return new StringMessage(message, messageType);
+	public static Message getInstance(byte[] message,
+	                                  MessageType messageType) {
+		return new StringMessage(message,
+		                         messageType);
 	}
 
-	public static Message getInstance(String message, MessageType messageType) {
-		return new StringMessage(message, messageType);
+	public static Message getInstance(String message,
+	                                  MessageType messageType) {
+		return new StringMessage(message,
+		                         messageType);
 	}
 
 	public String getMessage() {

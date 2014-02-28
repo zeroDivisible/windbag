@@ -16,25 +16,33 @@ import org.slf4j.LoggerFactory;
 public class ResponseReceiver extends SimpleChannelInboundHandler<String> {
 	private static final Logger logger = LoggerFactory.getLogger(ResponseReceiver.class);
 
-	private final MessageExchange messageExchange;
-	private final ApplicationConfiguration configuration;
-	private volatile boolean finished;
+	private final    MessageExchange          messageExchange;
+	private final    ApplicationConfiguration configuration;
+	private volatile boolean                  finished;
 
-	private ResponseReceiver(MessageExchange messageExchange, ApplicationConfiguration configuration) {
+	private ResponseReceiver(MessageExchange messageExchange,
+	                         ApplicationConfiguration configuration) {
 		this.messageExchange = messageExchange;
 		this.configuration = configuration;
 	}
 
-	public static ResponseReceiver getInstance(MessageExchange messageExchange, ApplicationConfiguration configuration) {
-		return new ResponseReceiver(messageExchange, configuration);
+	public static ResponseReceiver getInstance(MessageExchange messageExchange,
+	                                           ApplicationConfiguration configuration) {
+		return new ResponseReceiver(messageExchange,
+		                            configuration);
 	}
 
 	@Override
-	protected void messageReceived(ChannelHandlerContext ctx, String msg) throws Exception {
-		logger.debug("got {}, handling it and removing itself from pipeline", msg);
-		ctx.pipeline().remove(this);
+	protected void messageReceived(ChannelHandlerContext ctx,
+	                               String msg) throws
+	                                           Exception {
+		logger.debug("got {}, handling it and removing itself from pipeline",
+		             msg);
+		ctx.pipeline()
+		   .remove(this);
 
-		Message receivedMessage = StringMessage.getInstance(msg, MessageType.INBOUND);
+		Message receivedMessage = StringMessage.getInstance(msg,
+		                                                    MessageType.INBOUND);
 		messageExchange.postMessage(receivedMessage);
 		finished = true;
 	}

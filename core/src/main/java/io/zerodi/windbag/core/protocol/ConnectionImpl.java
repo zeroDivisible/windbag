@@ -13,19 +13,25 @@ import org.slf4j.LoggerFactory;
 public class ConnectionImpl implements Connection {
 	private static final Logger logger = LoggerFactory.getLogger(ConnectionImpl.class);
 
-	private final Handler handler;
-	private final ServerDetail serverDetail;
+	private final Handler           handler;
+	private final ServerDetail      serverDetail;
 	private final ProtocolBootstrap protocolBootstrap;
-	private long connectionId;
+	private       long              connectionId;
 
-	private ConnectionImpl(Handler handler, ServerDetail serverDetail, ProtocolBootstrap protocolBootstrap) {
+	private ConnectionImpl(Handler handler,
+	                       ServerDetail serverDetail,
+	                       ProtocolBootstrap protocolBootstrap) {
 		this.handler = handler;
 		this.serverDetail = serverDetail;
 		this.protocolBootstrap = protocolBootstrap;
 	}
 
-	public static Connection getInstance(Handler handler, ServerDetail serverDetail, ProtocolBootstrap protocolBootstrap) {
-		return new ConnectionImpl(handler, serverDetail, protocolBootstrap);
+	public static Connection getInstance(Handler handler,
+	                                     ServerDetail serverDetail,
+	                                     ProtocolBootstrap protocolBootstrap) {
+		return new ConnectionImpl(handler,
+		                          serverDetail,
+		                          protocolBootstrap);
 	}
 
 	@Override

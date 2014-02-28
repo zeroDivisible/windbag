@@ -11,17 +11,20 @@ import org.slf4j.LoggerFactory;
  */
 public class NoopHandler implements Handler {
 	private static final Logger logger = LoggerFactory.getLogger(NoopHandler.class);
-	private final ServerDetail serverDetail;
+	private final ServerDetail      serverDetail;
 	private final ProtocolBootstrap protocolBootstrap;
 	private boolean connected = false;
 
-	private NoopHandler(ServerDetail serverDetail, ProtocolBootstrap protocolBootstrap) {
+	private NoopHandler(ServerDetail serverDetail,
+	                    ProtocolBootstrap protocolBootstrap) {
 		this.serverDetail = serverDetail;
 		this.protocolBootstrap = protocolBootstrap;
 	}
 
-	public static NoopHandler getInstance(ServerDetail serverDetail, ProtocolBootstrap protocolBootstrap) {
-		return new NoopHandler(serverDetail, protocolBootstrap);
+	public static NoopHandler getInstance(ServerDetail serverDetail,
+	                                      ProtocolBootstrap protocolBootstrap) {
+		return new NoopHandler(serverDetail,
+		                       protocolBootstrap);
 	}
 
 	@Override
@@ -29,7 +32,8 @@ public class NoopHandler implements Handler {
 		logger.debug("connecting...");
 		connected = true;
 
-		return StringMessage.getInstance("noop connection started", MessageType.SYSTEM);
+		return StringMessage.getInstance("noop connection started",
+		                                 MessageType.SYSTEM);
 	}
 
 	@Override
@@ -40,7 +44,8 @@ public class NoopHandler implements Handler {
 	@Override
 	public Message disconnect() {
 		logger.debug("disconnecting..");
-		return StringMessage.getInstance("noop connection closed", MessageType.SYSTEM);
+		return StringMessage.getInstance("noop connection closed",
+		                                 MessageType.SYSTEM);
 	}
 
 	@Override

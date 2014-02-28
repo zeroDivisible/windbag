@@ -3,9 +3,9 @@ package io.zerodi.windbag.core.protocol;
 import com.google.common.base.Preconditions;
 import io.zerodi.windbag.api.representations.ServerDetail;
 import io.zerodi.windbag.core.ApplicationConfiguration;
+import io.zerodi.windbag.core.Protocol;
 import io.zerodi.windbag.core.protocol.epp.EppConnectionFactory;
 import io.zerodi.windbag.core.protocol.noop.NoopConnectionFactory;
-import io.zerodi.windbag.core.Protocol;
 
 import java.util.HashMap;
 
@@ -16,8 +16,10 @@ public class BootstrappedConnectionFactory {
 	private static final HashMap<Protocol, ConnectionFactory> bootstrapFactories = new HashMap<>();
 
 	static {
-		bootstrapFactories.put(Protocol.NOOP, NoopConnectionFactory.getInstance());
-		bootstrapFactories.put(Protocol.EPP, EppConnectionFactory.getInstance());
+		bootstrapFactories.put(Protocol.NOOP,
+		                       NoopConnectionFactory.getInstance());
+		bootstrapFactories.put(Protocol.EPP,
+		                       EppConnectionFactory.getInstance());
 	}
 
 	private final ApplicationConfiguration configuration;
@@ -31,12 +33,15 @@ public class BootstrappedConnectionFactory {
 	}
 
 	public Connection createConnection(ServerDetail serverDetail) {
-		Preconditions.checkNotNull(serverDetail, "serverDetail cannot be null!");
-		Preconditions.checkNotNull(serverDetail.getProtocol(), "serverDetail.getProtocol() cannot return null!");
+		Preconditions.checkNotNull(serverDetail,
+		                           "serverDetail cannot be null!");
+		Preconditions.checkNotNull(serverDetail.getProtocol(),
+		                           "serverDetail.getProtocol() cannot return null!");
 
 		Protocol protocol = serverDetail.getProtocol();
 		ConnectionFactory connectionFactory = bootstrapFactories.get(protocol);
 
-		return connectionFactory.newConnection(serverDetail, configuration);
+		return connectionFactory.newConnection(serverDetail,
+		                                       configuration);
 	}
 }

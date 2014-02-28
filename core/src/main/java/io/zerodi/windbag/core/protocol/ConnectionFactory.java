@@ -9,5 +9,6 @@ import io.zerodi.windbag.core.ApplicationConfiguration;
  */
 public interface ConnectionFactory {
 
-	public Connection newConnection(ServerDetail serverDetail, ApplicationConfiguration applicationConfiguration);
+	public Connection newConnection(ServerDetail serverDetail,
+	                                ApplicationConfiguration applicationConfiguration);
 }

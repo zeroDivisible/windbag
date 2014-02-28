@@ -32,8 +32,10 @@ public class MessageExchangeImpl implements MessageExchange {
 	@Override
 	public List<Message> getLast(int count) {
 		int to = messages.size();
-		int from = Math.max(to - count, 0);
+		int from = Math.max(to - count,
+		                    0);
 
-		return messages.subList(from , to);
+		return messages.subList(from,
+		                        to);
 	}
 }

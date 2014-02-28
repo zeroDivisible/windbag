@@ -8,8 +8,8 @@ import io.zerodi.windbag.core.protocol.ConnectionImpl;
 import io.zerodi.windbag.core.protocol.Handler;
 
 /**
- * Factory which creates connections initialized with {@link io.zerodi.windbag.core.protocol.epp.EppHandler}, so they can speak to
- * EPP servers.
+ * Factory which creates connections initialized with {@link io.zerodi.windbag.core.protocol.epp.EppHandler}, so they can speak to EPP
+ * servers.
  *
  * @author zerodi
  */
@@ -23,9 +23,14 @@ public class EppConnectionFactory implements ConnectionFactory {
 	}
 
 	@Override
-	public Connection newConnection(ServerDetail serverDetail, ApplicationConfiguration configuration) {
+	public Connection newConnection(ServerDetail serverDetail,
+	                                ApplicationConfiguration configuration) {
 		EppProtocolBootstrap protocolBootstrap = EppProtocolBootstrap.getInstance();
-		Handler eppHandler = EppHandler.getInstance(serverDetail, protocolBootstrap, configuration);
-		return ConnectionImpl.getInstance(eppHandler, serverDetail, protocolBootstrap);
+		Handler eppHandler = EppHandler.getInstance(serverDetail,
+		                                            protocolBootstrap,
+		                                            configuration);
+		return ConnectionImpl.getInstance(eppHandler,
+		                                  serverDetail,
+		                                  protocolBootstrap);
 	}
 }

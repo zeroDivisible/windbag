@@ -21,8 +21,12 @@ public class NoopConnectionFactory implements ConnectionFactory {
 	}
 
 	@Override
-	public Connection newConnection(ServerDetail serverDetail, ApplicationConfiguration applicationConfiguration) {
-		NoopHandler noopHandler = NoopHandler.getInstance(serverDetail, NOOP_PROTOCOL_BOOTSTRAP);
-		return ConnectionImpl.getInstance(noopHandler, serverDetail, NOOP_PROTOCOL_BOOTSTRAP);
+	public Connection newConnection(ServerDetail serverDetail,
+	                                ApplicationConfiguration applicationConfiguration) {
+		NoopHandler noopHandler = NoopHandler.getInstance(serverDetail,
+		                                                  NOOP_PROTOCOL_BOOTSTRAP);
+		return ConnectionImpl.getInstance(noopHandler,
+		                                  serverDetail,
+		                                  NOOP_PROTOCOL_BOOTSTRAP);
 	}
 }
