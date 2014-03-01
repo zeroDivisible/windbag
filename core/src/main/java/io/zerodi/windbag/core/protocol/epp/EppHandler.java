@@ -4,8 +4,8 @@ import com.google.common.base.Preconditions;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioSocketChannel;
 import io.zerodi.windbag.api.representations.ServerDetail;
-import io.zerodi.windbag.app.registry.ProtocolBootstrap;
 import io.zerodi.windbag.core.ApplicationConfiguration;
 import io.zerodi.windbag.core.Protocol;
 import io.zerodi.windbag.core.protocol.*;
@@ -22,24 +22,29 @@ public class EppHandler implements Handler {
 
 	private final ServerDetail             serverDetail;
 	private final ApplicationConfiguration configuration;
-	private       ProtocolBootstrap        protocolBootstrap;
+
+	private Bootstrap       bootstrap       = null;
 	private Channel         channel         = null;
 	private MessageExchange messageExchange = MessageExchangeImpl.getInstance();
 	private ExecutorService executorService = Executors.newCachedThreadPool();
 
 	private EppHandler(ServerDetail serverDetail,
-	                   ProtocolBootstrap protocolBootstrap,
 	                   ApplicationConfiguration configuration) {
 		this.serverDetail = serverDetail;
-		this.protocolBootstrap = protocolBootstrap;
 		this.configuration = configuration;
+
+		bootstrap = new Bootstrap();
+		bootstrap.channel(NioSocketChannel.class);
+		bootstrap.option(ChannelOption.SO_KEEPALIVE,
+		                 true);
+
+		bootstrap.handler(ChannelConfigurator.getInstance());
+
 	}
 
 	public static Handler getInstance(ServerDetail serverDetail,
-	                                  ProtocolBootstrap protocolBootstrap,
 	                                  ApplicationConfiguration configuration) {
 		return new EppHandler(serverDetail,
-		                      protocolBootstrap,
 		                      configuration);
 	}
 
@@ -52,7 +57,6 @@ public class EppHandler implements Handler {
 			logger.debug("{}:{} - connecting",
 			             serverAddress,
 			             serverPort);
-			Bootstrap bootstrap = protocolBootstrap.getBootstrap();
 
 			EventLoopGroup group = bootstrap.group();
 			if (group == null) {

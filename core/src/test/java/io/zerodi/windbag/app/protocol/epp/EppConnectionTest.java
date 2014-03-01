@@ -5,12 +5,8 @@ import io.zerodi.windbag.core.ApplicationConfiguration;
 import io.zerodi.windbag.core.protocol.Handler;
 import io.zerodi.windbag.core.protocol.MessageExchange;
 import io.zerodi.windbag.core.protocol.MessageExchangeImpl;
-import io.zerodi.windbag.app.registry.ProtocolBootstrap;
 import io.zerodi.windbag.core.protocol.epp.EppHandler;
-import io.zerodi.windbag.core.protocol.epp.EppProtocolBootstrap;
 import org.testng.annotations.BeforeMethod;
-
-import static org.fest.assertions.Assertions.assertThat;
 
 /**
  * @author zerodi
@@ -21,18 +17,17 @@ public class EppConnectionTest {
 
 	private ServerDetail serverDetail;
 
-	private ProtocolBootstrap protocolBootstrap;
-
 	private Handler handler;
 
 	private ApplicationConfiguration applicationConfiguration;
 
 	@BeforeMethod
-	public void setUp() throws Exception {
+	public void setUp() throws
+	                    Exception {
 		messageExchange = MessageExchangeImpl.getInstance();
 		serverDetail = new ServerDetail();
-		protocolBootstrap = EppProtocolBootstrap.getInstance();
 
-		handler = EppHandler.getInstance(serverDetail, protocolBootstrap, applicationConfiguration);
+		handler = EppHandler.getInstance(serverDetail,
+		                                 applicationConfiguration);
 	}
 }

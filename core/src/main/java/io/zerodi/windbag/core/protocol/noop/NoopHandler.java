@@ -1,7 +1,6 @@
 package io.zerodi.windbag.core.protocol.noop;
 
 import io.zerodi.windbag.api.representations.ServerDetail;
-import io.zerodi.windbag.app.registry.ProtocolBootstrap;
 import io.zerodi.windbag.core.Protocol;
 import io.zerodi.windbag.core.protocol.*;
 import org.slf4j.Logger;
@@ -12,20 +11,15 @@ import org.slf4j.LoggerFactory;
  */
 public class NoopHandler implements Handler {
 	private static final Logger logger = LoggerFactory.getLogger(NoopHandler.class);
-	private final ServerDetail      serverDetail;
-	private final ProtocolBootstrap protocolBootstrap;
+	private final ServerDetail serverDetail;
 	private boolean connected = false;
 
-	private NoopHandler(ServerDetail serverDetail,
-	                    ProtocolBootstrap protocolBootstrap) {
+	private NoopHandler(ServerDetail serverDetail) {
 		this.serverDetail = serverDetail;
-		this.protocolBootstrap = protocolBootstrap;
 	}
 
-	public static NoopHandler getInstance(ServerDetail serverDetail,
-	                                      ProtocolBootstrap protocolBootstrap) {
-		return new NoopHandler(serverDetail,
-		                       protocolBootstrap);
+	public static NoopHandler getInstance(ServerDetail serverDetail) {
+		return new NoopHandler(serverDetail);
 	}
 
 	@Override

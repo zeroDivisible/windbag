@@ -60,8 +60,11 @@ public class ConnectionRegistryImpl implements Managed, ConnectionRegistry {
 
 	@Override
 	public void registerConnection(Connection connection) {
-		Preconditions.checkNotNull(connection.getProtocolBootstrap(),
-		                           "connection.getProtocolBootstrap() cannot be null!");
+		Preconditions.checkNotNull(connection,
+		                           "connection cannot be null!");
+		Preconditions.checkNotNull(connection.getHandler(),
+		                           "connection.getHandler() cannot be null!");
+
 		Preconditions.checkArgument(connection.getId() == 0,
 		                            "connection.getId() == 0 is not fulfilled, cannot register connection twice!");
 

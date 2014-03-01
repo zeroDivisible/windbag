@@ -11,8 +11,6 @@ import io.zerodi.windbag.core.protocol.ConnectionImpl;
  */
 public class NoopConnectionFactory implements ConnectionFactory {
 
-	private static final NoopProtocolBootstrap NOOP_PROTOCOL_BOOTSTRAP = NoopProtocolBootstrap.getInstance();
-
 	private NoopConnectionFactory() {
 	}
 
@@ -23,10 +21,9 @@ public class NoopConnectionFactory implements ConnectionFactory {
 	@Override
 	public Connection newConnection(ServerDetail serverDetail,
 	                                ApplicationConfiguration applicationConfiguration) {
-		NoopHandler noopHandler = NoopHandler.getInstance(serverDetail,
-		                                                  NOOP_PROTOCOL_BOOTSTRAP);
+		NoopHandler noopHandler = NoopHandler.getInstance(serverDetail);
 		return ConnectionImpl.getInstance(noopHandler,
-		                                  serverDetail,
-		                                  NOOP_PROTOCOL_BOOTSTRAP);
+		                                  serverDetail);
+
 	}
 }

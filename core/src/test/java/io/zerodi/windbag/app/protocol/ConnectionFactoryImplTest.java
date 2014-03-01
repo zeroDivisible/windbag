@@ -1,7 +1,6 @@
 package io.zerodi.windbag.app.protocol;
 
 import io.zerodi.windbag.api.representations.ServerDetail;
-import io.zerodi.windbag.app.registry.ProtocolBootstrap;
 import io.zerodi.windbag.core.ApplicationConfiguration;
 import io.zerodi.windbag.core.Protocol;
 import io.zerodi.windbag.core.protocol.BootstrappedConnectionFactory;
@@ -35,11 +34,10 @@ public class ConnectionFactoryImplTest {
 
 		// when
 		Connection connection = bootstrapFactory.createConnection(serverDetail);
-		ProtocolBootstrap protocolBootstrap = connection.getProtocolBootstrap();
 		Handler handler = connection.getHandler();
 
 		// then
-		assertThat(protocolBootstrap).isNotNull();
+		assertThat(handler).isNotNull();
 		assertThat(handler.getProtocol()).isEqualTo(Protocol.NOOP);
 	}
 }
