@@ -30,11 +30,6 @@ public class EppProtocolBootstrap implements ProtocolBootstrap {
 	}
 
 	@Override
-	public Protocol getProtocol() {
-		return Protocol.EPP;
-	}
-
-	@Override
 	public Bootstrap getBootstrap() {
 		return bootstrap;
 	}

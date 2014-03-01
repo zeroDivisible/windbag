@@ -16,7 +16,8 @@ public class ConnectionImpl implements Connection {
 	private final Handler           handler;
 	private final ServerDetail      serverDetail;
 	private final ProtocolBootstrap protocolBootstrap;
-	private       long              connectionId;
+
+	private long connectionId;
 
 	private ConnectionImpl(Handler handler,
 	                       ServerDetail serverDetail,

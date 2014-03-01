@@ -2,6 +2,7 @@ package io.zerodi.windbag.core.protocol.noop;
 
 import io.zerodi.windbag.api.representations.ServerDetail;
 import io.zerodi.windbag.app.registry.ProtocolBootstrap;
+import io.zerodi.windbag.core.Protocol;
 import io.zerodi.windbag.core.protocol.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,17 +43,17 @@ public class NoopHandler implements Handler {
 	}
 
 	@Override
+	public Protocol getProtocol() {
+		return Protocol.NOOP;
+	}
+
+	@Override
 	public Message disconnect() {
 		logger.debug("disconnecting..");
 		return StringMessage.getInstance("noop connection closed",
 		                                 MessageType.SYSTEM);
 	}
 
-	@Override
-	public Message reconnect() {
-		disconnect();
-		return connect();
-	}
 
 	@Override
 	public Message sendMessage(Message message) {

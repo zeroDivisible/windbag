@@ -1,16 +1,16 @@
 package io.zerodi.windbag.app.protocol;
 
-import static org.fest.assertions.Assertions.assertThat;
-
+import io.zerodi.windbag.api.representations.ServerDetail;
+import io.zerodi.windbag.app.registry.ProtocolBootstrap;
 import io.zerodi.windbag.core.ApplicationConfiguration;
+import io.zerodi.windbag.core.Protocol;
 import io.zerodi.windbag.core.protocol.BootstrappedConnectionFactory;
 import io.zerodi.windbag.core.protocol.Connection;
+import io.zerodi.windbag.core.protocol.Handler;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import io.zerodi.windbag.api.representations.ServerDetail;
-import io.zerodi.windbag.app.registry.ProtocolBootstrap;
-import io.zerodi.windbag.core.Protocol;
+import static org.fest.assertions.Assertions.assertThat;
 
 /**
  * @author zerodi
@@ -22,7 +22,8 @@ public class ConnectionFactoryImplTest {
 	private ApplicationConfiguration applicationConfiguration;
 
 	@BeforeMethod
-	public void setUp() throws Exception {
+	public void setUp() throws
+	                    Exception {
 		bootstrapFactory = BootstrappedConnectionFactory.getInstance(applicationConfiguration);
 	}
 
@@ -35,9 +36,10 @@ public class ConnectionFactoryImplTest {
 		// when
 		Connection connection = bootstrapFactory.createConnection(serverDetail);
 		ProtocolBootstrap protocolBootstrap = connection.getProtocolBootstrap();
+		Handler handler = connection.getHandler();
 
 		// then
 		assertThat(protocolBootstrap).isNotNull();
-		assertThat(protocolBootstrap.getProtocol()).isEqualTo(Protocol.NOOP);
+		assertThat(handler.getProtocol()).isEqualTo(Protocol.NOOP);
 	}
 }

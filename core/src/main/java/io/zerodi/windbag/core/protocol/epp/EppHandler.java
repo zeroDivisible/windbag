@@ -7,6 +7,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.zerodi.windbag.api.representations.ServerDetail;
 import io.zerodi.windbag.app.registry.ProtocolBootstrap;
 import io.zerodi.windbag.core.ApplicationConfiguration;
+import io.zerodi.windbag.core.Protocol;
 import io.zerodi.windbag.core.protocol.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,8 +21,8 @@ public class EppHandler implements Handler {
 	private static final Logger logger = LoggerFactory.getLogger(EppHandler.class);
 
 	private final ServerDetail             serverDetail;
-	private       ProtocolBootstrap        protocolBootstrap;
 	private final ApplicationConfiguration configuration;
+	private       ProtocolBootstrap        protocolBootstrap;
 	private Channel         channel         = null;
 	private MessageExchange messageExchange = MessageExchangeImpl.getInstance();
 	private ExecutorService executorService = Executors.newCachedThreadPool();
@@ -117,6 +118,11 @@ public class EppHandler implements Handler {
 	}
 
 	@Override
+	public Protocol getProtocol() {
+		return Protocol.EPP;
+	}
+
+	@Override
 	public Message disconnect() {
 		if (isConnected()) {
 			try {
@@ -140,12 +146,6 @@ public class EppHandler implements Handler {
 	}
 
 	@Override
-	public Message reconnect() {
-		disconnect();
-		return connect();
-	}
-
-	@Override
 	public Message sendMessage(Message message) {
 		Preconditions.checkNotNull(message,
 		                           "message cannot be null!");
@@ -154,7 +154,6 @@ public class EppHandler implements Handler {
 
 		synchronized (this) {
 			getMessageExchange().postMessage(message);
-
 			ResponseReceiver responseReceiver = ResponseReceiver.getInstance(getMessageExchange(),
 			                                                                 configuration);
 			channel.pipeline()

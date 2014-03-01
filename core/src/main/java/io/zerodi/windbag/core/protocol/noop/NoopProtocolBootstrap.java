@@ -2,7 +2,6 @@ package io.zerodi.windbag.core.protocol.noop;
 
 import io.netty.bootstrap.Bootstrap;
 import io.zerodi.windbag.app.registry.ProtocolBootstrap;
-import io.zerodi.windbag.core.Protocol;
 
 /**
  * Helper implementation of {@link io.zerodi.windbag.app.registry.ProtocolBootstrap}, designed to do nothing.
@@ -19,11 +18,6 @@ public class NoopProtocolBootstrap implements ProtocolBootstrap {
 
 	public static NoopProtocolBootstrap getInstance() {
 		return new NoopProtocolBootstrap();
-	}
-
-	@Override
-	public Protocol getProtocol() {
-		return Protocol.NOOP;
 	}
 
 	@Override

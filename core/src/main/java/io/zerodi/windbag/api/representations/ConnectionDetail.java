@@ -19,7 +19,7 @@ public class ConnectionDetail {
 
 	private ConnectionDetail(Connection connection) {
 		id = connection.getId();
-		protocol = connection.getProtocolBootstrap()
+		protocol = connection.getHandler()
 		                     .getProtocol();
 	}
 
