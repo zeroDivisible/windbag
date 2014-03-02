@@ -12,36 +12,41 @@ import java.util.List;
  * @author zerodi
  */
 public class EppMessageDecoder extends ByteToMessageDecoder {
-    private static final Logger logger = LoggerFactory.getLogger(EppMessageDecoder.class);
+	private static final Logger logger = LoggerFactory.getLogger(EppMessageDecoder.class);
 
-    private EppMessageDecoder() {
-    }
+	private EppMessageDecoder() {
+	}
 
-    public static EppMessageDecoder getInstance() {
-        return new EppMessageDecoder();
-    }
+	public static EppMessageDecoder getInstance() {
+		return new EppMessageDecoder();
+	}
 
-    @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        logger.error("while decoding EPP message", cause);
-        ctx.close();
-    }
+	@Override
+	public void exceptionCaught(ChannelHandlerContext ctx,
+	                            Throwable cause) {
+		logger.error("while decoding EPP message",
+		             cause);
+		ctx.close();
+	}
 
-    @Override
-    protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
-        if (in.readableBytes() < 4) {
-            return;
-        }
+	@Override
+	protected void decode(ChannelHandlerContext ctx,
+	                      ByteBuf in,
+	                      List<Object> out) throws
+	                                        Exception {
+		if (in.readableBytes() < 4) {
+			return;
+		}
 
-        int messageLength = in.getInt(0);
-        if (in.readableBytes() < messageLength) {
-            return;
-        } else {
-            // we can read a header
-            in.readInt();
-        }
+		int messageLength = in.getInt(0);
+		if (in.readableBytes() < messageLength) {
+			return;
+		} else {
+			// we can read a header
+			in.readInt();
+		}
 
-        // and add the full message to the buffer
-        out.add(in.readBytes(messageLength - 4));
-    }
+		// and add the full message to the buffer
+		out.add(in.readBytes(messageLength - 4));
+	}
 }

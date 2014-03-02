@@ -2,8 +2,6 @@ package io.zerodi.windbag.api.representations;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
-import com.fasterxml.jackson.annotation.JsonValue;
-import io.zerodi.windbag.core.Protocol;
 import io.zerodi.windbag.core.protocol.Connection;
 
 /**
@@ -15,12 +13,8 @@ public class ConnectionDetail {
 	@JsonProperty
 	private final long id;
 
-	@JsonProperty
-	private final Protocol protocol;
-
 	private ConnectionDetail(Connection connection) {
 		id = connection.getId();
-		protocol = connection.getProtocolBootstrap().getProtocol();
 	}
 
 	public static ConnectionDetail getInstance(Connection connection) {

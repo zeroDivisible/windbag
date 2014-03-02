@@ -21,7 +21,7 @@ public class WebAppController {
 	}
 
 	public static WebAppController getInstance() {
-	    return new WebAppController();
+		return new WebAppController();
 	}
 
 	@GET

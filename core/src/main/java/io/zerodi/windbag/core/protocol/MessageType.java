@@ -8,5 +8,6 @@ package io.zerodi.windbag.core.protocol;
 public enum MessageType {
 	INBOUND,
 	OUTBOUND,
-	SYSTEM
+	SYSTEM,
+	SYSTEM_CONNECTION_ESTABLISHED, SYSTEM_INFO, SYSTEM_CONNECTION_DISCONNECTED,
 }

@@ -10,7 +10,7 @@ import io.netty.util.CharsetUtil;
 /**
  * @author zerodi
  */
-@JsonRootName("result")
+@JsonRootName("message")
 public class StringMessage implements Message {
 
 	@JsonProperty("raw_message")
@@ -24,7 +24,7 @@ public class StringMessage implements Message {
 		this.message = new String(message, CharsetUtil.UTF_8);
 	}
 
-	private StringMessage(String message, MessageType messageType) {
+	protected StringMessage(String message, MessageType messageType) {
 		this.message = message;
 		this.messageType = messageType;
 	}

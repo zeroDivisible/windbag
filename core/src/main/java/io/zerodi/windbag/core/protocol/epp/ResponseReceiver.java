@@ -4,11 +4,12 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.zerodi.windbag.core.ApplicationConfiguration;
 import io.zerodi.windbag.core.protocol.Message;
-import io.zerodi.windbag.core.protocol.MessageExchange;
 import io.zerodi.windbag.core.protocol.MessageType;
 import io.zerodi.windbag.core.protocol.StringMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.CountDownLatch;
 
 /**
  * @author zerodi
@@ -16,31 +17,33 @@ import org.slf4j.LoggerFactory;
 public class ResponseReceiver extends SimpleChannelInboundHandler<String> {
 	private static final Logger logger = LoggerFactory.getLogger(ResponseReceiver.class);
 
-	private final MessageExchange messageExchange;
+	private final CountDownLatch           lock;
 	private final ApplicationConfiguration configuration;
-	private volatile boolean finished;
+	private       Message                  receivedMessage;
 
-	private ResponseReceiver(MessageExchange messageExchange, ApplicationConfiguration configuration) {
-		this.messageExchange = messageExchange;
+	private ResponseReceiver(CountDownLatch lock, ApplicationConfiguration configuration) {
+		this.lock = lock;
 		this.configuration = configuration;
 	}
 
-	public static ResponseReceiver getInstance(MessageExchange messageExchange, ApplicationConfiguration configuration) {
-		return new ResponseReceiver(messageExchange, configuration);
+	public static ResponseReceiver getInstance(CountDownLatch lock, ApplicationConfiguration configuration) {
+		return new ResponseReceiver(lock, configuration);
 	}
 
 	@Override
-	protected void messageReceived(ChannelHandlerContext ctx, String msg) throws Exception {
+	protected void messageReceived(ChannelHandlerContext ctx, String msg) {
 		logger.debug("got {}, handling it and removing itself from pipeline", msg);
 		ctx.pipeline().remove(this);
 
-		Message receivedMessage = StringMessage.getInstance(msg, MessageType.INBOUND);
-		messageExchange.postMessage(receivedMessage);
-		finished = true;
+		setReceivedMessage(StringMessage.getInstance(msg, MessageType.INBOUND));
+		lock.countDown();
 	}
 
-	public boolean ifFinished() {
-		return finished;
+	public Message getReceivedMessage() {
+		return receivedMessage;
+	}
 
+	public void setReceivedMessage(Message receivedMessage) {
+		this.receivedMessage = receivedMessage;
 	}
 }
