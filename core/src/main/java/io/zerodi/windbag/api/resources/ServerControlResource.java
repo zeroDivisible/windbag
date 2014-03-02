@@ -129,8 +129,7 @@ public class ServerControlResource {
 			throw new WebApplicationException(Status.NOT_FOUND);
 		}
 
-		return MessageList.getInstance(connection.getHandler()
-		                                         .getMessageExchange()
+		return MessageList.getInstance(connection.getMessageExchange()
 		                                         .getLast(10));
 	}
 

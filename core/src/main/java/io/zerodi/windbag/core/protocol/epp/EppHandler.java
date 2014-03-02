@@ -21,16 +21,18 @@ public class EppHandler implements Handler {
 	private static final Logger logger = LoggerFactory.getLogger(EppHandler.class);
 
 	private final ServerDetail             serverDetail;
+	private final MessageExchange          messageExchange;
 	private final ApplicationConfiguration configuration;
 
 	private Bootstrap       bootstrap       = null;
 	private Channel         channel         = null;
-	private MessageExchange messageExchange = MessageExchangeImpl.getInstance();
 	private ExecutorService executorService = Executors.newCachedThreadPool();
 
 	private EppHandler(ServerDetail serverDetail,
+	                   MessageExchange messageExchange,
 	                   ApplicationConfiguration configuration) {
 		this.serverDetail = serverDetail;
+		this.messageExchange = messageExchange;
 		this.configuration = configuration;
 
 		bootstrap = new Bootstrap();
@@ -43,8 +45,10 @@ public class EppHandler implements Handler {
 	}
 
 	public static Handler getInstance(ServerDetail serverDetail,
+	                                  MessageExchange messageExchange,
 	                                  ApplicationConfiguration configuration) {
 		return new EppHandler(serverDetail,
+		                      messageExchange,
 		                      configuration);
 	}
 
@@ -64,7 +68,7 @@ public class EppHandler implements Handler {
 				bootstrap.group(eventLoopGroup);
 			}
 
-			final ResponseReceiver responseReceiver = ResponseReceiver.getInstance(getMessageExchange(),
+			final ResponseReceiver responseReceiver = ResponseReceiver.getInstance(messageExchange,
 			                                                                       configuration);
 			ChannelFuture connectionFuture = bootstrap.connect(serverAddress,
 			                                                   serverPort);
@@ -107,11 +111,11 @@ public class EppHandler implements Handler {
 				throw new RuntimeException(e);
 			}
 
-			return getMessageExchange().getLastMessage();
+			return messageExchange.getLastMessage();
 		} else {
 			// TODO find a way to return completed future.
-			return getMessageExchange().postMessage(StringMessage.getInstance("server already connected; doing nothing",
-			                                                                  MessageType.SYSTEM));
+			return messageExchange.postMessage(StringMessage.getInstance("server already connected; doing nothing",
+			                                                             MessageType.SYSTEM));
 		}
 	}
 
@@ -140,11 +144,11 @@ public class EppHandler implements Handler {
 				             e);
 				throw new RuntimeException(e); // TODO handle better than this.
 			}
-			return getMessageExchange().postMessage(StringMessage.getInstance("disconnected",
-			                                                                  MessageType.SYSTEM));
+			return messageExchange.postMessage(StringMessage.getInstance("disconnected",
+			                                                             MessageType.SYSTEM));
 		} else {
-			return getMessageExchange().postMessage(StringMessage.getInstance("doing nothing; was not connected",
-			                                                                  MessageType.SYSTEM));
+			return messageExchange.postMessage(StringMessage.getInstance("doing nothing; was not connected",
+			                                                             MessageType.SYSTEM));
 		}
 
 	}
@@ -157,8 +161,8 @@ public class EppHandler implements Handler {
 		                            "connection needs to be open and active to send the messages!");
 
 		synchronized (this) {
-			getMessageExchange().postMessage(message);
-			ResponseReceiver responseReceiver = ResponseReceiver.getInstance(getMessageExchange(),
+			messageExchange.postMessage(message);
+			ResponseReceiver responseReceiver = ResponseReceiver.getInstance(messageExchange,
 			                                                                 configuration);
 			channel.pipeline()
 			       .addLast("response-receiver",
@@ -174,12 +178,7 @@ public class EppHandler implements Handler {
 					throw new RuntimeException(e);
 				}
 			}
-			return getMessageExchange().getLastMessage();
+			return messageExchange.getLastMessage();
 		}
-	}
-
-	@Override
-	public MessageExchange getMessageExchange() {
-		return messageExchange;
 	}
 }

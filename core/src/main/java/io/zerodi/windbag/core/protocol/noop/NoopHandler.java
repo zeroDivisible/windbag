@@ -2,7 +2,10 @@ package io.zerodi.windbag.core.protocol.noop;
 
 import io.zerodi.windbag.api.representations.ServerDetail;
 import io.zerodi.windbag.core.Protocol;
-import io.zerodi.windbag.core.protocol.*;
+import io.zerodi.windbag.core.protocol.Handler;
+import io.zerodi.windbag.core.protocol.Message;
+import io.zerodi.windbag.core.protocol.MessageType;
+import io.zerodi.windbag.core.protocol.StringMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,12 +55,7 @@ public class NoopHandler implements Handler {
 	@Override
 	public Message sendMessage(Message message) {
 		logger.debug("sending message");
-
-		return null;
-	}
-
-	@Override
-	public MessageExchange getMessageExchange() {
-		return null;  //TODO Implement
+		return StringMessage.getInstance("noop message sent",
+		                                 MessageType.SYSTEM);
 	}
 }

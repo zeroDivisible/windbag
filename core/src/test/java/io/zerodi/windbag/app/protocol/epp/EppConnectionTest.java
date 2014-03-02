@@ -28,6 +28,7 @@ public class EppConnectionTest {
 		serverDetail = new ServerDetail();
 
 		handler = EppHandler.getInstance(serverDetail,
+		                                 messageExchange,
 		                                 applicationConfiguration);
 	}
 }

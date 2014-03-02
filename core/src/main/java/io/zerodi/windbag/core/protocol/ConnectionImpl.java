@@ -24,6 +24,7 @@ public class ConnectionImpl implements Connection {
 	}
 
 	public static Connection getInstance(Handler handler,
+	                                     MessageExchange messageExchange,
 	                                     ServerDetail serverDetail) {
 		return new ConnectionImpl(handler,
 		                          serverDetail);
