@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.zerodi.windbag.core.Protocol;
+import io.zerodi.windbag.core.protocol.Connection;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -17,11 +18,11 @@ import io.zerodi.windbag.JsonMapper;
  *
  * @author zerodi
  */
-public class ServerDetailsListTest {
+public class ServerDetailRepresentationListTest {
 
     private static final JsonMapper jsonMapper = JsonMapper.getInstance();
 
-    private List<ServerDetail> serverDetails;
+    private List<ServerDetailRepresentation> serverDetails;
     private ServerDetail devvm;
     private ServerDetail machine2;
 
@@ -41,17 +42,17 @@ public class ServerDetailsListTest {
         machine2.setServerPort(701);
         machine2.setProtocol(Protocol.EPP);
 
-        serverDetails.add(devvm);
-        serverDetails.add(machine2);
+        serverDetails.add(ServerDetailRepresentation.getInstance(devvm, new ArrayList<Connection>()));
+	    serverDetails.add(ServerDetailRepresentation.getInstance(machine2, new ArrayList<Connection>()));
     }
 
     @Test
     public void itShouldSerializeServerDetailListToJson() throws IOException {
         // given
-        ServerDetailsList serverDetailsList = ServerDetailsList.getInstance(serverDetails);
+        ServerDetailRepresentationList serverDetailRepresentationList = ServerDetailRepresentationList.getInstance(serverDetails);
 
         // when
-        String expected = jsonMapper.asJson(serverDetailsList);
+        String expected = jsonMapper.asJson(serverDetailRepresentationList);
         String actual = jsonMapper.jsonFixture("fixtures/servers.json");
 
         // then
