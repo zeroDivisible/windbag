@@ -29,9 +29,7 @@ public class EppHandler implements Handler {
 	private Channel         channel         = null;
 	private ExecutorService executorService = Executors.newCachedThreadPool();
 
-	private EppHandler(ServerDetail serverDetail,
-	                   MessageExchange messageExchange,
-	                   ApplicationConfiguration configuration) {
+	private EppHandler(ServerDetail serverDetail, MessageExchange messageExchange, ApplicationConfiguration configuration) {
 		this.serverDetail = serverDetail;
 		this.messageExchange = messageExchange;
 		this.configuration = configuration;
@@ -45,12 +43,8 @@ public class EppHandler implements Handler {
 
 	}
 
-	public static Handler getInstance(ServerDetail serverDetail,
-	                                  MessageExchange messageExchange,
-	                                  ApplicationConfiguration configuration) {
-		return new EppHandler(serverDetail,
-		                      messageExchange,
-		                      configuration);
+	public static Handler getInstance(ServerDetail serverDetail, MessageExchange messageExchange, ApplicationConfiguration configuration) {
+		return new EppHandler(serverDetail, messageExchange, configuration);
 	}
 
 	@Override
@@ -100,19 +94,15 @@ public class EppHandler implements Handler {
 			try {
 				executorService.shutdown();
 
-				channel.close()
-				       .sync();
+				channel.close().sync();
 				channel = null;
 			} catch (InterruptedException e) {
-				logger.error("while disconnecting from remote server",
-				             e);
+				logger.error("while disconnecting from remote server", e);
 				throw new RuntimeException(e); // TODO handle better than this.
 			}
-			return messageExchange.postMessage(StringMessage.getInstance("disconnected",
-			                                                             MessageType.SYSTEM));
+			return messageExchange.postMessage(StringMessage.getInstance("disconnected", MessageType.SYSTEM));
 		} else {
-			return messageExchange.postMessage(StringMessage.getInstance("doing nothing; was not connected",
-			                                                             MessageType.SYSTEM));
+			return messageExchange.postMessage(StringMessage.getInstance("doing nothing; was not connected", MessageType.SYSTEM));
 		}
 
 	}
