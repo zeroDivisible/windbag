@@ -52,7 +52,7 @@ public class ServerControlResource {
 		Message connectionResult = connection.getProtocolHandler().connect();
 		logger.debug("connection successful for {}", serverId);
 
-		return ConnectionEstablishedMessage.getInstance(connectionResult.getMessage(), "" + connection.getId());
+		return ConnectionEstablishedMessage.getInstance(connectionResult.getMessage(), String.valueOf(connection.getId()));
 	}
 
 	/**

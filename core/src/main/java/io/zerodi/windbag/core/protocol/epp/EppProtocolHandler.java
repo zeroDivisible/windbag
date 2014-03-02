@@ -80,16 +80,17 @@ public class EppProtocolHandler implements ProtocolHandler {
 				countDownLatch.await(configuration.getConnectionTimeoutSeconds(), TimeUnit.SECONDS);
 			} catch (InterruptedException e) {
 				logger.error("while connecting to remote server", e);
-				throw new RuntimeException(e);
+				throw new HandlerException(e);
 			}
 
 			Message receivedMessage = responseReceiver.getReceivedMessage();
 			ConnectionEstablishedMessage establishedConnectionMessage = ConnectionEstablishedMessage.getInstance(receivedMessage.getMessage(),
-			                                                                                                     "" + connection.getId());
+			                                                                                                     String.valueOf(connection.getId()));
 			messageExchange.postMessage(establishedConnectionMessage);
 			return establishedConnectionMessage;
 		} else {
-			return messageExchange.postMessage(StringMessage.getInstance("server already connected; doing nothing", MessageType.SYSTEM_INFO));
+			return messageExchange.postMessage(StringMessage.getInstance("server already connected; doing nothing",
+			                                                             MessageType.SYSTEM_INFO));
 		}
 	}
 

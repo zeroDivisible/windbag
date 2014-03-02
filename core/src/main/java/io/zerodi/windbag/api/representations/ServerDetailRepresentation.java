@@ -2,7 +2,6 @@ package io.zerodi.windbag.api.representations;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
-import com.fasterxml.jackson.annotation.JsonValue;
 import io.zerodi.windbag.core.protocol.Connection;
 
 import java.util.ArrayList;
