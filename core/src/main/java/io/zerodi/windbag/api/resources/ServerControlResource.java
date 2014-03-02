@@ -2,9 +2,9 @@ package io.zerodi.windbag.api.resources;
 
 import com.yammer.metrics.annotation.Timed;
 import io.zerodi.windbag.api.ApiSettings;
-import io.zerodi.windbag.api.representations.ServerDetailRepresentation;
 import io.zerodi.windbag.api.representations.MessageList;
 import io.zerodi.windbag.api.representations.ServerDetail;
+import io.zerodi.windbag.api.representations.ServerDetailRepresentation;
 import io.zerodi.windbag.app.registry.ConnectionRegistryImpl;
 import io.zerodi.windbag.core.ApplicationConfiguration;
 import io.zerodi.windbag.core.protocol.*;
@@ -37,10 +37,8 @@ public class ServerControlResource {
 		this.connectionRegistry = connectionRegistry;
 	}
 
-	public static ServerControlResource getInstance(ApplicationConfiguration configuration,
-	                                                ConnectionRegistryImpl connectionRegistry) {
-		return new ServerControlResource(configuration,
-		                                 connectionRegistry);
+	public static ServerControlResource getInstance(ApplicationConfiguration configuration, ConnectionRegistryImpl connectionRegistry) {
+		return new ServerControlResource(configuration, connectionRegistry);
 	}
 
 	@GET
@@ -73,6 +71,15 @@ public class ServerControlResource {
 		}
 
 		throw new WebApplicationException(Status.NOT_FOUND);
+	}
+
+	@GET
+	@Path("{serverId}")
+	@Timed
+	public ServerDetailRepresentation getServerDetails(@PathParam("serverId") String serverId) {
+		ServerDetail server = findServer(serverId);
+		List<Connection> connections = connectionRegistry.getAllForServer(serverId);
+		return ServerDetailRepresentation.getInstance(server, connections);
 	}
 
 	@GET
@@ -115,20 +122,9 @@ public class ServerControlResource {
 			throw new WebApplicationException(Status.NOT_FOUND);
 		}
 
-		return connection.getHandler()
-		                 .sendMessage(StringMessage.getInstance(message,
-		                                                        MessageType.OUTBOUND));
+		return connection.getHandler().sendMessage(StringMessage.getInstance(message, MessageType.OUTBOUND));
 	}
 
-	@GET
-	@Path("{serverId}")
-	@Timed
-	public ServerDetailRepresentation getServerDetails(@PathParam("serverId") String serverId) {
-		ServerDetail server = findServer(serverId);
-		List<Connection> connections = connectionRegistry.getAllForServer(serverId);
-
-		return ServerDetailRepresentation.getInstance(server, connections);
-	}
 
 	@GET
 	@Path("{serverId}/{connectionId}/messages")
