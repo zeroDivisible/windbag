@@ -5,6 +5,7 @@ import io.zerodi.windbag.api.ApiSettings;
 import io.zerodi.windbag.api.representations.MessageList;
 import io.zerodi.windbag.api.representations.ServerDetail;
 import io.zerodi.windbag.api.representations.ServerDetailRepresentation;
+import io.zerodi.windbag.api.representations.ServerDetailsList;
 import io.zerodi.windbag.app.registry.ConnectionRegistryImpl;
 import io.zerodi.windbag.core.ApplicationConfiguration;
 import io.zerodi.windbag.core.protocol.*;
@@ -22,7 +23,7 @@ import static javax.ws.rs.core.Response.Status;
  *
  * @author zerodi
  */
-@Path(ApiSettings.API_URL_PREFIX + "/server")
+@Path(ApiSettings.API_URL_PREFIX + "/servers")
 @Produces(MediaType.APPLICATION_JSON)
 public class ServerControlResource {
 
@@ -38,6 +39,12 @@ public class ServerControlResource {
 
 	public static ServerControlResource getInstance(ApplicationConfiguration configuration, ConnectionRegistryImpl connectionRegistry) {
 		return new ServerControlResource(configuration, connectionRegistry);
+	}
+
+	@GET
+	@Timed
+	public ServerDetailsList getDetails() {
+		return ServerDetailsList.getInstance(configuration.getServers());
 	}
 
 	@GET
