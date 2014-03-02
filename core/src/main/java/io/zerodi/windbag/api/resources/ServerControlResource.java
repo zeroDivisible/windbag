@@ -47,7 +47,7 @@ public class ServerControlResource {
 	public ServerDetailRepresentationList getAllServers() {
 		List<ServerDetailRepresentation> servers = new ArrayList<>();
 		for (ServerDetail serverDetail : configuration.getServers()) {
-			servers.add(ServerDetailRepresentation.getInstance(serverDetail, connectionRegistry.getAllForServer(serverDetail.getName())));
+			servers.add(ServerDetailRepresentation.getInstance(serverDetail, connectionRegistry.getAllForServer(serverDetail.getId())));
 		}
 
 		return ServerDetailRepresentationList.getInstance(servers);
@@ -85,7 +85,7 @@ public class ServerControlResource {
 	 */
 	private ServerDetail findServer(String serverId) {
 		for (ServerDetail serverDetail : configuration.getServers()) {
-			if (serverDetail.getName()
+			if (serverDetail.getId()
 			                .equals(serverId)) {
 				return serverDetail;
 			}

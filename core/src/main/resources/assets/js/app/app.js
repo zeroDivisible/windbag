@@ -1,6 +1,7 @@
 "use strict";
 
 window.Windbag = Ember.Application.create();
+var attr = DS.attr;
 
 Windbag.Store = DS.Store.extend({
 	revision: 13,
@@ -9,10 +10,13 @@ Windbag.Store = DS.Store.extend({
 	})
 });
 
-var attr = DS.attr;
 
 Windbag.Server = DS.Model.extend({
-	server_name: attr("string")
+	id: attr("string"),
+	protocol: attr("string"),
+	server_address: attr("string"),
+	server_port: attr("string")
 });
+
 
 

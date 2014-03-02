@@ -65,8 +65,8 @@ public class ConnectionRegistryImpl implements Managed, ConnectionRegistry {
 
 		ServerDetail serverDetail = connection.getServerDetail();
 		Preconditions.checkNotNull(serverDetail, "connection.getServerDetail() cannot be null!");
-		String serverId = serverDetail.getName();
-		Preconditions.checkNotNull(serverId, "clientConnection.getServerDetail().getName() cannot be null!");
+		String serverId = serverDetail.getId();
+		Preconditions.checkNotNull(serverId, "clientConnection.getServerDetail().getId() cannot be null!");
 
 		List<Connection> connections = connectionHashMap.get(serverId);
 		if (connections == null) {
@@ -81,7 +81,7 @@ public class ConnectionRegistryImpl implements Managed, ConnectionRegistry {
 	@Override
 	public Message disconnectAndDeregister(Connection connection) {
 		ServerDetail detail = connection.getServerDetail();
-		List<Connection> connections = getAllForServer(detail.getName());
+		List<Connection> connections = getAllForServer(detail.getId());
 		connections.remove(connection);
 
 		return connection.getProtocolHandler().disconnect();

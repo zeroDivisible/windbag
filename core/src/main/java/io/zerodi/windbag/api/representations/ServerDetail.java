@@ -14,7 +14,7 @@ public class ServerDetail {
 
 	@NotEmpty
 	@JsonProperty
-	private String name;
+	private String id;
 
 	@NotEmpty
 	@JsonProperty("server_address")
@@ -30,24 +30,24 @@ public class ServerDetail {
 	@JsonProperty
 	private Protocol protocol;
 
-	public String getName() {
-		return name;
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public String getServerAddress() {
 		return serverAddress;
 	}
 
-	public int getServerPort() {
-		return serverPort;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public void setServerAddress(String serverAddress) {
 		this.serverAddress = serverAddress;
+	}
+
+	public int getServerPort() {
+		return serverPort;
 	}
 
 	public void setServerPort(int serverPort) {
