@@ -4,12 +4,12 @@ connection_timeout_seconds: 10
 response_timeout_seconds: 30
 
 servers:
-  - name: devvm
+  - id: devvm
     server_address: 192.168.33.15
     server_port: 8700
     protocol: EPP
 
-  - name: devvm2
+  - id: devvm2
     server_address: 192.168.33.20
     server_port: 700
     protocol: EPP
