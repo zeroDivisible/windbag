@@ -17,7 +17,7 @@ servers:
 
 # dropwizard specific configuration
 logging:
-  level: info
+  level: debug
 
   console:
     enabled: true

@@ -1,5 +1,6 @@
 package io.zerodi.windbag.api.representations;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.zerodi.windbag.core.protocol.Connection;
@@ -12,23 +13,24 @@ import java.util.List;
  *
  * @author zerodi
  */
-@JsonRootName("connections")
-public class ConnectionDetailList {
+@JsonRootName("server")
+public class ServerDetailRepresentation {
 
+	@JsonProperty("details")
+	private final ServerDetail serverDetail;
+
+	@JsonProperty("active_connections")
 	private final List<ConnectionDetail> connections = new ArrayList<>();
 
-	private ConnectionDetailList(List<Connection> connections) {
+
+	private ServerDetailRepresentation(ServerDetail serverDetail, List<Connection> connections) {
+		this.serverDetail = serverDetail;
 		for (Connection connection : connections) {
 			this.connections.add(ConnectionDetail.getInstance(connection));
 		}
 	}
 
-	public static ConnectionDetailList getInstance(List<Connection> connections) {
-		return new ConnectionDetailList(connections);
-	}
-
-	@JsonValue
-	public List<ConnectionDetail> getConnections() {
-		return connections;
+	public static ServerDetailRepresentation getInstance(ServerDetail serverDetail, List<Connection> connections) {
+		return new ServerDetailRepresentation(serverDetail, connections);
 	}
 }

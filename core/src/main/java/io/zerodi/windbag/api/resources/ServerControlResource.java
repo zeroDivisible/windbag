@@ -2,7 +2,7 @@ package io.zerodi.windbag.api.resources;
 
 import com.yammer.metrics.annotation.Timed;
 import io.zerodi.windbag.api.ApiSettings;
-import io.zerodi.windbag.api.representations.ConnectionDetailList;
+import io.zerodi.windbag.api.representations.ServerDetailRepresentation;
 import io.zerodi.windbag.api.representations.MessageList;
 import io.zerodi.windbag.api.representations.ServerDetail;
 import io.zerodi.windbag.app.registry.ConnectionRegistryImpl;
@@ -76,13 +76,6 @@ public class ServerControlResource {
 	}
 
 	@GET
-	@Path("{serverId}/active-connections")
-	public ConnectionDetailList getConnections(@PathParam("serverId") String serverId) {
-		List<Connection> connections = connectionRegistry.getAllForServer(serverId);
-		return ConnectionDetailList.getInstance(connections);
-	}
-
-	@GET
 	@Path("{serverId}/{connectionId}/disconnect")
 	@Timed
 	public Message disconnectFromServer(@PathParam("serverId") String serverId,
@@ -101,11 +94,8 @@ public class ServerControlResource {
 	@Timed
 	public Message sendMessage(@PathParam("serverId") String serverId,
 	                           @PathParam("connectionId") Long connectionId,
-	                           @PathParam("message") final String message)
-			throws
-			InterruptedException {
-		Connection connection = connectionRegistry.getForServerWithId(serverId,
-		                                                              connectionId);
+	                           @PathParam("message") final String message) throws InterruptedException {
+		Connection connection = connectionRegistry.getForServerWithId(serverId, connectionId);
 		if (connection == null) {
 			throw new WebApplicationException(Status.NOT_FOUND);
 		}
@@ -128,6 +118,16 @@ public class ServerControlResource {
 		return connection.getHandler()
 		                 .sendMessage(StringMessage.getInstance(message,
 		                                                        MessageType.OUTBOUND));
+	}
+
+	@GET
+	@Path("{serverId}")
+	@Timed
+	public ServerDetailRepresentation getServerDetails(@PathParam("serverId") String serverId) {
+		ServerDetail server = findServer(serverId);
+		List<Connection> connections = connectionRegistry.getAllForServer(serverId);
+
+		return ServerDetailRepresentation.getInstance(server, connections);
 	}
 
 	@GET
