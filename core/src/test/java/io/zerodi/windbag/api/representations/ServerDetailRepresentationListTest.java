@@ -31,13 +31,13 @@ public class ServerDetailRepresentationListTest {
         serverDetails = new ArrayList<>();
 
         devvm = new ServerDetail();
-        devvm.setName("devvm");
+        devvm.setId("devvm");
         devvm.setServerAddress("192.168.33.15");
         devvm.setServerPort(700);
         devvm.setProtocol(Protocol.EPP);
 
         machine2 = new ServerDetail();
-        machine2.setName("machine2");
+        machine2.setId("machine2");
         machine2.setServerAddress("192.168.33.20");
         machine2.setServerPort(701);
         machine2.setProtocol(Protocol.EPP);

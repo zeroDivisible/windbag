@@ -32,7 +32,7 @@ public class ConnectionRegistryImplTest {
 	public void itShouldBePossibleToRegisterABootstrap() {
 		// given
 		ServerDetail serverDetail = new ServerDetail();
-		serverDetail.setName("serverId");
+		serverDetail.setId("serverId");
 		serverDetail.setProtocol(Protocol.NOOP);
 
 		Connection connection = protocolBootstrapFactory.createConnection(serverDetail);
