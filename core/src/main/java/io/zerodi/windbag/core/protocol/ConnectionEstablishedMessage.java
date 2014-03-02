@@ -11,7 +11,7 @@ public class ConnectionEstablishedMessage extends StringMessage {
 	private final String id;
 
 	private ConnectionEstablishedMessage(String originalResponse, String connectionChannelId) {
-		super(originalResponse, MessageType.SYSTEM);
+		super(originalResponse, MessageType.SYSTEM_CONNECTION_ESTABLISHED);
 		id = connectionChannelId;
 	}
 

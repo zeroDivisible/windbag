@@ -89,7 +89,7 @@ public class EppHandler implements Handler {
 			messageExchange.postMessage(establishedConnectionMessage);
 			return establishedConnectionMessage;
 		} else {
-			return messageExchange.postMessage(StringMessage.getInstance("server already connected; doing nothing", MessageType.SYSTEM));
+			return messageExchange.postMessage(StringMessage.getInstance("server already connected; doing nothing", MessageType.SYSTEM_INFO));
 		}
 	}
 
@@ -105,9 +105,9 @@ public class EppHandler implements Handler {
 				logger.error("while disconnecting from remote server", e);
 				throw new RuntimeException(e); // TODO handle better than this.
 			}
-			return messageExchange.postMessage(StringMessage.getInstance("disconnected", MessageType.SYSTEM));
+			return messageExchange.postMessage(StringMessage.getInstance("disconnected", MessageType.SYSTEM_CONNECTION_DISCONNECTED));
 		} else {
-			return messageExchange.postMessage(StringMessage.getInstance("doing nothing; was not connected", MessageType.SYSTEM));
+			return messageExchange.postMessage(StringMessage.getInstance("doing nothing; was not connected", MessageType.SYSTEM_INFO));
 		}
 
 	}

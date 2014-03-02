@@ -28,15 +28,13 @@ public class NoopHandler implements Handler {
 		logger.debug("connecting...");
 		connected = true;
 
-		return StringMessage.getInstance("noop connection started",
-		                                 MessageType.SYSTEM);
+		return StringMessage.getInstance("noop connection started", MessageType.SYSTEM_CONNECTION_ESTABLISHED);
 	}
 
 	@Override
 	public Message disconnect() {
 		logger.debug("disconnecting..");
-		return StringMessage.getInstance("noop connection closed",
-		                                 MessageType.SYSTEM);
+		return StringMessage.getInstance("noop connection closed", MessageType.SYSTEM_CONNECTION_DISCONNECTED);
 	}
 
 	@Override
@@ -52,8 +50,7 @@ public class NoopHandler implements Handler {
 	@Override
 	public Message sendMessage(Message message) {
 		logger.debug("sending message");
-		return StringMessage.getInstance("noop message sent",
-		                                 MessageType.SYSTEM);
+		return StringMessage.getInstance("noop message sent", MessageType.SYSTEM_INFO);
 	}
 
 	@Override public void setConnection(Connection connection) {

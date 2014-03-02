@@ -35,14 +35,12 @@ public class ConnectionRegistryImpl implements Managed, ConnectionRegistry {
 	}
 
 	@Override
-	public void start() throws
-	                    Exception {
+	public void start() throws Exception {
 		logger.info("starting channel registry");
 	}
 
 	@Override
-	public void stop() throws
-	                   Exception {
+	public void stop() throws Exception {
 		logger.info("stopping channel registry");
 
 		Collection<List<Connection>> values = connectionHashMap.values();
@@ -73,8 +71,7 @@ public class ConnectionRegistryImpl implements Managed, ConnectionRegistry {
 		List<Connection> connections = connectionHashMap.get(serverId);
 		if (connections == null) {
 			connections = new ArrayList<>();
-			connectionHashMap.put(serverId,
-			                      connections);
+			connectionHashMap.put(serverId, connections);
 		}
 
 		connection.setId(connectionIdGenerator.incrementAndGet());
@@ -87,8 +84,7 @@ public class ConnectionRegistryImpl implements Managed, ConnectionRegistry {
 		List<Connection> connections = getAllForServer(detail.getName());
 		connections.remove(connection);
 
-		return connection.getHandler()
-		                 .disconnect();
+		return connection.getHandler().disconnect();
 	}
 
 	@Override

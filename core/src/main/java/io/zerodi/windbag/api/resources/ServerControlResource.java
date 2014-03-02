@@ -31,8 +31,7 @@ public class ServerControlResource {
 	private final ApplicationConfiguration configuration;
 	private final ConnectionRegistryImpl   connectionRegistry;
 
-	private ServerControlResource(ApplicationConfiguration configuration,
-	                              ConnectionRegistryImpl connectionRegistry) {
+	private ServerControlResource(ApplicationConfiguration configuration, ConnectionRegistryImpl connectionRegistry) {
 		this.configuration = configuration;
 		this.connectionRegistry = connectionRegistry;
 	}
@@ -107,8 +106,7 @@ public class ServerControlResource {
 			throw new WebApplicationException(Status.NOT_FOUND);
 		}
 
-		Message messageToSend = StringMessage.getInstance(message,
-		                                                  MessageType.OUTBOUND);
+		Message messageToSend = StringMessage.getInstance(message, MessageType.OUTBOUND);
 		return connection.getHandler().sendMessage(messageToSend);
 	}
 
@@ -136,6 +134,6 @@ public class ServerControlResource {
 			throw new WebApplicationException(Status.NOT_FOUND);
 		}
 
-		return MessageList.getInstance(connection.getMessageExchange().getLast(10));
+		return MessageList.getInstance(connection.getMessageExchange().getLast(20));
 	}
 }
