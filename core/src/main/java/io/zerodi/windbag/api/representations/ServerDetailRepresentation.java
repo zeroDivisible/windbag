@@ -2,8 +2,12 @@ package io.zerodi.windbag.api.representations;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
+import io.zerodi.windbag.core.Protocol;
 import io.zerodi.windbag.core.protocol.Connection;
+import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,15 +19,28 @@ import java.util.List;
 @JsonRootName("server")
 public class ServerDetailRepresentation {
 
-	@JsonProperty("details")
-	private final ServerDetail serverDetail;
+	@JsonProperty("name")
+	private String name;
+
+	@JsonProperty("server_address")
+	private String serverAddress;
+
+	@JsonProperty("server_port")
+	private int serverPort;
+
+	@JsonProperty("protocol")
+	private Protocol protocol;
 
 	@JsonProperty("active_connections")
 	private final List<ConnectionDetail> connections = new ArrayList<>();
 
 
 	private ServerDetailRepresentation(ServerDetail serverDetail, List<Connection> connections) {
-		this.serverDetail = serverDetail;
+		this.name = serverDetail.getName();
+		this.serverAddress = serverDetail.getServerAddress();
+		this.serverPort = serverDetail.getServerPort();
+		this.protocol = serverDetail.getProtocol();
+
 		for (Connection connection : connections) {
 			this.connections.add(ConnectionDetail.getInstance(connection));
 		}
