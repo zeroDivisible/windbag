@@ -4,7 +4,6 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.zerodi.windbag.core.ApplicationConfiguration;
 import io.zerodi.windbag.core.protocol.Message;
-import io.zerodi.windbag.core.protocol.MessageExchange;
 import io.zerodi.windbag.core.protocol.MessageType;
 import io.zerodi.windbag.core.protocol.StringMessage;
 import org.slf4j.Logger;
@@ -18,21 +17,17 @@ import java.util.concurrent.CountDownLatch;
 public class ResponseReceiver extends SimpleChannelInboundHandler<String> {
 	private static final Logger logger = LoggerFactory.getLogger(ResponseReceiver.class);
 
-	private final MessageExchange          messageExchange;
 	private final CountDownLatch           lock;
 	private final ApplicationConfiguration configuration;
 	private       Message                  receivedMessage;
 
-	private ResponseReceiver(MessageExchange messageExchange,
-	                         CountDownLatch lock, ApplicationConfiguration configuration) {
-		this.messageExchange = messageExchange;
+	private ResponseReceiver(CountDownLatch lock, ApplicationConfiguration configuration) {
 		this.lock = lock;
 		this.configuration = configuration;
 	}
 
-	public static ResponseReceiver getInstance(MessageExchange messageExchange, CountDownLatch lock,
-	                                           ApplicationConfiguration configuration) {
-		return new ResponseReceiver(messageExchange, lock, configuration);
+	public static ResponseReceiver getInstance(CountDownLatch lock, ApplicationConfiguration configuration) {
+		return new ResponseReceiver(lock, configuration);
 	}
 
 	@Override
@@ -41,7 +36,6 @@ public class ResponseReceiver extends SimpleChannelInboundHandler<String> {
 		ctx.pipeline().remove(this);
 
 		setReceivedMessage(StringMessage.getInstance(msg, MessageType.INBOUND));
-		messageExchange.postMessage(receivedMessage);
 		lock.countDown();
 	}
 

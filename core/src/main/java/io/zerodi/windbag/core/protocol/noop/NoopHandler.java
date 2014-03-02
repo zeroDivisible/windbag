@@ -2,10 +2,7 @@ package io.zerodi.windbag.core.protocol.noop;
 
 import io.zerodi.windbag.api.representations.ServerDetail;
 import io.zerodi.windbag.core.Protocol;
-import io.zerodi.windbag.core.protocol.Handler;
-import io.zerodi.windbag.core.protocol.Message;
-import io.zerodi.windbag.core.protocol.MessageType;
-import io.zerodi.windbag.core.protocol.StringMessage;
+import io.zerodi.windbag.core.protocol.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +13,7 @@ public class NoopHandler implements Handler {
 	private static final Logger logger = LoggerFactory.getLogger(NoopHandler.class);
 	private final ServerDetail serverDetail;
 	private boolean connected = false;
+	private Connection connection;
 
 	private NoopHandler(ServerDetail serverDetail) {
 		this.serverDetail = serverDetail;
@@ -35,6 +33,13 @@ public class NoopHandler implements Handler {
 	}
 
 	@Override
+	public Message disconnect() {
+		logger.debug("disconnecting..");
+		return StringMessage.getInstance("noop connection closed",
+		                                 MessageType.SYSTEM);
+	}
+
+	@Override
 	public boolean isConnected() {
 		return connected;
 	}
@@ -45,17 +50,13 @@ public class NoopHandler implements Handler {
 	}
 
 	@Override
-	public Message disconnect() {
-		logger.debug("disconnecting..");
-		return StringMessage.getInstance("noop connection closed",
-		                                 MessageType.SYSTEM);
-	}
-
-
-	@Override
 	public Message sendMessage(Message message) {
 		logger.debug("sending message");
 		return StringMessage.getInstance("noop message sent",
 		                                 MessageType.SYSTEM);
+	}
+
+	@Override public void setConnection(Connection connection) {
+		this.connection = connection;
 	}
 }

@@ -7,10 +7,7 @@ import io.zerodi.windbag.api.representations.MessageList;
 import io.zerodi.windbag.api.representations.ServerDetail;
 import io.zerodi.windbag.app.registry.ConnectionRegistryImpl;
 import io.zerodi.windbag.core.ApplicationConfiguration;
-import io.zerodi.windbag.core.protocol.Connection;
-import io.zerodi.windbag.core.protocol.Message;
-import io.zerodi.windbag.core.protocol.MessageType;
-import io.zerodi.windbag.core.protocol.StringMessage;
+import io.zerodi.windbag.core.protocol.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,11 +52,10 @@ public class ServerControlResource {
 		Connection connection = connectionRegistry.createAndRegisterConnection(server);
 
 		// connects and waits till the connection is successful.
-		Message connectionResult = connection.getHandler()
-		                                     .connect();
-		logger.debug("connection successful for {}",
-		             serverId);
-		return connectionResult;
+		Message connectionResult = connection.getHandler().connect();
+		logger.debug("connection successful for {}", serverId);
+
+		return ConnectionEstablishedMessage.getInstance(connectionResult.getMessage(), "" + connection.getId());
 	}
 
 	/**

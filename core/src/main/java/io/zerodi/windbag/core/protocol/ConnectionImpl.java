@@ -1,5 +1,6 @@
 package io.zerodi.windbag.core.protocol;
 
+import com.google.common.base.Preconditions;
 import io.zerodi.windbag.api.representations.ServerDetail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,9 +23,13 @@ public class ConnectionImpl implements Connection {
 		this.handler = handler;
 		this.messageExchange = messageExchange;
 		this.serverDetail = serverDetail;
+
+		handler.setConnection(this);
 	}
 
 	public static Connection getInstance(Handler handler, MessageExchange messageExchange, ServerDetail serverDetail) {
+		Preconditions.checkNotNull(handler, "handler cannot be null!");
+
 		return new ConnectionImpl(handler, messageExchange, serverDetail);
 	}
 

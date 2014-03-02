@@ -24,4 +24,6 @@ public interface Handler {
 	public Protocol getProtocol();
 
 	public Message sendMessage(Message message);
+
+	public void setConnection(Connection connection);
 }

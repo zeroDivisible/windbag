@@ -1,6 +1,5 @@
 package io.zerodi.windbag.core.protocol;
 
-import io.netty.bootstrap.Bootstrap;
 import io.zerodi.windbag.api.representations.ServerDetail;
 
 /**

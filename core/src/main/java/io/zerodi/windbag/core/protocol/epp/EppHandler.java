@@ -28,6 +28,7 @@ public class EppHandler implements Handler {
 	private Bootstrap       bootstrap       = null;
 	private Channel         channel         = null;
 	private ExecutorService executorService = Executors.newCachedThreadPool();
+	private Connection connection;
 
 	private EppHandler(ServerDetail serverDetail, MessageExchange messageExchange, ApplicationConfiguration configuration) {
 		this.serverDetail = serverDetail;
@@ -62,7 +63,7 @@ public class EppHandler implements Handler {
 			}
 
 			CountDownLatch countDownLatch = new CountDownLatch(1);
-			final ResponseReceiver responseReceiver = ResponseReceiver.getInstance(messageExchange, countDownLatch, configuration);
+			final ResponseReceiver responseReceiver = ResponseReceiver.getInstance(countDownLatch, configuration);
 
 			ChannelFuture connectionFuture = bootstrap.connect(serverAddress, serverPort);
 			connectionFuture.addListener(new ChannelFutureListener() {
@@ -82,7 +83,11 @@ public class EppHandler implements Handler {
 				throw new RuntimeException(e);
 			}
 
-			return responseReceiver.getReceivedMessage();
+			Message receivedMessage = responseReceiver.getReceivedMessage();
+			ConnectionEstablishedMessage establishedConnectionMessage = ConnectionEstablishedMessage.getInstance(receivedMessage.getMessage(),
+			                                                                                                     "" + connection.getId());
+			messageExchange.postMessage(establishedConnectionMessage);
+			return establishedConnectionMessage;
 		} else {
 			return messageExchange.postMessage(StringMessage.getInstance("server already connected; doing nothing", MessageType.SYSTEM));
 		}
@@ -125,7 +130,7 @@ public class EppHandler implements Handler {
 
 		messageExchange.postMessage(message);
 		final CountDownLatch countDownLatch = new CountDownLatch(1);
-		final ResponseReceiver responseReceiver = ResponseReceiver.getInstance(messageExchange, countDownLatch, configuration);
+		final ResponseReceiver responseReceiver = ResponseReceiver.getInstance(countDownLatch, configuration);
 
 		channel.pipeline().addLast("response-receiver", responseReceiver);
 		channel.writeAndFlush(message.asByteBuf());
@@ -137,6 +142,12 @@ public class EppHandler implements Handler {
 			throw new RuntimeException(e);
 		}
 
-		return responseReceiver.getReceivedMessage();
+		Message receivedMessage = responseReceiver.getReceivedMessage();
+		messageExchange.postMessage(receivedMessage);
+		return receivedMessage;
+	}
+
+	@Override public void setConnection(Connection connection) {
+		this.connection = connection;
 	}
 }

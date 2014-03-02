@@ -24,12 +24,8 @@ public class EppConnectionFactory implements ConnectionFactory {
 	                                ApplicationConfiguration configuration) {
 
 		MessageExchange messageExchange = MessageExchangeImpl.getInstance();
-		Handler eppHandler = EppHandler.getInstance(serverDetail,
-		                                            messageExchange,
-		                                            configuration);
+		Handler eppHandler = EppHandler.getInstance(serverDetail, messageExchange, configuration);
 
-		return ConnectionImpl.getInstance(eppHandler,
-		                                  messageExchange,
-		                                  serverDetail);
+		return ConnectionImpl.getInstance(eppHandler, messageExchange, serverDetail);
 	}
 }
