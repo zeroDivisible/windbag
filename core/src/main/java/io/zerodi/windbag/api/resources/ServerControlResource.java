@@ -28,6 +28,7 @@ import static javax.ws.rs.core.Response.Status;
 @Path(ApiSettings.API_URL_PREFIX + "/server")
 @Produces(MediaType.APPLICATION_JSON)
 public class ServerControlResource {
+
 	private static final Logger logger = LoggerFactory.getLogger(ServerControlResource.class);
 
 	private final ApplicationConfiguration configuration;
@@ -59,6 +60,23 @@ public class ServerControlResource {
 		logger.debug("connection successful for {}",
 		             serverId);
 		return connectionResult;
+	}
+
+	/**
+	 * @param serverId which we would like to retrieve from the registry
+	 * @return found {@link io.zerodi.windbag.core.protocol.Connection}
+	 * @throws javax.ws.rs.WebApplicationException with status of {@link javax.ws.rs.core.Response.Status#NOT_FOUND NOT_FOUND} if none
+	 *                                             matches the name.
+	 */
+	private ServerDetail findServer(String serverId) {
+		for (ServerDetail serverDetail : configuration.getServers()) {
+			if (serverDetail.getName()
+			                .equals(serverId)) {
+				return serverDetail;
+			}
+		}
+
+		throw new WebApplicationException(Status.NOT_FOUND);
 	}
 
 	@GET
@@ -98,8 +116,7 @@ public class ServerControlResource {
 
 		Message messageToSend = StringMessage.getInstance(message,
 		                                                  MessageType.OUTBOUND);
-		return connection.getHandler()
-		                 .sendMessage(messageToSend);
+		return connection.getHandler().sendMessage(messageToSend);
 	}
 
 	@POST
@@ -107,8 +124,7 @@ public class ServerControlResource {
 	public Message postMessage(@PathParam("serverId") String serverId,
 	                           @PathParam("connectionId") Long connectionId,
 	                           String message) {
-		Connection connection = connectionRegistry.getForServerWithId(serverId,
-		                                                              connectionId);
+		Connection connection = connectionRegistry.getForServerWithId(serverId, connectionId);
 		if (connection == null) {
 			throw new WebApplicationException(Status.NOT_FOUND);
 		}
@@ -123,32 +139,11 @@ public class ServerControlResource {
 	@Timed
 	public MessageList getMessages(@PathParam("serverId") String serverId,
 	                               @PathParam("connectionId") Long connectionId) {
-		Connection connection = connectionRegistry.getForServerWithId(serverId,
-		                                                              connectionId);
+		Connection connection = connectionRegistry.getForServerWithId(serverId, connectionId);
 		if (connection == null) {
 			throw new WebApplicationException(Status.NOT_FOUND);
 		}
 
-		return MessageList.getInstance(connection.getMessageExchange()
-		                                         .getLast(10));
-	}
-
-	/**
-	 * @param serverId which we would like to retrieve from the registry
-	 *
-	 * @return found {@link io.zerodi.windbag.core.protocol.Connection}
-	 *
-	 * @throws javax.ws.rs.WebApplicationException with status of {@link javax.ws.rs.core.Response.Status#NOT_FOUND NOT_FOUND} if none
-	 *                                             matches the name.
-	 */
-	private ServerDetail findServer(String serverId) {
-		for (ServerDetail serverDetail : configuration.getServers()) {
-			if (serverDetail.getName()
-			                .equals(serverId)) {
-				return serverDetail;
-			}
-		}
-
-		throw new WebApplicationException(Status.NOT_FOUND);
+		return MessageList.getInstance(connection.getMessageExchange().getLast(10));
 	}
 }

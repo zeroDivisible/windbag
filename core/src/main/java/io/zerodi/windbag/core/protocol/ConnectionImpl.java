@@ -12,22 +12,20 @@ import org.slf4j.LoggerFactory;
 public class ConnectionImpl implements Connection {
 	private static final Logger logger = LoggerFactory.getLogger(ConnectionImpl.class);
 
-	private final Handler      handler;
-	private final ServerDetail serverDetail;
+	private final Handler         handler;
+	private final MessageExchange messageExchange;
+	private final ServerDetail    serverDetail;
 
 	private long connectionId;
 
-	private ConnectionImpl(Handler handler,
-	                       ServerDetail serverDetail) {
+	private ConnectionImpl(Handler handler, MessageExchange messageExchange, ServerDetail serverDetail) {
 		this.handler = handler;
+		this.messageExchange = messageExchange;
 		this.serverDetail = serverDetail;
 	}
 
-	public static Connection getInstance(Handler handler,
-	                                     MessageExchange messageExchange,
-	                                     ServerDetail serverDetail) {
-		return new ConnectionImpl(handler,
-		                          serverDetail);
+	public static Connection getInstance(Handler handler, MessageExchange messageExchange, ServerDetail serverDetail) {
+		return new ConnectionImpl(handler, messageExchange, serverDetail);
 	}
 
 	@Override
@@ -52,6 +50,6 @@ public class ConnectionImpl implements Connection {
 
 	@Override
 	public MessageExchange getMessageExchange() {
-		return null; // TODO Implement
+		return messageExchange;
 	}
 }

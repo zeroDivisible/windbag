@@ -3,8 +3,8 @@ package io.zerodi.windbag.app.registry;
 import com.google.common.base.Preconditions;
 import com.yammer.dropwizard.lifecycle.Managed;
 import io.zerodi.windbag.api.representations.ServerDetail;
-import io.zerodi.windbag.core.protocol.BootstrappedConnectionFactory;
 import io.zerodi.windbag.core.protocol.Connection;
+import io.zerodi.windbag.core.protocol.ConnectionFactoryRegistry;
 import io.zerodi.windbag.core.protocol.Handler;
 import io.zerodi.windbag.core.protocol.Message;
 import org.slf4j.Logger;
@@ -19,18 +19,19 @@ import java.util.concurrent.atomic.AtomicLong;
  * @author zerodi
  */
 public class ConnectionRegistryImpl implements Managed, ConnectionRegistry {
+
 	private static final Logger logger = LoggerFactory.getLogger(ConnectionRegistryImpl.class);
-	private final BootstrappedConnectionFactory bootstrappedConnectionFactory;
+	private final ConnectionFactoryRegistry connectionFactoryRegistry;
 
 	private AtomicLong                    connectionIdGenerator = new AtomicLong();
 	private Map<String, List<Connection>> connectionHashMap     = new HashMap<>();
 
-	private ConnectionRegistryImpl(BootstrappedConnectionFactory bootstrappedConnectionFactory) {
-		this.bootstrappedConnectionFactory = bootstrappedConnectionFactory;
+	private ConnectionRegistryImpl(ConnectionFactoryRegistry connectionFactoryRegistry) {
+		this.connectionFactoryRegistry = connectionFactoryRegistry;
 	}
 
-	public static ConnectionRegistryImpl getInstance(BootstrappedConnectionFactory bootstrappedConnectionFactory) {
-		return new ConnectionRegistryImpl(bootstrappedConnectionFactory);
+	public static ConnectionRegistryImpl getInstance(ConnectionFactoryRegistry connectionFactoryRegistry) {
+		return new ConnectionRegistryImpl(connectionFactoryRegistry);
 	}
 
 	@Override
@@ -60,20 +61,14 @@ public class ConnectionRegistryImpl implements Managed, ConnectionRegistry {
 
 	@Override
 	public void registerConnection(Connection connection) {
-		Preconditions.checkNotNull(connection,
-		                           "connection cannot be null!");
-		Preconditions.checkNotNull(connection.getHandler(),
-		                           "connection.getHandler() cannot be null!");
-
-		Preconditions.checkArgument(connection.getId() == 0,
-		                            "connection.getId() == 0 is not fulfilled, cannot register connection twice!");
+		Preconditions.checkNotNull(connection, "connection cannot be null!");
+		Preconditions.checkNotNull(connection.getHandler(), "connection.getHandler() cannot be null!");
+		Preconditions.checkArgument(connection.getId() == 0, "connection.getId() == 0 is not fulfilled, cannot register connection twice!");
 
 		ServerDetail serverDetail = connection.getServerDetail();
-		Preconditions.checkNotNull(serverDetail,
-		                           "connection.getServerDetail() cannot be null!");
+		Preconditions.checkNotNull(serverDetail, "connection.getServerDetail() cannot be null!");
 		String serverId = serverDetail.getName();
-		Preconditions.checkNotNull(serverId,
-		                           "clientConnection.getServerDetail().getName() cannot be null!");
+		Preconditions.checkNotNull(serverId, "clientConnection.getServerDetail().getName() cannot be null!");
 
 		List<Connection> connections = connectionHashMap.get(serverId);
 		if (connections == null) {
@@ -98,7 +93,7 @@ public class ConnectionRegistryImpl implements Managed, ConnectionRegistry {
 
 	@Override
 	public Connection createAndRegisterConnection(ServerDetail serverDetail) {
-		Connection connection = bootstrappedConnectionFactory.createConnection(serverDetail);
+		Connection connection = connectionFactoryRegistry.createConnection(serverDetail);
 		registerConnection(connection);
 
 		return connection;

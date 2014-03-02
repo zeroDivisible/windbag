@@ -3,7 +3,7 @@ package io.zerodi.windbag.app.protocol;
 import io.zerodi.windbag.api.representations.ServerDetail;
 import io.zerodi.windbag.core.ApplicationConfiguration;
 import io.zerodi.windbag.core.Protocol;
-import io.zerodi.windbag.core.protocol.BootstrappedConnectionFactory;
+import io.zerodi.windbag.core.protocol.ConnectionFactoryRegistry;
 import io.zerodi.windbag.core.protocol.Connection;
 import io.zerodi.windbag.core.protocol.Handler;
 import org.testng.annotations.BeforeMethod;
@@ -16,14 +16,14 @@ import static org.fest.assertions.Assertions.assertThat;
  */
 public class ConnectionFactoryImplTest {
 
-	private BootstrappedConnectionFactory bootstrapFactory;
+	private ConnectionFactoryRegistry bootstrapFactory;
 
 	private ApplicationConfiguration applicationConfiguration;
 
 	@BeforeMethod
 	public void setUp() throws
 	                    Exception {
-		bootstrapFactory = BootstrappedConnectionFactory.getInstance(applicationConfiguration);
+		bootstrapFactory = ConnectionFactoryRegistry.getInstance(applicationConfiguration);
 	}
 
 	@Test

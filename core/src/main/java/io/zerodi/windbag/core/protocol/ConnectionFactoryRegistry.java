@@ -12,7 +12,8 @@ import java.util.HashMap;
 /**
  * @author zerodi
  */
-public class BootstrappedConnectionFactory {
+public class ConnectionFactoryRegistry {
+
 	private static final HashMap<Protocol, ConnectionFactory> bootstrapFactories = new HashMap<>();
 
 	static {
@@ -24,12 +25,12 @@ public class BootstrappedConnectionFactory {
 
 	private final ApplicationConfiguration configuration;
 
-	private BootstrappedConnectionFactory(ApplicationConfiguration configuration) {
+	private ConnectionFactoryRegistry(ApplicationConfiguration configuration) {
 		this.configuration = configuration;
 	}
 
-	public static BootstrappedConnectionFactory getInstance(ApplicationConfiguration configuration) {
-		return new BootstrappedConnectionFactory(configuration);
+	public static ConnectionFactoryRegistry getInstance(ApplicationConfiguration configuration) {
+		return new ConnectionFactoryRegistry(configuration);
 	}
 
 	public Connection createConnection(ServerDetail serverDetail) {

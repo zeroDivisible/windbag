@@ -12,18 +12,19 @@ import io.zerodi.windbag.core.protocol.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author zerodi
  */
 public class EppHandler implements Handler {
 	private static final Logger logger = LoggerFactory.getLogger(EppHandler.class);
-
 	private final ServerDetail             serverDetail;
 	private final MessageExchange          messageExchange;
 	private final ApplicationConfiguration configuration;
-
 	private Bootstrap       bootstrap       = null;
 	private Channel         channel         = null;
 	private ExecutorService executorService = Executors.newCachedThreadPool();
@@ -55,12 +56,10 @@ public class EppHandler implements Handler {
 	@Override
 	public Message connect() {
 		if (!isConnected()) {
-			String serverAddress = serverDetail.getServerAddress();
-			int serverPort = serverDetail.getServerPort();
+			final String serverAddress = serverDetail.getServerAddress();
+			final int serverPort = serverDetail.getServerPort();
 
-			logger.debug("{}:{} - connecting",
-			             serverAddress,
-			             serverPort);
+			logger.debug("{}:{} - connecting", serverAddress, serverPort);
 
 			EventLoopGroup group = bootstrap.group();
 			if (group == null) {
@@ -68,10 +67,10 @@ public class EppHandler implements Handler {
 				bootstrap.group(eventLoopGroup);
 			}
 
-			final ResponseReceiver responseReceiver = ResponseReceiver.getInstance(messageExchange,
-			                                                                       configuration);
-			ChannelFuture connectionFuture = bootstrap.connect(serverAddress,
-			                                                   serverPort);
+			CountDownLatch countDownLatch = new CountDownLatch(1);
+			final ResponseReceiver responseReceiver = ResponseReceiver.getInstance(messageExchange, countDownLatch, configuration);
+
+			ChannelFuture connectionFuture = bootstrap.connect(serverAddress, serverPort);
 			connectionFuture.addListener(new ChannelFutureListener() {
 				@Override
 				public void operationComplete(ChannelFuture future) throws
@@ -82,52 +81,17 @@ public class EppHandler implements Handler {
 				}
 			});
 
-			connectionFuture.awaitUninterruptibly(configuration.getConnectionTimeoutSeconds(),
-			                                      TimeUnit.SECONDS);
-
-			Future<Object> submit = executorService.submit(new Callable<Object>() {
-				@Override
-				public Object call() throws
-				                     Exception {
-					while (!responseReceiver.ifFinished()) {
-						try {
-							Thread.sleep(2);
-						} catch (InterruptedException e) {
-							logger.error("while waiting for response after sending a message",
-							             e);
-							throw new RuntimeException(e);
-						}
-					}
-					return new Object();
-				}
-			});
-
 			try {
-				submit.get(configuration.getResponseTimeoutSeconds(),
-				           TimeUnit.SECONDS);
-			} catch (InterruptedException | ExecutionException | TimeoutException e) {
-				logger.error("while waiting for the response after sending message",
-				             e);
+				countDownLatch.await(configuration.getConnectionTimeoutSeconds(), TimeUnit.SECONDS);
+			} catch (InterruptedException e) {
+				logger.error("while connecting to remote server", e);
 				throw new RuntimeException(e);
 			}
 
-			return messageExchange.getLastMessage();
+			return responseReceiver.getReceivedMessage();
 		} else {
-			// TODO find a way to return completed future.
-			return messageExchange.postMessage(StringMessage.getInstance("server already connected; doing nothing",
-			                                                             MessageType.SYSTEM));
+			return messageExchange.postMessage(StringMessage.getInstance("server already connected; doing nothing", MessageType.SYSTEM));
 		}
-	}
-
-	@Override
-	public boolean isConnected() {
-		return channel != null && channel.isActive();
-
-	}
-
-	@Override
-	public Protocol getProtocol() {
-		return Protocol.EPP;
 	}
 
 	@Override
@@ -154,31 +118,35 @@ public class EppHandler implements Handler {
 	}
 
 	@Override
-	public Message sendMessage(Message message) {
-		Preconditions.checkNotNull(message,
-		                           "message cannot be null!");
-		Preconditions.checkArgument(isConnected(),
-		                            "connection needs to be open and active to send the messages!");
+	public boolean isConnected() {
+		return channel != null && channel.isActive();
 
-		synchronized (this) {
-			messageExchange.postMessage(message);
-			ResponseReceiver responseReceiver = ResponseReceiver.getInstance(messageExchange,
-			                                                                 configuration);
-			channel.pipeline()
-			       .addLast("response-receiver",
-			                responseReceiver);
-			channel.writeAndFlush(message.asByteBuf());
+	}
 
-			while (!responseReceiver.ifFinished()) {
-				try {
-					Thread.sleep(2);
-				} catch (InterruptedException e) {
-					logger.error("while waiting for response after sending a message",
-					             e);
-					throw new RuntimeException(e);
-				}
-			}
-			return messageExchange.getLastMessage();
+	@Override
+	public Protocol getProtocol() {
+		return Protocol.EPP;
+	}
+
+	@Override
+	public Message sendMessage(final Message message) {
+		Preconditions.checkNotNull(message, "message cannot be null!");
+		Preconditions.checkArgument(isConnected(), "connection needs to be open and active to send the messages!");
+
+		messageExchange.postMessage(message);
+		final CountDownLatch countDownLatch = new CountDownLatch(1);
+		final ResponseReceiver responseReceiver = ResponseReceiver.getInstance(messageExchange, countDownLatch, configuration);
+
+		channel.pipeline().addLast("response-receiver", responseReceiver);
+		channel.writeAndFlush(message.asByteBuf());
+
+		try {
+			countDownLatch.await(configuration.getResponseTimeoutSeconds(), TimeUnit.SECONDS);
+		} catch (InterruptedException e) {
+			logger.error("while waiting for the response after sending a message", e);
+			throw new RuntimeException(e);
 		}
+
+		return responseReceiver.getReceivedMessage();
 	}
 }

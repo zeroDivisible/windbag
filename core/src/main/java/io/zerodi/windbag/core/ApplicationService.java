@@ -11,7 +11,7 @@ import io.zerodi.windbag.api.resources.ServerControlResource;
 import io.zerodi.windbag.api.resources.WebAppController;
 import io.zerodi.windbag.app.healthcheck.ServerDefinitionHealthCheck;
 import io.zerodi.windbag.app.registry.ConnectionRegistryImpl;
-import io.zerodi.windbag.core.protocol.BootstrappedConnectionFactory;
+import io.zerodi.windbag.core.protocol.ConnectionFactoryRegistry;
 
 /**
  * Main class, spinning the core application.
@@ -39,8 +39,8 @@ public class ApplicationService extends Service<ApplicationConfiguration> {
 	public void run(ApplicationConfiguration configuration,
 	                Environment environment) throws
 	                                         Exception {
-		BootstrappedConnectionFactory bootstrappedConnectionFactory = BootstrappedConnectionFactory.getInstance(configuration);
-		ConnectionRegistryImpl connectionRegistry = ConnectionRegistryImpl.getInstance(bootstrappedConnectionFactory);
+		ConnectionFactoryRegistry connectionFactoryRegistry = ConnectionFactoryRegistry.getInstance(configuration);
+		ConnectionRegistryImpl connectionRegistry = ConnectionRegistryImpl.getInstance(connectionFactoryRegistry);
 
 		environment.manage(connectionRegistry); // registry of open connections will need to be shut down along with the main application.
 

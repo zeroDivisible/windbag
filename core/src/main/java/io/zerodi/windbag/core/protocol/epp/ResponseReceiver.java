@@ -10,45 +10,46 @@ import io.zerodi.windbag.core.protocol.StringMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.CountDownLatch;
+
 /**
  * @author zerodi
  */
 public class ResponseReceiver extends SimpleChannelInboundHandler<String> {
 	private static final Logger logger = LoggerFactory.getLogger(ResponseReceiver.class);
 
-	private final    MessageExchange          messageExchange;
-	private final    ApplicationConfiguration configuration;
-	private volatile boolean                  finished;
+	private final MessageExchange          messageExchange;
+	private final CountDownLatch           lock;
+	private final ApplicationConfiguration configuration;
+	private       Message                  receivedMessage;
 
 	private ResponseReceiver(MessageExchange messageExchange,
-	                         ApplicationConfiguration configuration) {
+	                         CountDownLatch lock, ApplicationConfiguration configuration) {
 		this.messageExchange = messageExchange;
+		this.lock = lock;
 		this.configuration = configuration;
 	}
 
-	public static ResponseReceiver getInstance(MessageExchange messageExchange,
+	public static ResponseReceiver getInstance(MessageExchange messageExchange, CountDownLatch lock,
 	                                           ApplicationConfiguration configuration) {
-		return new ResponseReceiver(messageExchange,
-		                            configuration);
+		return new ResponseReceiver(messageExchange, lock, configuration);
 	}
 
 	@Override
-	protected void messageReceived(ChannelHandlerContext ctx,
-	                               String msg) throws
-	                                           Exception {
-		logger.debug("got {}, handling it and removing itself from pipeline",
-		             msg);
-		ctx.pipeline()
-		   .remove(this);
+	protected void messageReceived(ChannelHandlerContext ctx, String msg) {
+		logger.debug("got {}, handling it and removing itself from pipeline", msg);
+		ctx.pipeline().remove(this);
 
-		Message receivedMessage = StringMessage.getInstance(msg,
-		                                                    MessageType.INBOUND);
+		setReceivedMessage(StringMessage.getInstance(msg, MessageType.INBOUND));
 		messageExchange.postMessage(receivedMessage);
-		finished = true;
+		lock.countDown();
 	}
 
-	public boolean ifFinished() {
-		return finished;
+	public Message getReceivedMessage() {
+		return receivedMessage;
+	}
 
+	public void setReceivedMessage(Message receivedMessage) {
+		this.receivedMessage = receivedMessage;
 	}
 }
