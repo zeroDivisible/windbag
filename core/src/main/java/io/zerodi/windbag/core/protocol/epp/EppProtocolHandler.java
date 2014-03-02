@@ -104,7 +104,7 @@ public class EppProtocolHandler implements ProtocolHandler {
 				channel = null;
 			} catch (InterruptedException e) {
 				logger.error("while disconnecting from remote server", e);
-				throw new RuntimeException(e); // TODO handle better than this.
+				throw new HandlerException(e);
 			}
 			return messageExchange.postMessage(StringMessage.getInstance("disconnected", MessageType.SYSTEM_CONNECTION_DISCONNECTED));
 		} else {
@@ -140,7 +140,7 @@ public class EppProtocolHandler implements ProtocolHandler {
 			countDownLatch.await(configuration.getResponseTimeoutSeconds(), TimeUnit.SECONDS);
 		} catch (InterruptedException e) {
 			logger.error("while waiting for the response after sending a message", e);
-			throw new RuntimeException(e);
+			throw new HandlerException(e);
 		}
 
 		Message receivedMessage = responseReceiver.getReceivedMessage();
