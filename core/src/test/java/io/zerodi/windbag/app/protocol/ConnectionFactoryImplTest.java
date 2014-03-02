@@ -5,7 +5,7 @@ import io.zerodi.windbag.core.ApplicationConfiguration;
 import io.zerodi.windbag.core.Protocol;
 import io.zerodi.windbag.core.protocol.ConnectionFactoryRegistry;
 import io.zerodi.windbag.core.protocol.Connection;
-import io.zerodi.windbag.core.protocol.Handler;
+import io.zerodi.windbag.core.protocol.ProtocolHandler;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -34,10 +34,10 @@ public class ConnectionFactoryImplTest {
 
 		// when
 		Connection connection = bootstrapFactory.createConnection(serverDetail);
-		Handler handler = connection.getHandler();
+		ProtocolHandler protocolHandler = connection.getProtocolHandler();
 
 		// then
-		assertThat(handler).isNotNull();
-		assertThat(handler.getProtocol()).isEqualTo(Protocol.NOOP);
+		assertThat(protocolHandler).isNotNull();
+		assertThat(protocolHandler.getProtocol()).isEqualTo(Protocol.NOOP);
 	}
 }

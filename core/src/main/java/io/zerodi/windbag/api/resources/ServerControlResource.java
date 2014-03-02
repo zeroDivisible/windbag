@@ -49,7 +49,7 @@ public class ServerControlResource {
 		Connection connection = connectionRegistry.createAndRegisterConnection(server);
 
 		// connects and waits till the connection is successful.
-		Message connectionResult = connection.getHandler().connect();
+		Message connectionResult = connection.getProtocolHandler().connect();
 		logger.debug("connection successful for {}", serverId);
 
 		return ConnectionEstablishedMessage.getInstance(connectionResult.getMessage(), "" + connection.getId());
@@ -107,7 +107,7 @@ public class ServerControlResource {
 		}
 
 		Message messageToSend = StringMessage.getInstance(message, MessageType.OUTBOUND);
-		return connection.getHandler().sendMessage(messageToSend);
+		return connection.getProtocolHandler().sendMessage(messageToSend);
 	}
 
 	@POST
@@ -120,7 +120,7 @@ public class ServerControlResource {
 			throw new WebApplicationException(Status.NOT_FOUND);
 		}
 
-		return connection.getHandler().sendMessage(StringMessage.getInstance(message, MessageType.OUTBOUND));
+		return connection.getProtocolHandler().sendMessage(StringMessage.getInstance(message, MessageType.OUTBOUND));
 	}
 
 

@@ -13,7 +13,7 @@ public interface Connection {
 
 	public void setId(long id);
 
-	public Handler getHandler();
+	public ProtocolHandler getProtocolHandler();
 
 	public ServerDetail getServerDetail();
 

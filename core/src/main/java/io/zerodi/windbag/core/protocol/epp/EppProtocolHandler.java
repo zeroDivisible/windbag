@@ -20,8 +20,8 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author zerodi
  */
-public class EppHandler implements Handler {
-	private static final Logger logger = LoggerFactory.getLogger(EppHandler.class);
+public class EppProtocolHandler implements ProtocolHandler {
+	private static final Logger logger = LoggerFactory.getLogger(EppProtocolHandler.class);
 	private final ServerDetail             serverDetail;
 	private final MessageExchange          messageExchange;
 	private final ApplicationConfiguration configuration;
@@ -30,7 +30,7 @@ public class EppHandler implements Handler {
 	private ExecutorService executorService = Executors.newCachedThreadPool();
 	private Connection connection;
 
-	private EppHandler(ServerDetail serverDetail, MessageExchange messageExchange, ApplicationConfiguration configuration) {
+	private EppProtocolHandler(ServerDetail serverDetail, MessageExchange messageExchange, ApplicationConfiguration configuration) {
 		this.serverDetail = serverDetail;
 		this.messageExchange = messageExchange;
 		this.configuration = configuration;
@@ -44,8 +44,8 @@ public class EppHandler implements Handler {
 
 	}
 
-	public static Handler getInstance(ServerDetail serverDetail, MessageExchange messageExchange, ApplicationConfiguration configuration) {
-		return new EppHandler(serverDetail, messageExchange, configuration);
+	public static ProtocolHandler getInstance(ServerDetail serverDetail, MessageExchange messageExchange, ApplicationConfiguration configuration) {
+		return new EppProtocolHandler(serverDetail, messageExchange, configuration);
 	}
 
 	@Override

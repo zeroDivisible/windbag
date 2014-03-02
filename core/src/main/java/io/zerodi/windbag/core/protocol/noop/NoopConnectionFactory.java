@@ -21,7 +21,7 @@ public class NoopConnectionFactory implements ConnectionFactory {
 	                                ApplicationConfiguration applicationConfiguration) {
 		MessageExchange messageExchange = MessageExchangeImpl.getInstance();
 
-		NoopHandler noopHandler = NoopHandler.getInstance(serverDetail);
+		NoopProtocolHandler noopHandler = NoopProtocolHandler.getInstance(serverDetail);
 
 		return ConnectionImpl.getInstance(noopHandler,
 		                                  messageExchange,

@@ -5,7 +5,7 @@ import io.zerodi.windbag.core.Protocol;
 /**
  * @author zerodi
  */
-public interface Handler {
+public interface ProtocolHandler {
 	/**
 	 * @return {@link io.netty.channel.ChannelFuture} returned when opening a channel to remote server.
 	 */

@@ -5,7 +5,7 @@ import com.yammer.dropwizard.lifecycle.Managed;
 import io.zerodi.windbag.api.representations.ServerDetail;
 import io.zerodi.windbag.core.protocol.Connection;
 import io.zerodi.windbag.core.protocol.ConnectionFactoryRegistry;
-import io.zerodi.windbag.core.protocol.Handler;
+import io.zerodi.windbag.core.protocol.ProtocolHandler;
 import io.zerodi.windbag.core.protocol.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,11 +46,11 @@ public class ConnectionRegistryImpl implements Managed, ConnectionRegistry {
 		Collection<List<Connection>> values = connectionHashMap.values();
 		for (List<Connection> connections : values) {
 			for (Connection connection : connections) {
-				Handler handler = connection.getHandler();
+				ProtocolHandler protocolHandler = connection.getProtocolHandler();
 
-				if (handler != null) {
-					if (handler.isConnected()) {
-						handler.disconnect();
+				if (protocolHandler != null) {
+					if (protocolHandler.isConnected()) {
+						protocolHandler.disconnect();
 					}
 				}
 			}
@@ -60,7 +60,7 @@ public class ConnectionRegistryImpl implements Managed, ConnectionRegistry {
 	@Override
 	public void registerConnection(Connection connection) {
 		Preconditions.checkNotNull(connection, "connection cannot be null!");
-		Preconditions.checkNotNull(connection.getHandler(), "connection.getHandler() cannot be null!");
+		Preconditions.checkNotNull(connection.getProtocolHandler(), "connection.getProtocolHandler() cannot be null!");
 		Preconditions.checkArgument(connection.getId() == 0, "connection.getId() == 0 is not fulfilled, cannot register connection twice!");
 
 		ServerDetail serverDetail = connection.getServerDetail();
@@ -84,7 +84,7 @@ public class ConnectionRegistryImpl implements Managed, ConnectionRegistry {
 		List<Connection> connections = getAllForServer(detail.getName());
 		connections.remove(connection);
 
-		return connection.getHandler().disconnect();
+		return connection.getProtocolHandler().disconnect();
 	}
 
 	@Override

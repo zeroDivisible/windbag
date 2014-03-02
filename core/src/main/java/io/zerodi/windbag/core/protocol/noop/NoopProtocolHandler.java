@@ -9,18 +9,18 @@ import org.slf4j.LoggerFactory;
 /**
  * @author zerodi
  */
-public class NoopHandler implements Handler {
-	private static final Logger logger = LoggerFactory.getLogger(NoopHandler.class);
+public class NoopProtocolHandler implements ProtocolHandler {
+	private static final Logger logger = LoggerFactory.getLogger(NoopProtocolHandler.class);
 	private final ServerDetail serverDetail;
 	private boolean connected = false;
 	private Connection connection;
 
-	private NoopHandler(ServerDetail serverDetail) {
+	private NoopProtocolHandler(ServerDetail serverDetail) {
 		this.serverDetail = serverDetail;
 	}
 
-	public static NoopHandler getInstance(ServerDetail serverDetail) {
-		return new NoopHandler(serverDetail);
+	public static NoopProtocolHandler getInstance(ServerDetail serverDetail) {
+		return new NoopProtocolHandler(serverDetail);
 	}
 
 	@Override

@@ -13,24 +13,24 @@ import org.slf4j.LoggerFactory;
 public class ConnectionImpl implements Connection {
 	private static final Logger logger = LoggerFactory.getLogger(ConnectionImpl.class);
 
-	private final Handler         handler;
+	private final ProtocolHandler protocolHandler;
 	private final MessageExchange messageExchange;
 	private final ServerDetail    serverDetail;
 
 	private long connectionId;
 
-	private ConnectionImpl(Handler handler, MessageExchange messageExchange, ServerDetail serverDetail) {
-		this.handler = handler;
+	private ConnectionImpl(ProtocolHandler protocolHandler, MessageExchange messageExchange, ServerDetail serverDetail) {
+		this.protocolHandler = protocolHandler;
 		this.messageExchange = messageExchange;
 		this.serverDetail = serverDetail;
 
-		handler.setConnection(this);
+		protocolHandler.setConnection(this);
 	}
 
-	public static Connection getInstance(Handler handler, MessageExchange messageExchange, ServerDetail serverDetail) {
-		Preconditions.checkNotNull(handler, "handler cannot be null!");
+	public static Connection getInstance(ProtocolHandler protocolHandler, MessageExchange messageExchange, ServerDetail serverDetail) {
+		Preconditions.checkNotNull(protocolHandler, "protocolHandler cannot be null!");
 
-		return new ConnectionImpl(handler, messageExchange, serverDetail);
+		return new ConnectionImpl(protocolHandler, messageExchange, serverDetail);
 	}
 
 	@Override
@@ -44,8 +44,8 @@ public class ConnectionImpl implements Connection {
 	}
 
 	@Override
-	public Handler getHandler() {
-		return handler;
+	public ProtocolHandler getProtocolHandler() {
+		return protocolHandler;
 	}
 
 	@Override

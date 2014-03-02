@@ -5,7 +5,7 @@ import io.zerodi.windbag.core.ApplicationConfiguration;
 import io.zerodi.windbag.core.protocol.*;
 
 /**
- * Factory which creates connections initialized with {@link io.zerodi.windbag.core.protocol.epp.EppHandler}, so they can speak to EPP
+ * Factory which creates connections initialized with {@link EppProtocolHandler}, so they can speak to EPP
  * servers.
  *
  * @author zerodi
@@ -24,8 +24,8 @@ public class EppConnectionFactory implements ConnectionFactory {
 	                                ApplicationConfiguration configuration) {
 
 		MessageExchange messageExchange = MessageExchangeImpl.getInstance();
-		Handler eppHandler = EppHandler.getInstance(serverDetail, messageExchange, configuration);
+		ProtocolHandler eppProtocolHandler = EppProtocolHandler.getInstance(serverDetail, messageExchange, configuration);
 
-		return ConnectionImpl.getInstance(eppHandler, messageExchange, serverDetail);
+		return ConnectionImpl.getInstance(eppProtocolHandler, messageExchange, serverDetail);
 	}
 }
