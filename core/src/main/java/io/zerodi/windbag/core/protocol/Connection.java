@@ -1,7 +1,6 @@
 package io.zerodi.windbag.core.protocol;
 
 import io.zerodi.windbag.api.representations.ServerDetail;
-import io.zerodi.windbag.app.registry.ProtocolBootstrap;
 
 /**
  * Interface abstracting connection to a remote server.
@@ -14,9 +13,7 @@ public interface Connection {
 
 	public void setId(long id);
 
-	public Handler getHandler();
-
-	public ProtocolBootstrap getProtocolBootstrap();
+	public ProtocolHandler getProtocolHandler();
 
 	public ServerDetail getServerDetail();
 

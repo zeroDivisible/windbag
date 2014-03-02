@@ -1,7 +1,7 @@
 package io.zerodi.windbag.core.protocol;
 
+import com.google.common.base.Preconditions;
 import io.zerodi.windbag.api.representations.ServerDetail;
-import io.zerodi.windbag.app.registry.ProtocolBootstrap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,19 +13,24 @@ import org.slf4j.LoggerFactory;
 public class ConnectionImpl implements Connection {
 	private static final Logger logger = LoggerFactory.getLogger(ConnectionImpl.class);
 
-	private final Handler handler;
-	private final ServerDetail serverDetail;
-	private final ProtocolBootstrap protocolBootstrap;
+	private final ProtocolHandler protocolHandler;
+	private final MessageExchange messageExchange;
+	private final ServerDetail    serverDetail;
+
 	private long connectionId;
 
-	private ConnectionImpl(Handler handler, ServerDetail serverDetail, ProtocolBootstrap protocolBootstrap) {
-		this.handler = handler;
+	private ConnectionImpl(ProtocolHandler protocolHandler, MessageExchange messageExchange, ServerDetail serverDetail) {
+		this.protocolHandler = protocolHandler;
+		this.messageExchange = messageExchange;
 		this.serverDetail = serverDetail;
-		this.protocolBootstrap = protocolBootstrap;
+
+		protocolHandler.setConnection(this);
 	}
 
-	public static Connection getInstance(Handler handler, ServerDetail serverDetail, ProtocolBootstrap protocolBootstrap) {
-		return new ConnectionImpl(handler, serverDetail, protocolBootstrap);
+	public static Connection getInstance(ProtocolHandler protocolHandler, MessageExchange messageExchange, ServerDetail serverDetail) {
+		Preconditions.checkNotNull(protocolHandler, "protocolHandler cannot be null!");
+
+		return new ConnectionImpl(protocolHandler, messageExchange, serverDetail);
 	}
 
 	@Override
@@ -39,13 +44,8 @@ public class ConnectionImpl implements Connection {
 	}
 
 	@Override
-	public Handler getHandler() {
-		return handler;
-	}
-
-	@Override
-	public ProtocolBootstrap getProtocolBootstrap() {
-		return protocolBootstrap;
+	public ProtocolHandler getProtocolHandler() {
+		return protocolHandler;
 	}
 
 	@Override
@@ -55,6 +55,6 @@ public class ConnectionImpl implements Connection {
 
 	@Override
 	public MessageExchange getMessageExchange() {
-		return null; // TODO Implement
+		return messageExchange;
 	}
 }

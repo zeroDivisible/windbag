@@ -25,7 +25,8 @@ public class ServerDefinitionHealthCheck extends HealthCheck {
 	}
 
 	@Override
-	protected Result check() throws Exception {
+	protected Result check() throws
+	                         Exception {
 		List<ServerDetail> servers = configuration.getServers();
 		if (servers == null || servers.isEmpty()) {
 			return Result.unhealthy("no server definitions found");

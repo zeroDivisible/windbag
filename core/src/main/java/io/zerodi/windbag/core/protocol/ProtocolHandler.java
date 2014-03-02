@@ -1,9 +1,11 @@
 package io.zerodi.windbag.core.protocol;
 
+import io.zerodi.windbag.core.Protocol;
+
 /**
  * @author zerodi
  */
-public interface Handler {
+public interface ProtocolHandler {
 	/**
 	 * @return {@link io.netty.channel.ChannelFuture} returned when opening a channel to remote server.
 	 */
@@ -15,16 +17,13 @@ public interface Handler {
 	public Message disconnect();
 
 	/**
-	 * @return {@link io.netty.channel.ChannelFuture} returned when reopening a channel to remote server.
-	 */
-	public Message reconnect();
-
-	/**
 	 * @return <code>true</code> if channel to remote server is open
 	 */
 	public boolean isConnected();
 
+	public Protocol getProtocol();
+
 	public Message sendMessage(Message message);
 
-	MessageExchange getMessageExchange();
+	public void setConnection(Connection connection);
 }

@@ -5,7 +5,6 @@ import com.yammer.dropwizard.config.Configuration;
 import io.zerodi.windbag.api.representations.ServerDetail;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.util.List;
 

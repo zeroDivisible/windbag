@@ -21,5 +21,7 @@ public interface ConnectionRegistry {
 
 	public List<Connection> getAllForServer(String serverId);
 
-	public Connection getForServerWithId(String serverId, long connectionId);
+	public Connection getForServerWithId(String serverId,
+	                                     long connectionId);
+
 }

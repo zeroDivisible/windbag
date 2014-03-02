@@ -12,6 +12,6 @@ public class MainView extends View {
 	}
 
 	public static MainView getInstance() {
-	    return new MainView();
+		return new MainView();
 	}
 }
