@@ -2,6 +2,7 @@ package io.zerodi.windbag.api.representations;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
+import com.yammer.dropwizard.json.JsonSnakeCase;
 import io.zerodi.windbag.core.Protocol;
 import io.zerodi.windbag.core.protocol.Connection;
 
@@ -14,18 +15,19 @@ import java.util.List;
  * @author zerodi
  */
 @JsonRootName("server")
+@JsonSnakeCase
 public class ServerDetailRepresentation {
 
-	@JsonProperty("id")
+	@JsonProperty
 	private String id;
 
-	@JsonProperty("server_address")
+	@JsonProperty
 	private String serverAddress;
 
-	@JsonProperty("server_port")
+	@JsonProperty
 	private int serverPort;
 
-	@JsonProperty("protocol")
+	@JsonProperty
 	private Protocol protocol;
 
 	@JsonProperty("active_connections")

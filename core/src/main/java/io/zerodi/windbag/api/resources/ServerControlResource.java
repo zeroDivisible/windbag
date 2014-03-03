@@ -85,8 +85,7 @@ public class ServerControlResource {
 	 */
 	private ServerDetail findServer(String serverId) {
 		for (ServerDetail serverDetail : configuration.getServers()) {
-			if (serverDetail.getId()
-			                .equals(serverId)) {
+			if (serverDetail.getId().equals(serverId)) {
 				return serverDetail;
 			}
 		}
