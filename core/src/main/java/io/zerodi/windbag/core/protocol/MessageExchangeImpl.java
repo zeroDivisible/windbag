@@ -11,7 +11,7 @@ import java.util.List;
  * @author zerodi
  */
 public class MessageExchangeImpl implements MessageExchange {
-	private List<Message> messages = new ArrayList<>();
+	private final List<Message> messages = new ArrayList<>();
 
 	private MessageExchangeImpl() {
 	}

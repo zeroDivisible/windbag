@@ -8,13 +8,14 @@ import io.zerodi.windbag.core.protocol.epp.EppConnectionFactory;
 import io.zerodi.windbag.core.protocol.noop.NoopConnectionFactory;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author zerodi
  */
 public class ConnectionFactoryRegistry {
 
-	private static final HashMap<Protocol, ConnectionFactory> bootstrapFactories = new HashMap<>();
+	private static final Map<Protocol, ConnectionFactory> bootstrapFactories = new HashMap<>();
 
 	static {
 		bootstrapFactories.put(Protocol.NOOP,

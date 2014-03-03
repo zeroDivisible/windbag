@@ -22,18 +22,14 @@ public class EppMessageDecoder extends ByteToMessageDecoder {
 	}
 
 	@Override
-	public void exceptionCaught(ChannelHandlerContext ctx,
-	                            Throwable cause) {
-		logger.error("while decoding EPP message",
-		             cause);
+	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+		super.exceptionCaught(ctx, cause);
+		logger.error("while decoding EPP message", cause);
 		ctx.close();
 	}
 
 	@Override
-	protected void decode(ChannelHandlerContext ctx,
-	                      ByteBuf in,
-	                      List<Object> out) throws
-	                                        Exception {
+	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
 		if (in.readableBytes() < 4) {
 			return;
 		}

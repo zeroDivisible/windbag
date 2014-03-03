@@ -23,8 +23,8 @@ public class ConnectionRegistryImpl implements Managed, ConnectionRegistry {
 	private static final Logger logger = LoggerFactory.getLogger(ConnectionRegistryImpl.class);
 	private final ConnectionFactoryRegistry connectionFactoryRegistry;
 
-	private AtomicLong                    connectionIdGenerator = new AtomicLong();
-	private Map<String, List<Connection>> connectionHashMap     = new HashMap<>();
+	private final AtomicLong                    connectionIdGenerator = new AtomicLong();
+	private final Map<String, List<Connection>> connectionHashMap     = new HashMap<>();
 
 	private ConnectionRegistryImpl(ConnectionFactoryRegistry connectionFactoryRegistry) {
 		this.connectionFactoryRegistry = connectionFactoryRegistry;
@@ -65,8 +65,8 @@ public class ConnectionRegistryImpl implements Managed, ConnectionRegistry {
 
 		ServerDetail serverDetail = connection.getServerDetail();
 		Preconditions.checkNotNull(serverDetail, "connection.getServerDetail() cannot be null!");
-		String serverId = serverDetail.getName();
-		Preconditions.checkNotNull(serverId, "clientConnection.getServerDetail().getName() cannot be null!");
+		String serverId = serverDetail.getId();
+		Preconditions.checkNotNull(serverId, "clientConnection.getServerDetail().getId() cannot be null!");
 
 		List<Connection> connections = connectionHashMap.get(serverId);
 		if (connections == null) {
@@ -81,7 +81,7 @@ public class ConnectionRegistryImpl implements Managed, ConnectionRegistry {
 	@Override
 	public Message disconnectAndDeregister(Connection connection) {
 		ServerDetail detail = connection.getServerDetail();
-		List<Connection> connections = getAllForServer(detail.getName());
+		List<Connection> connections = getAllForServer(detail.getId());
 		connections.remove(connection);
 
 		return connection.getProtocolHandler().disconnect();

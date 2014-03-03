@@ -28,7 +28,7 @@ public class ClientConnectionTest {
 		serverDetail.setProtocol(Protocol.EPP);
 		serverDetail.setServerAddress("192.168.33.15");
 		serverDetail.setServerPort(8700);
-		serverDetail.setName("devvm");
+		serverDetail.setId("devvm");
 	}
 
 	@Test(enabled = false)

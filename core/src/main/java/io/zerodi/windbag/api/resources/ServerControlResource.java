@@ -5,6 +5,7 @@ import io.zerodi.windbag.api.ApiSettings;
 import io.zerodi.windbag.api.representations.MessageList;
 import io.zerodi.windbag.api.representations.ServerDetail;
 import io.zerodi.windbag.api.representations.ServerDetailRepresentation;
+import io.zerodi.windbag.api.representations.ServerDetailRepresentationList;
 import io.zerodi.windbag.app.registry.ConnectionRegistryImpl;
 import io.zerodi.windbag.core.ApplicationConfiguration;
 import io.zerodi.windbag.core.protocol.*;
@@ -13,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.ArrayList;
 import java.util.List;
 
 import static javax.ws.rs.core.Response.Status;
@@ -22,7 +24,7 @@ import static javax.ws.rs.core.Response.Status;
  *
  * @author zerodi
  */
-@Path(ApiSettings.API_URL_PREFIX + "/server")
+@Path(ApiSettings.API_URL_PREFIX + "/servers")
 @Produces(MediaType.APPLICATION_JSON)
 public class ServerControlResource {
 
@@ -38,6 +40,26 @@ public class ServerControlResource {
 
 	public static ServerControlResource getInstance(ApplicationConfiguration configuration, ConnectionRegistryImpl connectionRegistry) {
 		return new ServerControlResource(configuration, connectionRegistry);
+	}
+
+	@GET
+	@Timed
+	public ServerDetailRepresentationList getAllServers() {
+		List<ServerDetailRepresentation> servers = new ArrayList<>();
+		for (ServerDetail serverDetail : configuration.getServers()) {
+			servers.add(ServerDetailRepresentation.getInstance(serverDetail, connectionRegistry.getAllForServer(serverDetail.getId())));
+		}
+
+		return ServerDetailRepresentationList.getInstance(servers);
+	}
+
+	@GET
+	@Path("{serverId}")
+	@Timed
+	public ServerDetailRepresentation getServer(@PathParam("serverId") String serverId) {
+		ServerDetail server = findServer(serverId);
+		List<Connection> connections = connectionRegistry.getAllForServer(serverId);
+		return ServerDetailRepresentation.getInstance(server, connections);
 	}
 
 	@GET
@@ -63,22 +85,12 @@ public class ServerControlResource {
 	 */
 	private ServerDetail findServer(String serverId) {
 		for (ServerDetail serverDetail : configuration.getServers()) {
-			if (serverDetail.getName()
-			                .equals(serverId)) {
+			if (serverDetail.getId().equals(serverId)) {
 				return serverDetail;
 			}
 		}
 
 		throw new WebApplicationException(Status.NOT_FOUND);
-	}
-
-	@GET
-	@Path("{serverId}")
-	@Timed
-	public ServerDetailRepresentation getServerDetails(@PathParam("serverId") String serverId) {
-		ServerDetail server = findServer(serverId);
-		List<Connection> connections = connectionRegistry.getAllForServer(serverId);
-		return ServerDetailRepresentation.getInstance(server, connections);
 	}
 
 	@GET
@@ -134,6 +146,6 @@ public class ServerControlResource {
 			throw new WebApplicationException(Status.NOT_FOUND);
 		}
 
-		return MessageList.getInstance(connection.getMessageExchange().getLast(20));
+		return MessageList.getInstance(connection.getMessageExchange().getLast(configuration.getDefaultMessagesReturned()));
 	}
 }

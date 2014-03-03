@@ -3,6 +3,7 @@ package io.zerodi.windbag.core.protocol;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
+import com.yammer.dropwizard.json.JsonSnakeCase;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.util.CharsetUtil;
@@ -11,12 +12,13 @@ import io.netty.util.CharsetUtil;
  * @author zerodi
  */
 @JsonRootName("message")
+@JsonSnakeCase
 public class StringMessage implements Message {
 
 	@JsonProperty("raw_message")
 	private final String message;
 
-	@JsonProperty("message_type")
+	@JsonProperty
 	private final MessageType messageType;
 
 	private StringMessage(byte[] message, MessageType messageType) {
@@ -24,7 +26,7 @@ public class StringMessage implements Message {
 		this.message = new String(message, CharsetUtil.UTF_8);
 	}
 
-	protected StringMessage(String message, MessageType messageType) {
+	StringMessage(String message, MessageType messageType) {
 		this.message = message;
 		this.messageType = messageType;
 	}
@@ -37,6 +39,7 @@ public class StringMessage implements Message {
 		return new StringMessage(message, messageType);
 	}
 
+	@Override
 	public String getMessage() {
 		return message;
 	}
