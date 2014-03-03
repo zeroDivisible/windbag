@@ -7,6 +7,7 @@ import io.zerodi.windbag.api.representations.ServerDetail;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Min;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,7 +30,7 @@ public class ApplicationConfiguration extends Configuration {
 
 	@NotEmpty
 	@JsonProperty
-	private List<ServerDetail> servers;
+	private List<ServerDetail> servers = new ArrayList<>();
 
 
 	public List<ServerDetail> getServers() {

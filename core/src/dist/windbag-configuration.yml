@@ -2,6 +2,7 @@
 # those are the default servers which the applications knows about
 connection_timeout_seconds: 10
 response_timeout_seconds: 30
+default_messages_returned: 20
 
 servers:
   - id: devvm

@@ -25,10 +25,10 @@ public class EppProtocolHandler implements ProtocolHandler {
 	private final ServerDetail             serverDetail;
 	private final MessageExchange          messageExchange;
 	private final ApplicationConfiguration configuration;
-	private Bootstrap       bootstrap       = null;
-	private Channel         channel         = null;
-	private ExecutorService executorService = Executors.newCachedThreadPool();
-	private Connection connection;
+	private final ExecutorService executorService = Executors.newCachedThreadPool();
+	private       Bootstrap       bootstrap       = null;
+	private       Channel         channel         = null;
+	private       Connection      connection      = null;
 
 	private EppProtocolHandler(ServerDetail serverDetail, MessageExchange messageExchange, ApplicationConfiguration configuration) {
 		this.serverDetail = serverDetail;
@@ -63,7 +63,7 @@ public class EppProtocolHandler implements ProtocolHandler {
 			}
 
 			CountDownLatch countDownLatch = new CountDownLatch(1);
-			final ResponseReceiver responseReceiver = ResponseReceiver.getInstance(countDownLatch, configuration);
+			final ResponseReceiver responseReceiver = ResponseReceiver.getInstance(countDownLatch);
 
 			ChannelFuture connectionFuture = bootstrap.connect(serverAddress, serverPort);
 			connectionFuture.addListener(new ChannelFutureListener() {
@@ -131,7 +131,7 @@ public class EppProtocolHandler implements ProtocolHandler {
 
 		messageExchange.postMessage(message);
 		final CountDownLatch countDownLatch = new CountDownLatch(1);
-		final ResponseReceiver responseReceiver = ResponseReceiver.getInstance(countDownLatch, configuration);
+		final ResponseReceiver responseReceiver = ResponseReceiver.getInstance(countDownLatch);
 
 		channel.pipeline().addLast("response-receiver", responseReceiver);
 		channel.writeAndFlush(message.asByteBuf());

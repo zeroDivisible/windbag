@@ -13,7 +13,7 @@ import java.util.List;
 @JsonRootName("servers")
 public class ServerDetailRepresentationList {
 
-	private List<ServerDetailRepresentation> serverDetails;
+	private final List<ServerDetailRepresentation> serverDetails;
 
 	private ServerDetailRepresentationList(List<ServerDetailRepresentation> serverDetails) {
 		this.serverDetails = serverDetails;

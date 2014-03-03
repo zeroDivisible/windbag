@@ -13,7 +13,7 @@ public class NoopProtocolHandler implements ProtocolHandler {
 	private static final Logger logger = LoggerFactory.getLogger(NoopProtocolHandler.class);
 	private final ServerDetail serverDetail;
 	private boolean connected = false;
-	private Connection connection;
+	private Connection connection = null;
 
 	private NoopProtocolHandler(ServerDetail serverDetail) {
 		this.serverDetail = serverDetail;

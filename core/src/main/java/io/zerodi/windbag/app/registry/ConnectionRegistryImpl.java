@@ -23,8 +23,8 @@ public class ConnectionRegistryImpl implements Managed, ConnectionRegistry {
 	private static final Logger logger = LoggerFactory.getLogger(ConnectionRegistryImpl.class);
 	private final ConnectionFactoryRegistry connectionFactoryRegistry;
 
-	private AtomicLong                    connectionIdGenerator = new AtomicLong();
-	private Map<String, List<Connection>> connectionHashMap     = new HashMap<>();
+	private final AtomicLong                    connectionIdGenerator = new AtomicLong();
+	private final Map<String, List<Connection>> connectionHashMap     = new HashMap<>();
 
 	private ConnectionRegistryImpl(ConnectionFactoryRegistry connectionFactoryRegistry) {
 		this.connectionFactoryRegistry = connectionFactoryRegistry;

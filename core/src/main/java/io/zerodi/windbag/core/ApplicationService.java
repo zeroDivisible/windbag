@@ -17,7 +17,7 @@ import io.zerodi.windbag.core.protocol.ConnectionFactoryRegistry;
  *
  * @author zerodi
  */
-public class ApplicationService extends Service<ApplicationConfiguration> {
+class ApplicationService extends Service<ApplicationConfiguration> {
 
 	public static void main(String[] args) throws Exception {
 		new ApplicationService().run(args);

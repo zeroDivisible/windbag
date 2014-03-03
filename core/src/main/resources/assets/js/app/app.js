@@ -3,11 +3,13 @@
 window.Windbag = Ember.Application.create();
 var attr = DS.attr;
 
+Windbag.adapter = DS.RESTAdapter.extend({
+	namespace: 'api/v1'
+});
+
 Windbag.Store = DS.Store.extend({
-	revision: 13,
-	adapter: DS.RESTAdapter.create({
-		namespace: 'api/v1'
-	})
+	revision: 14,
+	adapter: Windbag.adapter.create()
 });
 
 

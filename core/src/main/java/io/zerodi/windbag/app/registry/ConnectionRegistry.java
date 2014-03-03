@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author zerodi
  */
-public interface ConnectionRegistry {
+interface ConnectionRegistry {
 
 	public void registerConnection(Connection connection);
 

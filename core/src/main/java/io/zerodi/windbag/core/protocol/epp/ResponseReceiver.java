@@ -2,7 +2,6 @@ package io.zerodi.windbag.core.protocol.epp;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.zerodi.windbag.core.ApplicationConfiguration;
 import io.zerodi.windbag.core.protocol.Message;
 import io.zerodi.windbag.core.protocol.MessageType;
 import io.zerodi.windbag.core.protocol.StringMessage;
@@ -17,17 +16,15 @@ import java.util.concurrent.CountDownLatch;
 public class ResponseReceiver extends SimpleChannelInboundHandler<String> {
 	private static final Logger logger = LoggerFactory.getLogger(ResponseReceiver.class);
 
-	private final CountDownLatch           lock;
-	private final ApplicationConfiguration configuration;
-	private       Message                  receivedMessage;
+	private final CountDownLatch lock;
+	private Message receivedMessage = null;
 
-	private ResponseReceiver(CountDownLatch lock, ApplicationConfiguration configuration) {
+	private ResponseReceiver(CountDownLatch lock) {
 		this.lock = lock;
-		this.configuration = configuration;
 	}
 
-	public static ResponseReceiver getInstance(CountDownLatch lock, ApplicationConfiguration configuration) {
-		return new ResponseReceiver(lock, configuration);
+	public static ResponseReceiver getInstance(CountDownLatch lock) {
+		return new ResponseReceiver(lock);
 	}
 
 	@Override
@@ -43,7 +40,7 @@ public class ResponseReceiver extends SimpleChannelInboundHandler<String> {
 		return receivedMessage;
 	}
 
-	public void setReceivedMessage(Message receivedMessage) {
+	private void setReceivedMessage(Message receivedMessage) {
 		this.receivedMessage = receivedMessage;
 	}
 }

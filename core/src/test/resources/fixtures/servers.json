@@ -2,16 +2,16 @@
     "servers": [
         {
             "id": "devvm",
-            "protocol": "EPP",
             "server_address": "192.168.33.15",
             "server_port": 700,
+	          "protocol": "EPP",
 	          "active_connections": []
         },
         {
             "id": "machine2",
-            "protocol": "EPP",
             "server_address": "192.168.33.20",
             "server_port": 701,
+	          "protocol": "EPP",
 	          "active_connections": []
         }
     ]

@@ -1,6 +1,7 @@
 package io.zerodi.windbag.api.representations;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.yammer.dropwizard.json.JsonSnakeCase;
 import io.zerodi.windbag.core.Protocol;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -10,6 +11,7 @@ import javax.validation.constraints.Min;
 /**
  * @author zerodi
  */
+@JsonSnakeCase
 public class ServerDetail {
 
 	@NotEmpty
@@ -17,11 +19,11 @@ public class ServerDetail {
 	private String id;
 
 	@NotEmpty
-	@JsonProperty("server_address")
+	@JsonProperty
 	private String serverAddress;
 
 	@NotEmpty
-	@JsonProperty("server_port")
+	@JsonProperty
 	@Min(1)
 	@Max(65535)
 	private int serverPort;
