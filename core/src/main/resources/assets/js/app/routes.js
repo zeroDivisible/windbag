@@ -5,8 +5,6 @@ Windbag.Router.map(function () {
 
 Windbag.IndexRoute = Ember.Route.extend({
 	model: function () {
-		this.store.find('server').then(function (servers) {
-			console.log(servers);
-		});
+		return this.store.find('server');
 	}
 });
